@@ -3,9 +3,11 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, DepthwiseConv2D
 
 # 1. Tạo dữ liệu đầu vào giả lập (kích thước 3x3x3)
-input_data = np.array([[[1, 5, 5], [2, 1, 5], [0, 3, 1]],
-                       [[2, 1, 1], [1, 2, 1], [1, 1, 2]],
-                       [[3, 0, 2], [0, 3, 0], [2, 0, 3]]])
+input_data = np.array([
+    [[[1, 4, 7], [1, 4, 7], [1, 4, 7]],
+     [[2, 5, 8], [2, 5, 8], [2, 5, 8]],
+     [[3, 6, 9], [3, 6, 9], [3, 6, 9]]]
+]).astype(np.float32)  # Kích thước (1, 3, 3, 3)
 
 print(input_data)
 
