@@ -11,7 +11,7 @@ typedef enum {
 } PaddingType;
 
 // Convolution function
-void conv2d(
+void conv2d(  //tuan anh
     const int16_t *input,       // Pointer to input data
     const int16_t *kernel,      // Pointer to kernel weights
     const int16_t *bias,        // Pointer to bias (can be NULL)
@@ -28,7 +28,7 @@ void conv2d(
 );
 
 // Depthwise convolution function
-void depthwise_conv2d(
+void depthwise_conv2d(  //Anh
     const int16_t *input,       // Pointer to input data
     const int16_t *kernel,      // Pointer to kernel weights
     const int16_t *bias,        // Pointer to bias (can be NULL)
@@ -43,16 +43,8 @@ void depthwise_conv2d(
     PaddingType padding         // Padding type
 );
 
-// Squeeze-and-Excitation (SE) block function
-void se_block(
-    const int16_t *input,       // Pointer to input data
-    int16_t *output,            // Pointer to output data
-    int input_channels,         // Number of input channels
-    int reduced_channels        // Number of reduced channels in SE block
-);
-
 // Add function (element-wise addition)
-void add(
+void add(  //Tuan Anh
     const int16_t *input1,      // Pointer to first input tensor
     const int16_t *input2,      // Pointer to second input tensor
     int16_t *output,            // Pointer to output tensor
@@ -60,7 +52,7 @@ void add(
     int height,                 // Height of the tensors
     int channels                // Number of channels in the tensors
 );
-void pooling_average(
+void pooling_average( //Anh
     const int16_t *input,       // Pointer to input data
     int16_t *output,            // Pointer to output data
     int input_width,            // Input width
@@ -73,7 +65,7 @@ void pooling_average(
 );
 
 // Reshape function
-void reshape(
+void reshape(  //Tuan Anh
     const int16_t *input,       // Pointer to input data
     int16_t *output,            // Pointer to output data
     int input_width,            // Original input width
