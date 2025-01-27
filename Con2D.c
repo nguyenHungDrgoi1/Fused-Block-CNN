@@ -26,7 +26,7 @@ float ***Padding_3D(float ***ifmap, int input_height, int input_width, int input
 
 // Hàm thực hiện Conv2D
 float ***ConV2D(float ***ifmap, float ****kernel, int input_height, int input_width, int input_channel, int kernel_height, int kernel_filter, int kernel_channel, int stride, int padding) {
-    int output_height = (input_height - kernel_height + 2 * padding) / stride + 1 ;
+    int output_height = (input_height - kernel_height + 2 * padding) / stride + 1;
     int output_width = (input_width - kernel_height + 2 * padding) / stride + 1;
     int output_channel = kernel_filter;
 
