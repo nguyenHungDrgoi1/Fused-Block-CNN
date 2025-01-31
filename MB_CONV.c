@@ -161,7 +161,13 @@ int main() {
 
     // Khởi tạo các kernel và bias
     int16_t kernel1[INPUT_CHANNELS * EXPANDED_CHANNELS] = {1}; // 1x1 conv kernel
+    for (int i = 0; i < INPUT_CHANNELS * EXPANDED_CHANNELS; i++) {
+    kernel1[i] = 1;
+}
     int16_t kernel2[EXPANDED_CHANNELS * KERNEL_SIZE * KERNEL_SIZE] = {1}; // 3x3 dwconv kernel
+        for (int i = 0; i < EXPANDED_CHANNELS * KERNEL_SIZE * KERNEL_SIZE; i++) {
+    kernel2[i] = 1;
+}
     int16_t kernel3[EXPANDED_CHANNELS * INPUT_CHANNELS] = {1}; // 1x1 conv kernel
     
     int16_t bias1[EXPANDED_CHANNELS] = {0};
@@ -208,6 +214,9 @@ int main() {
 
     printf("output1:\n");
     print_layer(output1,INPUT_WIDTH,INPUT_HEIGHT,EXPANDED_CHANNELS);
+
+    printf("output2:\n");
+    print_layer(output2,INPUT_WIDTH,INPUT_HEIGHT,EXPANDED_CHANNELS);
 
     return 0;
 }
