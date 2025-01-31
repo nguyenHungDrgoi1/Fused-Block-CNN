@@ -57,7 +57,12 @@ void conv2d(  //tuan anh
              }
              // Gán giá trị đã tính vào đầu ra
              int output_idx = (oc * output_height + oh) * output_width + ow;
-             output[output_idx] = value + bias[output_idx];
+             if (bias != NULL) {
+                output[output_idx] = value + bias[oc];
+             }
+             else {
+                output[output_idx] = value;
+             }
          }
      }
  }
