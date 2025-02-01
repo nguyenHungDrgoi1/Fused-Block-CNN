@@ -15,21 +15,30 @@ void conv2d(  //tuan anh
     PaddingType padding         // Padding type
 )
 {
-    int output_height = (input_height - kernel_height + 2 * padding) / stride_height + 1;
-    int output_width = (input_width - kernel_height + 2 * padding) / stride_width + 1;
+    int padding_width, padding_height;
+    if (padding == PADDING_VALID) {
+        padding_width = 0;
+        padding_height = 0;
+    }
+    else {
+        padding_width = (kernel_width - 1 ) / 2; // same
+        padding_height = (kernel_height - 1) / 2; // same
+    }
+    int output_height = (input_height - kernel_height + 2 * padding_height) / stride_height + 1;
+    int output_width = (input_width - kernel_height + 2 * padding_width) / stride_width + 1;
      for (int oc = 0; oc < output_channels; oc++) {
      // Duyệt qua chiều cao và chiều rộng của đầu ra
      for (int oh = 0; oh < output_height; oh++) {
          for (int ow = 0; ow < output_width; ow++) {
-             float value = 0.0f; // Giá trị tích chập cho pixel đầu ra hiện tại
+             int32_t value = 0; // Giá trị tích chập cho pixel đầu ra hiện tại
              // Duyệt qua từng kênh đầu vào
              for (int ic = 0; ic < input_channels; ic++) {
                  // Duyệt qua kernel
                  for (int kh = 0; kh < kernel_height; kh++) {
                      for (int kw = 0; kw < kernel_width; kw++) {
                          // Tính toán tọa độ trong đầu vào với padding
-                         int ih = oh * stride_height + kh - padding;
-                         int iw = ow * stride_width + kw - padding;
+                         int ih = oh * stride_height + kh - padding_height;
+                         int iw = ow * stride_width + kw - padding_width;
 
                          // Kiểm tra nếu tọa độ trong phạm vi của input
                          if (ih >= 0 && ih < input_height && iw >= 0 && iw < input_width) {
@@ -48,7 +57,12 @@ void conv2d(  //tuan anh
              }
              // Gán giá trị đã tính vào đầu ra
              int output_idx = (oc * output_height + oh) * output_width + ow;
-             output[output_idx] = value + bias[output_idx];
+             if (bias != NULL) {
+                output[output_idx] = value + bias[oc];
+             }
+             else {
+                output[output_idx] = value;
+             }
          }
      }
  }
