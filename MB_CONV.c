@@ -196,7 +196,7 @@ int main() {
     int16_t kernel1[INPUT_CHANNELS * EXPANDED_CHANNELS] = {1}; // 1x1 conv kernel
     for (int i = 0; i < INPUT_CHANNELS * EXPANDED_CHANNELS; i++) {
     kernel1[i] = 1;
-}
+}   
     int16_t kernel2[EXPANDED_CHANNELS * KERNEL_SIZE * KERNEL_SIZE] = {1}; // 3x3 dwconv kernel
         for (int i = 0; i < EXPANDED_CHANNELS * KERNEL_SIZE * KERNEL_SIZE; i++) {
     kernel2[i] = 1;
@@ -219,8 +219,8 @@ int main() {
            1, 1, EXPANDED_CHANNELS, 1, 1, PADDING_SAME);
 
     // 2. Depthwise Conv2D (3x3)
-    depthwise_conv2d(output1, kernel2, bias2, output2,
-                     INPUT_WIDTH, INPUT_HEIGHT, EXPANDED_CHANNELS,
+    depthwise_conv2d(output1, kernel2, NULL, output2,
+                     EXPANDED_CHANNELS, INPUT_HEIGHT, INPUT_WIDTH, 
                      3, 3, 1, 1, PADDING_SAME);
 
     // 3. Conv2D (1x1)
