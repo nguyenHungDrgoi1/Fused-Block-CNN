@@ -30,7 +30,7 @@ int main() {
 
     const int weight_height = 3;
     const int weight_width = 3;
-    const int weight_channel = 1;
+    const int weight_channel = 3;
     const int weight_filter = 3;
     int weight_size = weight_channel * weight_height * weight_width * weight_filter;
 

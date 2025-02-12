@@ -57,6 +57,13 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "mb_conv.h": "c"
+    "mb_conv.h": "c",
+    "algorithm": "c",
+    "optional": "c",
+    "system_error": "c",
+    "type_traits": "c",
+    "xlocmon": "c",
+    "xtr1common": "c",
+    "xutility": "c"
   }
 }

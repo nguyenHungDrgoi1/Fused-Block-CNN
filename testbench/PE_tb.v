@@ -1,20 +1,25 @@
-module depthwise_tb();
+module PE_tb();
 
     parameter kernel_size_1channel = 9; // 3x3
     parameter kernel_channel = 3;
+    parameter kernel_filter = 3;
     parameter input_size_1channel = 1024; // 32x32
     parameter input_channel = 3;
     parameter input_size = input_size_1channel * input_channel;
-    parameter weight_size = kernel_size_1channel * kernel_channel;
+    parameter weight_size = kernel_size_1channel * kernel_channel * kernel_filter;
+    parameter operation = input_size * kernel_size_1channel * input_channel;
+
 
     reg clk, rst;
     reg [7:0] input_feature;
     reg [7:0] weight;
     wire [15:0] output_feature;
+
     reg [7:0] fifo_input[input_size - 1 : 0];
     reg [7:0] fifo_weight[weight_size - 1 : 0];
+    
     integer file_input, file_weight, file_out, cycle_count;
-    integer i = j = 0;
+    integer i = 0;
 
     always #5 clk = ~clk;
 
@@ -30,7 +35,7 @@ module depthwise_tb();
         weight = 0;
 
         // Đọc dữ liệu đầu vào từ file hex
-        file_input = $fopen("input.hex", "r");
+        file_input = $fopen("input.hex", "r"); // chinh sua duong dan
         file_weight = $fopen("weight.hex", "r");
         file_out = $fopen("output.hex", "w");
 
@@ -51,11 +56,11 @@ module depthwise_tb();
     end
 
     always @(posedge clk) begin
-        if (i < input_size) begin
-            weight <= fifo_weight[j];
-            if ()
-            cycle_count = cycle_count + 1;
-            i = i + 1;
+        if (i < operation) begin
+            input_feature <= fifo_input[i];
+            weight <= fifo_weight[i];
+            cycle_count <= cycle_count + 1;
+            i <= i + 1;
         end else begin
             $fclose(file_out);
             $finish;
@@ -63,7 +68,7 @@ module depthwise_tb();
     end
 
     always @(negedge clk) begin
-        if(cycle_count % 9 == 0) begin
+        if(cycle_count % weight_size == 0) begin
             $fwrite(file_out, "%h\n", output_feature);
         end
     end
