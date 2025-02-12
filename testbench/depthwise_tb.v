@@ -1,7 +1,11 @@
 module depthwise_tb();
 
-    parameter input_size = 1024;
-    parameter weight_size = 2048;
+    parameter kernel_size_1channel = 9; // 3x3
+    parameter kernel_channel = 3;
+    parameter input_size_1channel = 1024; // 32x32
+    parameter input_channel = 3;
+    parameter input_size = input_size_1channel * input_channel;
+    parameter weight_size = kernel_size_1channel * kernel_channel;
 
     reg clk, rst;
     reg [7:0] input_feature;
@@ -9,7 +13,8 @@ module depthwise_tb();
     wire [15:0] output_feature;
     reg [7:0] fifo_input[input_size - 1 : 0];
     reg [7:0] fifo_weight[weight_size - 1 : 0];
-    integer i, file_input, file_weight, file_out;
+    integer file_input, file_weight, file_out, cycle_count;
+    integer i = j = 0;
 
     always #5 clk = ~clk;
 
@@ -47,8 +52,9 @@ module depthwise_tb();
 
     always @(posedge clk) begin
         if (i < input_size) begin
-            input_feature <= fifo_input[i];
-            weight <= fifo_weight[i % weight_size];
+            weight <= fifo_weight[j];
+            if ()
+            cycle_count = cycle_count + 1;
             i = i + 1;
         end else begin
             $fclose(file_out);
@@ -57,6 +63,8 @@ module depthwise_tb();
     end
 
     always @(negedge clk) begin
-        $fwrite(file_out, "%h\n", output_feature);
+        if(cycle_count % 9 == 0) begin
+            $fwrite(file_out, "%h\n", output_feature);
+        end
     end
 endmodule
