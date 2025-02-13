@@ -15,15 +15,16 @@ module PE_tb();
     reg [7:0] weight;
     wire [15:0] output_feature;
 
-    reg [7:0] fifo_input[input_size - 1 : 0];
-    reg [7:0] fifo_weight[weight_size - 1 : 0];
+    reg [7:0] fifo_input[operation - 1 : 0];
+    reg [7:0] fifo_weight[operation - 1 : 0];
     
-    integer file_input, file_weight, file_out, cycle_count;
+    integer file_input, file_weight, file_out, cycle_count = 0;
     integer i = 0;
+    integer j = 0;
 
     always #5 clk = ~clk;
 
-    depthwise dut (
+    PE dut (
         .input_feature(input_feature),
         .weight(weight),
         .output_feature(output_feature)
@@ -40,10 +41,10 @@ module PE_tb();
         file_out = $fopen("output.hex", "w");
 
         if (file_input && file_weight) begin
-            for (i = 0; i < input_size; i = i + 1) begin
+            for (i = 0; i < operation; i = i + 1) begin
                 $fscanf(file_input, "%h", fifo_input[i]);
             end
-            for (i = 0; i < weight_size; i = i + 1) begin
+            for (i = 0; i < operation; i = i + 1) begin
                 $fscanf(file_weight, "%h", fifo_weight[i]);
             end
         end else begin
@@ -56,11 +57,11 @@ module PE_tb();
     end
 
     always @(posedge clk) begin
-        if (i < operation) begin
-            input_feature <= fifo_input[i];
-            weight <= fifo_weight[i];
+        if (j < operation) begin
+            input_feature <= fifo_input[j];
+            weight <= fifo_weight[j];
             cycle_count <= cycle_count + 1;
-            i <= i + 1;
+            j <= j + 1;
         end else begin
             $fclose(file_out);
             $finish;
