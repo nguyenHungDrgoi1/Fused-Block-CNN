@@ -13,7 +13,7 @@ module PE_tb();
     reg clk, rst;
     reg [7:0] input_feature;
     reg [7:0] weight;
-    wire [15:0] output_feature;
+    wire [7:0] output_feature;
     reg PE_en;
     reg PE_finish;
     wire valid;
@@ -43,7 +43,7 @@ module PE_tb();
         // Đọc dữ liệu đầu vào từ file hex
         file_input = $fopen("C:/CNN/Fused-Block-CNN/in-out-weight/input_DUT.hex", "r"); // chinh sua duong dan
         file_weight = $fopen("C:/CNN/Fused-Block-CNN/in-out-weight/weight_DUT.hex", "r");
-        file_out = $fopen("output.hex", "w");
+        file_out = $fopen("C:/CNN/Fused-Block-CNN/in-out-weight/output.hex", "w");
 
         if (file_input && file_weight) begin
             for (i = 0; i < operation; i = i + 1) begin
@@ -91,7 +91,7 @@ module PE_tb();
     end
     end
     always @(negedge clk) begin
-        if(cycle_count % weight_size == 0) begin
+        if(valid == 1) begin
             $fwrite(file_out, "%h\n", output_feature);
         end
     end
