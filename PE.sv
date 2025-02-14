@@ -14,19 +14,19 @@ module PE(
     assign mul_IFM_Wei = IFM * Weight;
     logic [7:0] mul_sum_d;
     logic [7:0] mul_sum_q;
+    logic [7:0] mul_sum;
     //sum
-    assign mul_sum_d = mul_IFM_Wei + mul_sum_q ;
+    assign mul_sum_d = mul_IFM_Wei + mul_sum ;
     // reg
     always@(posedge clk or negedge reset_n) begin
         if(~reset_n) begin
             mul_sum_q <= 0;
         end
         else begin
-            if(PE_en == 1) mul_sum_q <= 0 ;
-            else
             mul_sum_q <= mul_sum_d; 
         end
     end
+    assign mul_sum = (PE_en) ? 0 : mul_sum_q ;
     //reg for valid
     always@(posedge clk or negedge reset_n) begin
         if(~reset_n) begin

@@ -41,9 +41,9 @@ module PE_tb();
         input_feature = 0;
         weight = 0;
         // Đọc dữ liệu đầu vào từ file hex
-        file_input = $fopen("C:/CNN/Fused-Block-CNN/in-out-weight/input_DUT.hex", "r"); // chinh sua duong dan
-        file_weight = $fopen("C:/CNN/Fused-Block-CNN/in-out-weight/weight_DUT.hex", "r");
-        file_out = $fopen("C:/CNN/Fused-Block-CNN/in-out-weight/output.hex", "w");
+        file_input = $fopen("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_DUT.hex", "r"); // chinh sua duong dan
+        file_weight = $fopen("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_DUT.hex", "r");
+        file_out = $fopen("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output.hex", "w");
 
         if (file_input && file_weight) begin
             for (i = 0; i < operation; i = i + 1) begin
@@ -66,18 +66,26 @@ module PE_tb();
         rst = 1;
         //PE_en = 0;
         //#10;
-        forever begin
+        #15
         PE_en = 1 ;
         #10;
         PE_en = 0;
-        #270;
+        #260;
         PE_finish = 1;
+        #10
+        PE_finish = 0;
+        forever begin
+        PE_en = 1 ;
         #10;
+        PE_en = 0 ;
+        #250;
+        PE_finish = 1;
+        #10
         PE_finish = 0;
         end
     end
     initial begin
-    #10;
+    #20;
     forever @(posedge clk) begin
         if (j < operation) begin
             input_feature <= fifo_input[j];

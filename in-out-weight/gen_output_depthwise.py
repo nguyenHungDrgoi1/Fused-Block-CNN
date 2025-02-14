@@ -23,10 +23,19 @@ def read_hex_file(filename, shape):
     return reshaped_data
 
 # Hàm ghi dữ liệu ra file HEX
+# Hàm ghi dữ liệu ra file HEX theo thứ tự hàng → cột → channel
 def write_hex_file(filename, data):
+    H, W, C = data.shape
     with open(filename, "w") as file:
-        for value in data.flatten():  # Chuyển thành 1D để ghi từng giá trị
-            file.write(f"{int(value):5X}\n")  
+        for c in range(C):  # Duyệt qua từng channel
+            for h in range(H):  # Duyệt theo hàng
+                for w in range(W):  # Duyệt theo cột
+                    int_value = int(round(data[h, w, c]))  # Chuyển float thành int
+                    hex_value = int_value & 0xFF  # Giữ lại 8 bit thấp nhất
+                    file.write(f"{hex_value:02x}\n")  # Định dạng 2 ký tự HEX
+
+
+
 
 # Đường dẫn file
 input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_depthwise.hex"
@@ -55,10 +64,10 @@ conv_layer = tf.keras.layers.Conv2D(filters=3, kernel_size=(3, 3), padding="same
 model = tf.keras.Model(inputs=input_layer, outputs=conv_layer)
 
 # Đặt trọng số cho Conv2D layer
-model.layers[1].set_weights([weight_data.astype(np.float32), np.zeros(3, dtype=np.float32)])  # Bias = 0
+model.layers[1].set_weights([weight_data.astype(np.int32), np.zeros(3, dtype=np.int32)])  # Bias = 0
 
 # Chạy dữ liệu qua mô hình
-output_data = model.predict(input_data.reshape(1, 32, 32, 3).astype(np.float32))
+output_data = model.predict(input_data.reshape(1, 32, 32, 3).astype(np.int32))
 output_data = output_data.reshape(32, 32, 3)
 # output_data = output_data.flatten().astype(np.int32)  # Chuyển thành mảng 1D, giữ số nguyên 16-bit
 
