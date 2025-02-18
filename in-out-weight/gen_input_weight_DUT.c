@@ -111,7 +111,7 @@ void write_hex_file(const char *filename, int16_t *data, int size) {
 }
 int main() {
     // Kích thước đầu vào
-    int input_width = 32, input_height = 32, input_channels = 1;
+    int input_width = 16, input_height = 16, input_channels = 3;
     int kernel_width = 3, kernel_height = 3, output_channels = 1;
     int stride_width = 1, stride_height = 1;
     int padding = 1;
@@ -142,8 +142,8 @@ int main() {
     }
 
     // Đọc dữ liệu từ file
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_32x32.hex", input_data, input_size);
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3.hex", kernel_data, kernel_size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_16x16x3.hex", input_data, input_size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3x3.hex", kernel_data, kernel_size);
 
     add_padding_1d(input_data, input_height, input_width, input_channels, padding, 0, input_data_padded);
 
@@ -162,8 +162,8 @@ int main() {
 
     // Ghi kết quả ra file
     //write_hex_file("output.hex", output_data, output_size);
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_32x32_DUT.hex", ifm_used, ifm_used_size);
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3_DUT.hex", weight_used, weight_used_size);
+    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_16x16x3_DUT.hex", ifm_used, ifm_used_size);
+    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3x3_DUT.hex", weight_used, weight_used_size);
 
     printf("Kết quả đã ghi vào output.hex\n");
     printf("Dữ liệu sau khi thêm padding:\n");

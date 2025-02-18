@@ -23,19 +23,19 @@ void generateAndWriteHexFile(const char *filename, int arraySize, unsigned int s
 }
 
 int main() {
-    const int input_height = 32;
-    const int input_width = 32;
-    const int input_channel = 1;
+    const int input_height = 16;
+    const int input_width = 16;
+    const int input_channel = 3;
     int input_size = input_channel * input_height * input_width;
 
     const int weight_height = 3;
     const int weight_width = 3;
-    const int weight_channel = 1;
+    const int weight_channel = 3;
     const int weight_filter = 1;
     int weight_size = weight_channel * weight_height * weight_width * weight_filter;
 
-    const char *filename_IFM = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_32x32.hex";
-    const char *filename_Weight = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3.hex";
+    const char *filename_IFM = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_16x16x3.hex";
+    const char *filename_Weight = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3x3.hex";
 
     // Gọi hàm với seed khác nhau để đảm bảo dãy số khác nhau
     generateAndWriteHexFile(filename_IFM, input_size, time(NULL));

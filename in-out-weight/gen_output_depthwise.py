@@ -38,17 +38,17 @@ def write_hex_file(filename, data):
 
 
 # Đường dẫn file
-input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_32x32.hex"
-weight_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3.hex"
-output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output_depthwise.hex"
+input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_16x16x3.hex"
+weight_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3x3.hex"
+output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output_16x16x3.hex"
 
 # Đọc dữ liệu từ file với thứ tự chuẩn hàng → cột → channel
-input_data = read_hex_file(input_file, (32, 32, 3))  # H=32, W=32, C=3
+input_data = read_hex_file(input_file, (16, 16, 3))  # H=32, W=32, C=3
 # Đọc dữ liệu từ file với thứ tự hàng → cột → channel*filter (tức 3x3x9)
-weight_data_flat = read_hex_file(weight_file, (3, 3, 9))  # Đọc thành (3,3,9) trước
+weight_data_flat = read_hex_file(weight_file, (3, 3, 3))  # Đọc thành (3,3,9) trước
 
 # Reshape lại thành (3,3,3,3) với thứ tự hàng → cột → channel → filter
-weight_data = weight_data_flat.reshape(3, 3, 3, 3).transpose(0, 1, 3, 2)  # Chuyển đúng thứ tự Conv2D yêu cầu
+weight_data = weight_data_flat.reshape(3, 3, 1, 3).transpose(0, 1, 3, 2)  # Chuyển đúng thứ tự Conv2D yêu cầu
 # In kiểm tra kernel theo từng channel
 print("Các kernel được đọc vào:")
 for f in range(weight_data.shape[3]):  # Duyệt qua từng filter
@@ -59,16 +59,16 @@ for f in range(weight_data.shape[3]):  # Duyệt qua từng filter
         print()
 
 # Tạo mô hình Convolution
-input_layer = tf.keras.layers.Input(shape=(32, 32, 3))
-conv_layer = tf.keras.layers.Conv2D(filters=3, kernel_size=(3, 3), padding="same", activation=None)(input_layer)
+input_layer = tf.keras.layers.Input(shape=(16, 16, 3))
+conv_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=(3, 3), padding="same", activation=None)(input_layer)
 model = tf.keras.Model(inputs=input_layer, outputs=conv_layer)
 
 # Đặt trọng số cho Conv2D layer
-model.layers[1].set_weights([weight_data.astype(np.int32), np.zeros(3, dtype=np.int32)])  # Bias = 0
+model.layers[1].set_weights([weight_data.astype(np.int32), np.zeros(1, dtype=np.int32)])  # Bias = 0
 
 # Chạy dữ liệu qua mô hình
-output_data = model.predict(input_data.reshape(1, 32, 32, 3).astype(np.int32))
-output_data = output_data.reshape(32, 32, 3)
+output_data = model.predict(input_data.reshape(1, 16, 16, 3).astype(np.int32))
+output_data = output_data.reshape(16, 16, 1)
 # output_data = output_data.flatten().astype(np.int32)  # Chuyển thành mảng 1D, giữ số nguyên 16-bit
 
 # Ghi kết quả ra file HEX
