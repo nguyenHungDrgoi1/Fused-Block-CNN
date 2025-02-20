@@ -26,28 +26,29 @@ def read_hex_file(filename, shape):
 def write_hex_file(filename, data):
     H, W, C = data.shape
     with open(filename, "w") as file:
-        for h in range(H):  # Duyệt theo hàng
-            for w in range(W):  # Duyệt theo cột
-                int_value = int(round(data[h, w, 0]))  # Chuyển float thành int (chỉ lấy channel đầu tiên)
-                hex_value = int_value & 0xFF  # Giữ lại 8 bit thấp nhất
-                file.write(f"{hex_value:02x}\n")  # Định dạng 2 ký tự HEX
+        for c in range(C):  # Duyệt qua từng channel
+            for h in range(H):  # Duyệt theo hàng
+                for w in range(W):  # Duyệt theo cột
+                    int_value = int(round(data[h, w, c]))  # Chuyển float thành int
+                    hex_value = int_value & 0xFF  # Giữ lại 8 bit thấp nhất
+                    file.write(f"{hex_value:02x}\n")  # Định dạng 2 ký tự HEX
 
 
-input_feature_height = 16
-input_feature_width = 16
+input_feature_height = 32
+input_feature_width = 32
 input_feature_channel = 3
 weight_height = 3
 weight_width = 3
 weight_channel = input_feature_channel
 weight_filter = 1
-output_feature_height = 16
-output_feature_width = 16
+output_feature_height = 32
+output_feature_width = 32
 output_feature_channel = weight_filter
 
 # Đường dẫn file
-input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_16x16x3.hex"
+input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_32x32x3.hex"
 weight_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3x3.hex"
-output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output_16x16x1.hex"
+output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output_32x32x1.hex"
 
 # Đọc dữ liệu đầu vào
 input_data = read_hex_file(input_file, (input_feature_height, input_feature_width, input_feature_channel))
@@ -59,11 +60,11 @@ weight_data_flat = read_hex_file(weight_file, (weight_height, weight_width, weig
 weight_data = weight_data_flat.reshape(weight_height, weight_width, weight_channel, weight_filter)
 
 # In kiểm tra kernel
-print("Kernel đọc từ file:")
-for c in range(3):  # Duyệt qua từng channel
-    print(f"Channel {c}:")
-    print(weight_data[:, :, c, 0])  # Hiển thị ma trận 3x3 của channel c
-    print()
+# print("Kernel đọc từ file:")
+# for c in range(3):  # Duyệt qua từng channel
+#     print(f"Channel {c}:")
+#     print(weight_data[:, :, c, 0])  # Hiển thị ma trận 3x3 của channel c
+#     print()
 
 # Tạo mô hình Convolution với 1 filter
 input_layer = tf.keras.layers.Input(shape=(input_feature_height, input_feature_width, input_feature_channel))
