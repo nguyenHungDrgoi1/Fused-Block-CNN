@@ -142,8 +142,8 @@ int main() {
     }
 
     // Đọc dữ liệu từ file
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_32x32x3.hex", input_data, input_size);
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3x3.hex", kernel_data, kernel_size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input.hex", input_data, input_size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight.hex", kernel_data, kernel_size);
 
     add_padding_1d(input_data, input_height, input_width, input_channels, padding, 0, input_data_padded);
 
@@ -162,8 +162,8 @@ int main() {
 
     // Ghi kết quả ra file
     //write_hex_file("output.hex", output_data, output_size);
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_32x32x3_DUT.hex", input_data_padded, input_size_padded);
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_3x3x3_DUT.hex", weight_used, weight_used_size);
+    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_padding.hex", input_data_padded, input_size_padded);
+    //write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight.hex", weight_used, weight_used_size);
 
     printf("Kết quả đã ghi vào output.hex\n");
     printf("Dữ liệu sau khi thêm padding:\n");

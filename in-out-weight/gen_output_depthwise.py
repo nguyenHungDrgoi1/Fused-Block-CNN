@@ -40,15 +40,15 @@ input_feature_channel = 3
 weight_height = 3
 weight_width = 3
 weight_channel = input_feature_channel
-weight_filter = 1
+weight_filter = 3
 output_feature_height = 32
 output_feature_width = 32
 output_feature_channel = weight_filter
 
 # Đường dẫn file
-input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_new.hex"
-weight_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_new.hex"
-output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output_32x32x1.hex"
+input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input.hex"
+weight_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight.hex"
+output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output.hex"
 
 # Đọc dữ liệu đầu vào
 input_data = read_hex_file(input_file, (input_feature_height, input_feature_width, input_feature_channel))
@@ -57,7 +57,7 @@ input_data = read_hex_file(input_file, (input_feature_height, input_feature_widt
 weight_data_flat = read_hex_file(weight_file, (weight_height, weight_width, weight_channel * weight_filter))
 
 # Reshape lại thành (3,3,3,1) theo thứ tự hàng → cột → channel → filter
-weight_data = weight_data_flat.reshape(weight_height, weight_width, weight_channel, weight_filter)
+weight_data = weight_data_flat.reshape(weight_height, weight_width, weight_channel, weight_filter).transpose(0,1,3,2)
 
 # In kiểm tra kernel
 # print("Kernel đọc từ file:")

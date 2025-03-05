@@ -86,7 +86,7 @@ void add_padding_1d(const int16_t *flat_matrix, int H, int W, int C, int P, int1
 int main() {
     int H = 32, W = 32, C = 3;  // Kích thước input (4x4, 1 channel)
     int K = 3;  // Kernel 3x3
-    int F = 1;
+    int F = 3; // filter
     int P = 1;
     int size = H * W * C;
     int size_padded = (H + 2 * P) * (W + 2 * P) * C;
@@ -104,14 +104,14 @@ int main() {
     }
 
     // Đọc dữ liệu từ file
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_new.hex", input_data, size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input.hex", input_data, size);
     // padding 1D
     add_padding_1d(input_data, H, W, C, P, 0, input_data_padded);
     // Trích xuất cửa sổ 3x3
     extract_patches_1d(input_data_padded, H + 2 * P, W + 2 * P, C, K,F, output_data);
 
     // Ghi kết quả ra file
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_DUT_new.hex", output_data, output_size);
+    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_DUT.hex", output_data, output_size);
 
     printf("Dữ liệu đã ghi vào output.hex\n");
 
