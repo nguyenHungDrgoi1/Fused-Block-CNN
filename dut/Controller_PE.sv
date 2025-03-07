@@ -3,14 +3,17 @@ module Controller_PE(
     input reset_n, 
     input en,
     input valid,
-    input [12:0] start_addr,
+    input [19:0] start_addr,
     //address
-    output [12:0]  addr
+    output [19:0]  addr,
+    input [8:0] end_OFM,
+    input [8:0] change_row,
+    input [8:0] change_channel
 );
     //define addr signal
-    logic [12:0] base_addr_d;
-    logic [12:0] base_addr_q;
-    logic signed [12:0] add_value;
+    logic [19:0] base_addr_d;
+    logic [19:0] base_addr_q;
+    logic signed [19:0] add_value;
     //signal for counter
     logic count_3; // co the thay 3 bang parameter
     logic count_9;
@@ -53,10 +56,10 @@ module Controller_PE(
     //Mux
     always_comb begin
         case({default_set,count_3,count_9,count_45})
-            4'b1000 : add_value = 1;
-            4'b0100 : add_value = 5;
-            4'b0110 : add_value = 33;
-            4'b0111 : add_value = -190;
+            4'b1000 : add_value = 1;  
+            4'b0100 : add_value = 5; //change_row
+            4'b0110 : add_value = 33; //change_channel
+            4'b0111 : add_value = -190; //end_OFM
             default : add_value = 0;
         endcase
     end

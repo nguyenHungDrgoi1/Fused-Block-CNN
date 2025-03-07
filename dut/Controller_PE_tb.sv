@@ -6,7 +6,7 @@ module Controller_PE_tb;
     reg reset_n;
     reg en;
     reg valid;
-    wire [12:0] addr;
+    wire [19:0] addr;
 
     // Instantiate the Controller_PE module
     Controller_PE uut (

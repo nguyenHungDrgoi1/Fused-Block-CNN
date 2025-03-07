@@ -4,7 +4,10 @@ module Controller(
     input en,
     input [15:0] valid, // 16-bit valid signal
     output [12:0] addr_1, addr_2, addr_3, addr_4, addr_5, addr_6, addr_7, addr_8,
-    output [12:0] addr_9, addr_10, addr_11, addr_12, addr_13, addr_14, addr_15, addr_16
+    output [12:0] addr_9, addr_10, addr_11, addr_12, addr_13, addr_14, addr_15, addr_16,
+    input [8:0] end_OFM,
+    input [8:0] change_row,
+    input [8:0] change_channel
 );
     // Declare wires to connect each Controller_PE instance
     wire [12:0] addr_1_pe, addr_2_pe, addr_3_pe, addr_4_pe, addr_5_pe, addr_6_pe, addr_7_pe, addr_8_pe;
@@ -17,6 +20,9 @@ module Controller(
         .en(en),
         .valid(valid[0]),
         .start_addr(0),
+        .change_row(change_row),
+        .change_channel(change_channel),
+        .end_OFM(end_OFM),
         .addr(addr_1_pe)
     );
 
