@@ -32,6 +32,9 @@ module Controller(
         .en(en),
         .valid(valid[1]),
         .start_addr(1),
+        .change_row(change_row),
+        .change_channel(change_channel),
+        .end_OFM(end_OFM),
         .addr(addr_2_pe)
     );
 
@@ -41,6 +44,9 @@ module Controller(
         .en(en),
         .valid(valid[2]),
         .start_addr(2),
+        .change_row(change_row),
+        .change_channel(change_channel),
+        .end_OFM(end_OFM),
         .addr(addr_3_pe)
     );
 
@@ -50,6 +56,9 @@ module Controller(
         .en(en),
         .valid(valid[3]),
         .start_addr(3),
+        .change_row(change_row),
+        .change_channel(change_channel),
+        .end_OFM(end_OFM),
         .addr(addr_4_pe)
     );
 
@@ -59,6 +68,9 @@ module Controller(
         .en(en),
         .valid(valid[4]),
         .start_addr(4),
+        .change_row(change_row),
+        .change_channel(change_channel),
+        .end_OFM(end_OFM),
         .addr(addr_5_pe)
     );
 
@@ -68,6 +80,9 @@ module Controller(
         .en(en),
         .valid(valid[5]),
         .start_addr(7),
+        .change_row(change_row),
+        .change_channel(change_channel),
+        .end_OFM(end_OFM),
         .addr(addr_6_pe)
     );
 
