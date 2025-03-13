@@ -4,22 +4,22 @@ module PE_cluster_tb;
     // Khai báo tín hiệu testbench
     reg clk;
     reg reset_n;
-    reg [31:0] Weigh [0:15];
+    reg [31:0] Weight [0:15];
     reg [31:0] IFM;
     reg [15:0] PE_en;
     reg [15:0] PE_finish;
     
     wire [7:0] OFM [0:15];
     wire [15:0] valid;
-
+            int i;
     // Instance của DUT (Device Under Test)
     PE_cluster uut (
         .clk(clk),
         .reset_n(reset_n),
-        .Weigh_0(Weigh[0]), .Weigh_1(Weigh[1]), .Weigh_2(Weigh[2]), .Weigh_3(Weigh[3]),
-        .Weigh_4(Weigh[4]), .Weigh_5(Weigh[5]), .Weigh_6(Weigh[6]), .Weigh_7(Weigh[7]),
-        .Weigh_8(Weigh[8]), .Weigh_9(Weigh[9]), .Weigh_10(Weigh[10]), .Weigh_11(Weigh[11]),
-        .Weigh_12(Weigh[12]), .Weigh_13(Weigh[13]), .Weigh_14(Weigh[14]), .Weigh_15(Weigh[15]),
+        .Weight_0(Weight[0]), .Weight_1(Weight[1]), .Weight_2(Weight[2]), .Weight_3(Weight[3]),
+        .Weight_4(Weight[4]), .Weight_5(Weight[5]), .Weight_6(Weight[6]), .Weight_7(Weight[7]),
+        .Weight_8(Weight[8]), .Weight_9(Weight[9]), .Weight_10(Weight[10]), .Weight_11(Weight[11]),
+        .Weight_12(Weight[12]), .Weight_13(Weight[13]), .Weight_14(Weight[14]), .Weight_15(Weight[15]),
         .IFM(IFM),
         .PE_en(PE_en),
         .PE_finish(PE_finish),
@@ -39,33 +39,19 @@ module PE_cluster_tb;
         clk = 0;
         reset_n = 0;
         PE_en = 16'hFFFF;
+        #10;
+        PE_en = 16'h0;
+        reset_n = 1;
         PE_finish = 16'h0000;
         IFM = 32'h01020304;
-        
-        // Khởi tạo trọng số
-        integer i;
-        for (i = 0; i < 16; i = i + 1) begin
-            Weigh[i] = 32'h11111111 * i;
+        for(i = 0 ; i< 16 ; i++) begin
+            Weight[i] = i;
         end
-
-        // Reset hệ thống
-        #10 reset_n = 1;
-
-        // Chạy thử nghiệm với một số trường hợp
-        #20;
-        IFM = 32'h05060708;
-        PE_en = 16'hAAAA; // Chỉ kích hoạt một số PE
-        #20;
-        IFM = 32'h0A0B0C0D;
-        PE_en = 16'h5555;
-        #20;
-        PE_finish = 16'hFFFF; // Đánh dấu hoàn thành
-
-        // Kết thúc mô phỏng
-        #50;
-        $stop;
+        #10000;
+    $finish();
+        //int i;
+        // Khởi tạo trọng số
     end
-
     // Monitor các tín hiệu đầu ra
     initial begin
         $monitor("Time: %t | OFM: %h %h %h %h %h %h %h %h %h %h %h %h %h %h %h %h", 

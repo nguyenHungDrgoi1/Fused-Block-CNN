@@ -28,7 +28,7 @@ module Quad_PE(
 
     assign add1 = mul1 + mul2;
     assign add2 = mul4 + mul3;
-    assign add3 = add1 + add2
+    assign add3 = add1 + add2;
 
 
     assign sum_d = add3 + mul_sum;
