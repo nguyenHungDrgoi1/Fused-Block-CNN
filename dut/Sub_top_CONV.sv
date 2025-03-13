@@ -3,7 +3,24 @@ module Sub_top_CONV(
     input reset,
     input [6:0] addr,
     input we,
-    input [63:0] data_in,
+    input [63:0] data_in_IFM,
+    input [63:0] data_in_Weight_0,
+    input [63:0] data_in_Weight_1,
+    input [63:0] data_in_Weight_2,
+    input [63:0] data_in_Weight_3,
+    input [63:0] data_in_Weight_4,
+    input [63:0] data_in_Weight_5,
+    input [63:0] data_in_Weight_6,
+    input [63:0] data_in_Weight_7,
+    input [63:0] data_in_Weight_8,
+    input [63:0] data_in_Weight_9,
+    input [63:0] data_in_Weight_10,
+    input [63:0] data_in_Weight_11,
+    input [63:0] data_in_Weight_12,
+    input [63:0] data_in_Weight_13,
+    input [63:0] data_in_Weight_14,
+    input [63:0] data_in_Weight_15,
+
     output [31:0] OFM,
     
     input  wire  [15:0]    PE_en,      
@@ -65,7 +82,7 @@ module Sub_top_CONV(
         .rd_addr(addr),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_IFM),
         .data_out(IFM_data)
     );
     BRAM IFM_Weight_0(
@@ -73,7 +90,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w0),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_0),
         .data_out(Weight_0)
     );
     BRAM IFM_Weight_1(
@@ -81,7 +98,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w1),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_1),
         .data_out(Weight_1)
     );
     BRAM IFM_Weight_2(
@@ -89,7 +106,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w2),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_2),
         .data_out(Weight_2)
     );
     BRAM IFM_Weight_3(
@@ -97,7 +114,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w3),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_3),
         .data_out(Weight_3)
     );
     BRAM IFM_Weight_4(
@@ -105,7 +122,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w4),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_4),
         .data_out(Weight_4)
     );
     BRAM IFM_Weight_5(
@@ -113,7 +130,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w5),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_5),
         .data_out(Weight_5)
     );
     BRAM IFM_Weight_6(
@@ -121,7 +138,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w6),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_6),
         .data_out(Weight_6)
     );
     BRAM IFM_Weight_7(
@@ -129,7 +146,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w7),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_7),
         .data_out(Weight_7)
     );
     BRAM IFM_Weight_8(
@@ -137,7 +154,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w8),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_8),
         .data_out(Weight_8)
     );
     BRAM IFM_Weight_9(
@@ -145,7 +162,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w9),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_9),
         .data_out(Weight_9)
     );
     BRAM IFM_Weight_10(
@@ -153,7 +170,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w10),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_10),
         .data_out(Weight_10)
     );
     BRAM IFM_Weight_11(
@@ -161,7 +178,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w11),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_11),
         .data_out(Weight_11)
     );
     BRAM IFM_Weight_12(
@@ -169,7 +186,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w12),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_12),
         .data_out(Weight_12)
     );
     BRAM IFM_Weight_13(
@@ -177,7 +194,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w13),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_13),
         .data_out(Weight_13)
     );
     BRAM IFM_Weight_14(
@@ -185,7 +202,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w14),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_14),
         .data_out(Weight_14)
     );
     BRAM IFM_Weight_15(
@@ -193,7 +210,7 @@ module Sub_top_CONV(
         .rd_addr(addr_w15),
         .wr_addr(addr),
         .we(we),
-        .data_in(data_in),
+        .data_in(data_in_Weight_15),
         .data_out(Weight_15)
     );
     
