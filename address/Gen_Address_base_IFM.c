@@ -10,10 +10,10 @@ int main(){
 
     const int PE = 16;
 
-    //int tile = kernel_filter / PE;
+    int tile = kernel_filter / PE;
     int count = 1;
     int add_base = 0;
-    int add_file [30000];
+    int add_file[30000];
     
     FILE *fp = fopen("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/addr_IFM.txt", "w");
     if (fp == NULL) {
@@ -21,11 +21,19 @@ int main(){
         return 1;
     }
     
-    for (int i = 0; i < 30000; i++){
+    int pattern[36];  // Mảng lưu 36 địa chỉ đầu tiên để lặp lại
+    int pattern_index = 0;
+    
+    for (int i = 0; i < 30000; i++) {
         add_file[i] = add_base;
-        fprintf(fp, "%X\n", add_file[i]);
-        
-        if (count != 0 && count % ((IFM_channel * kernel_width * kernel_width) / 4) == 0 ){
+
+        // Lưu 36 giá trị đầu tiên vào pattern
+        if (pattern_index < 36) {
+            pattern[pattern_index] = add_base;
+            pattern_index++;
+        }
+
+        if (count != 0 && count % ((IFM_channel * kernel_width * kernel_width) / 4) == 0) {
             add_base = add_base - (kernel_width * IFM_height - IFM_height + 1) * IFM_channel - 12;
         }
         else if (count != 0 && count % ((IFM_channel * kernel_width ) / 4) == 0 ) {
@@ -35,10 +43,20 @@ int main(){
             add_base = add_base + 4;
         }
         count++;
+
+        // Nếu đã đủ 36 dòng, thực hiện ghi lặp lại pattern `tile` lần
+        if (pattern_index == 36) {
+            for (int t = 0; t < tile; t++) {
+                for (int j = 0; j < 36; j++) {
+                    fprintf(fp, "%.4X\n", pattern[j]);
+                }
+            }
+            pattern_index = 0; // Reset để lấy 36 dòng tiếp theo
+        }
     }
     
     fclose(fp);
-    printf("Address data written to address_output.txt\n");
+    printf("Address data written successfully!\n");
     
     return 0;
 }
