@@ -32,8 +32,10 @@ int main(){
             pattern[pattern_index] = add_base;
             pattern_index++;
         }
-
-        if (count != 0 && count % ((IFM_channel * kernel_width * kernel_width) / 4) == 0) {
+        if (count != 0 && count % (((IFM_width - 2) * IFM_channel * kernel_width * kernel_width) / 4) == 0){
+            add_base = add_base + (kernel_width - 1) * IFM_channel - (kernel_width * IFM_height - IFM_height + 1) * IFM_channel - 12;
+        }
+        else if (count != 0 && count % ((IFM_channel * kernel_width * kernel_width) / 4) == 0) {
             add_base = add_base - (kernel_width * IFM_height - IFM_height + 1) * IFM_channel - 12;
         }
         else if (count != 0 && count % ((IFM_channel * kernel_width ) / 4) == 0 ) {
