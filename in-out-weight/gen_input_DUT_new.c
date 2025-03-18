@@ -30,7 +30,7 @@ void write_hex_file(const char *filename, int16_t *data, int size) {
     }
 
     for (int i = 0; i < size; i++) {
-        fprintf(file, "%02hx\n", data[i]); // Ghi HEX 4 chữ số
+        fprintf(file, "%02hX\n", data[i]); // Ghi HEX 4 chữ số
     }
 
     fclose(file);
@@ -84,7 +84,7 @@ void add_padding_1d(const int16_t *flat_matrix, int H, int W, int C, int P, int1
     }
 }
 int main() {
-    int H = 32, W = 32, C = 3;  // Kích thước input (4x4, 1 channel)
+    int H = 56, W = 56, C = 16;  // Kích thước input (4x4, 1 channel)
     int K = 3;  // Kernel 3x3
     int F = 3; // filter
     int P = 1;
@@ -104,14 +104,14 @@ int main() {
     }
 
     // Đọc dữ liệu từ file
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input.hex", input_data, size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/input_56x56x16.hex", input_data, size);
     // padding 1D
     add_padding_1d(input_data, H, W, C, P, 0, input_data_padded);
     // Trích xuất cửa sổ 3x3
-    extract_patches_1d(input_data_padded, H + 2 * P, W + 2 * P, C, K,F, output_data);
+    // extract_patches_1d(input_data_padded, H + 2 * P, W + 2 * P, C, K,F, output_data);
 
     // Ghi kết quả ra file
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_DUT.hex", output_data, output_size);
+    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/input_56x56x16_pad.hex", input_data_padded, size_padded);
 
     printf("Dữ liệu đã ghi vào output.hex\n");
 

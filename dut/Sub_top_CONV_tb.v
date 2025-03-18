@@ -31,23 +31,23 @@ module Sub_top_CONV_tb;
     wire [7:0] OFM_out[15:0];
     
     integer i;
-    reg [63:0] input_data_mem [0:50175]; // BRAM input data
-    reg [63:0] input_data_mem1 [0:287];
-    reg [63:0] input_data_mem2 [0:287];
-    reg [63:0] input_data_mem3 [0:287];
-    reg [63:0] input_data_mem4 [0:287];
-    reg [63:0] input_data_mem5 [0:287];
-    reg [63:0] input_data_mem6 [0:287];
-    reg [63:0] input_data_mem7 [0:287];
-    reg [63:0] input_data_mem8 [0:287];
-    reg [63:0] input_data_mem9 [0:287];
-    reg [63:0] input_data_mem10 [0:287];
-    reg [63:0] input_data_mem11 [0:287];
-    reg [63:0] input_data_mem12 [0:287];
-    reg [63:0] input_data_mem13 [0:287];
-    reg [63:0] input_data_mem14 [0:287];
-    reg [63:0] input_data_mem15 [0:287];
-    reg [63:0] input_data_mem16 [0:287];
+    reg [7:0] input_data_mem [0:53823]; // BRAM input data
+    reg [7:0] input_data_mem1 [0:287];
+    reg [7:0] input_data_mem2 [0:287];
+    reg [7:0] input_data_mem3 [0:287];
+    reg [7:0] input_data_mem4 [0:287];
+    reg [7:0] input_data_mem5 [0:287];
+    reg [7:0] input_data_mem6 [0:287];
+    reg [7:0] input_data_mem7 [0:287];
+    reg [7:0] input_data_mem8 [0:287];
+    reg [7:0] input_data_mem9 [0:287];
+    reg [7:0] input_data_mem10 [0:287];
+    reg [7:0] input_data_mem11 [0:287];
+    reg [7:0] input_data_mem12 [0:287];
+    reg [7:0] input_data_mem13 [0:287];
+    reg [7:0] input_data_mem14 [0:287];
+    reg [7:0] input_data_mem15 [0:287];
+    reg [7:0] input_data_mem16 [0:287];
     Sub_top_CONV uut (
         .clk(clk),
         .reset(reset),
@@ -113,51 +113,50 @@ module Sub_top_CONV_tb;
         #20 reset = 0;
         
         // Load input data from file (example: input_data.hex)
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/input_56x56x16.hex", input_data_mem);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_0.hex", input_data_mem1);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_1.hex", input_data_mem2);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_2.hex", input_data_mem3);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_3.hex", input_data_mem4);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_4.hex", input_data_mem5);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_5.hex", input_data_mem6);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_6.hex", input_data_mem7);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_7.hex", input_data_mem8);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_8.hex", input_data_mem9);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_9.hex", input_data_mem10);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_10.hex", input_data_mem11);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_11.hex", input_data_mem12);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_12.hex", input_data_mem13);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_13.hex", input_data_mem14);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_14.hex", input_data_mem15);
-        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/IFM, Weight/weight_15.hex", input_data_mem16);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE0.hex", input_data_mem1);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE1.hex", input_data_mem2);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE2.hex", input_data_mem3);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE3.hex", input_data_mem4);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE4.hex", input_data_mem5);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE5.hex", input_data_mem6);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE6.hex", input_data_mem7);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE7.hex", input_data_mem8);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE8.hex", input_data_mem9);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE9.hex", input_data_mem10);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE10.hex", input_data_mem11);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE11.hex", input_data_mem12);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE12.hex", input_data_mem13);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE13.hex", input_data_mem14);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE14.hex", input_data_mem15);
+        $readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE15.hex", input_data_mem16);
 
         
         
         // Write data into BRAM
-        for (i = 0; i < 50175; i = i + 1) begin
-            addr = i;
-            data_in_IFM = input_data_mem[i];
-            data_in_Weight_0 = input_data_mem1[i];
-            data_in_Weight_1 = input_data_mem2[i];
-            data_in_Weight_2= input_data_mem3[i];
-            data_in_Weight_3 = input_data_mem4[i];
-            data_in_Weight_4 = input_data_mem5[i];
-            data_in_Weight_5= input_data_mem6[i];
-            data_in_Weight_6= input_data_mem7[i];
-            data_in_Weight_7= input_data_mem8[i];
-            data_in_Weight_8= input_data_mem9[i];
-            data_in_Weight_9= input_data_mem10[i];
-            data_in_Weight_10= input_data_mem11[i];
-            data_in_Weight_11= input_data_mem12[i];
-            data_in_Weight_12= input_data_mem13[i];
-            data_in_Weight_13= input_data_mem14[i];
-            data_in_Weight_14= input_data_mem15[i];
-            data_in_Weight_15= input_data_mem16[i];
+        for (i = 0; i < 50176; i = i + 4) begin
+            addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
+            data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
+            data_in_Weight_0 = {input_data_mem1[i], input_data_mem1[i+1], input_data_mem1[i+2], input_data_mem1[i+3]};
+            data_in_Weight_1 = {input_data_mem2[i], input_data_mem2[i+1], input_data_mem2[i+2], input_data_mem2[i+3]};
+            data_in_Weight_2 = {input_data_mem3[i], input_data_mem3[i+1], input_data_mem3[i+2], input_data_mem3[i+3]};
+            data_in_Weight_3 = {input_data_mem4[i], input_data_mem4[i+1], input_data_mem4[i+2], input_data_mem4[i+3]};
+            data_in_Weight_4 = {input_data_mem5[i], input_data_mem5[i+1], input_data_mem5[i+2], input_data_mem5[i+3]};
+            data_in_Weight_5 = {input_data_mem6[i], input_data_mem6[i+1], input_data_mem6[i+2], input_data_mem6[i+3]};
+            data_in_Weight_6 = {input_data_mem7[i], input_data_mem7[i+1], input_data_mem7[i+2], input_data_mem7[i+3]};
+            data_in_Weight_7 = {input_data_mem8[i], input_data_mem8[i+1], input_data_mem8[i+2], input_data_mem8[i+3]};
+            data_in_Weight_8 = {input_data_mem9[i], input_data_mem9[i+1], input_data_mem9[i+2], input_data_mem9[i+3]};
+            data_in_Weight_9 = {input_data_mem10[i], input_data_mem10[i+1], input_data_mem10[i+2], input_data_mem10[i+3]};
+            data_in_Weight_10 = {input_data_mem11[i], input_data_mem11[i+1], input_data_mem11[i+2], input_data_mem11[i+3]};
+            data_in_Weight_11 = {input_data_mem12[i], input_data_mem12[i+1], input_data_mem12[i+2], input_data_mem12[i+3]};
+            data_in_Weight_12 = {input_data_mem13[i], input_data_mem13[i+1], input_data_mem13[i+2], input_data_mem13[i+3]};
+            data_in_Weight_13 = {input_data_mem14[i], input_data_mem14[i+1], input_data_mem14[i+2], input_data_mem14[i+3]};
+            data_in_Weight_14 = {input_data_mem15[i], input_data_mem15[i+1], input_data_mem15[i+2], input_data_mem15[i+3]};
+            data_in_Weight_15 = {input_data_mem16[i], input_data_mem16[i+1], input_data_mem16[i+2], input_data_mem16[i+3]};
             we = 1;
             #10;
         end
     
-        
         we = 0;
         #50;
         
