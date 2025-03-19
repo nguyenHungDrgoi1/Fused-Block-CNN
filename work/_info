@@ -1,0 +1,191 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/manhung/Hung/Fused-Block-CNN
+T_opt
+!s110 1742356222
+V75A3iKU;N2:kC6]J3BJal3
+Z1 04 15 4 work Sub_top_CONV_tb fast 0
+=3-5c619920e7f1-67da3efe-5f934-cac2
+Z2 o-quiet -auto_acc_if_foreign -work work +acc
+Z3 tCvgOpt 0
+n@_opt
+Z4 OL;O;10.7c;67
+R0
+T_opt1
+!s110 1742374843
+VjQ6e9=9io?nUk3SWMn0z82
+R1
+=27-5c619920e7f1-67da87bb-715aa-686b
+R2
+R3
+n@_opt1
+R4
+vaddress_generator
+Z5 !s110 1742374841
+!i10b 1
+!s100 DC>V26b>nM2aNkc?BL>gk0
+I[ljLji9B_gfnWD=ki<lHd3
+Z6 VDg1SIo80bB@j0V0VzS_@n1
+Z7 d/home/manhung/Hung/CNN/Fused-Block-CNN
+w1742371359
+8/home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v
+F/home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v
+L0 1
+Z8 OL;L;10.7c;67
+r1
+!s85 0
+31
+Z9 !s108 1742374841.000000
+!s107 /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v|
+!i113 0
+Z10 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R3
+vBRAM
+R5
+!i10b 1
+!s100 KYgK8KZfM3MXR[zk9oC?;3
+Ie^J7:F^F]gKEhJAGCA48I2
+R6
+R7
+w1742371948
+8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v
+F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v
+L0 1
+R8
+r1
+!s85 0
+31
+R9
+!s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v|
+!i113 0
+R10
+R3
+n@b@r@a@m
+vBRAM_IFM
+R5
+!i10b 1
+!s100 l@h@GYRj_6i>LcQcD]83i2
+IVYkN]CA:BP:bCb02d08eU0
+R6
+R7
+w1742372002
+8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v
+F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v
+L0 1
+R8
+r1
+!s85 0
+31
+R9
+!s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v|
+!i113 0
+R10
+R3
+n@b@r@a@m_@i@f@m
+vPE_cluster
+Z11 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
+R5
+!i10b 1
+!s100 AzbQVdKV7:C@Kn@kc<_hb0
+I7TJAX:GehXnn=b@9PI[_:2
+R6
+!s105 PE_Cluster_sv_unit
+S1
+R7
+Z12 w1742355346
+8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv
+F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv
+L0 1
+R8
+r1
+!s85 0
+31
+R9
+!s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv|
+!i113 0
+Z13 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R3
+n@p@e_cluster
+vQuad_PE
+R11
+R5
+!i10b 1
+!s100 bTH8Y_eZ;zW_AYman8[N40
+Im67Ea>mFClR<^dZLSl@I@2
+R6
+!s105 Quad_PE_sv_unit
+S1
+R7
+R12
+8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv
+F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv
+L0 1
+R8
+r1
+!s85 0
+31
+R9
+!s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv|
+!i113 0
+R13
+R3
+n@quad_@p@e
+vSub_top_CONV
+R11
+R5
+!i10b 1
+!s100 [HVQON2g>FT5_BU7?g`gW1
+I5BB9kW[=mNNjjiP;ML<`B0
+R6
+!s105 Sub_top_CONV_sv_unit
+S1
+R7
+w1742373056
+8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv
+F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv
+L0 1
+R8
+r1
+!s85 0
+31
+R9
+!s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv|
+!i113 0
+R13
+R3
+n@sub_top_@c@o@n@v
+vSub_top_CONV_tb
+R5
+!i10b 1
+!s100 39SbI4cZk=R]ML9:93[S11
+I1igiVMSB;WWFV_M6:z6aG2
+R6
+R7
+w1742374838
+8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.v
+F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.v
+L0 5
+R8
+r1
+!s85 0
+31
+R9
+!s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.v|
+!i113 0
+R10
+R3
+n@sub_top_@c@o@n@v_tb

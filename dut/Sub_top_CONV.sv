@@ -1,46 +1,36 @@
 module Sub_top_CONV(
     input clk,
     input reset,
-    input [6:0] addr,
-    input we,
-    input [63:0] data_in_IFM,
-    input [63:0] data_in_Weight_0,
-    input [63:0] data_in_Weight_1,
-    input [63:0] data_in_Weight_2,
-    input [63:0] data_in_Weight_3,
-    input [63:0] data_in_Weight_4,
-    input [63:0] data_in_Weight_5,
-    input [63:0] data_in_Weight_6,
-    input [63:0] data_in_Weight_7,
-    input [63:0] data_in_Weight_8,
-    input [63:0] data_in_Weight_9,
-    input [63:0] data_in_Weight_10,
-    input [63:0] data_in_Weight_11,
-    input [63:0] data_in_Weight_12,
-    input [63:0] data_in_Weight_13,
-    input [63:0] data_in_Weight_14,
-    input [63:0] data_in_Weight_15,
+    input [31:0] addr,
+    input we_IFM,
+    input we_weight,
+    input cal_start,
+    input [31:0] data_in_IFM,
+    input [31:0] data_in_Weight_0,
+    input [31:0] data_in_Weight_1,
+    input [31:0] data_in_Weight_2,
+    input [31:0] data_in_Weight_3,
+    input [31:0] data_in_Weight_4,
+    input [31:0] data_in_Weight_5,
+    input [31:0] data_in_Weight_6,
+    input [31:0] data_in_Weight_7,
+    input [31:0] data_in_Weight_8,
+    input [31:0] data_in_Weight_9,
+    input [31:0] data_in_Weight_10,
+    input [31:0] data_in_Weight_11,
+    input [31:0] data_in_Weight_12,
+    input [31:0] data_in_Weight_13,
+    input [31:0] data_in_Weight_14,
+    input [31:0] data_in_Weight_15,
+
+    //control signal 
+    input wire [15:0] PE_en,
+    input wire [15:0] PE_finish,
+    output wire [15:0] valid,
+    
 
     output [31:0] OFM,
-    
-    input  wire  [15:0]    PE_en,      
-    input  wire  [15:0]       PE_finish, 
-    input [19:0] addr_w0,
-    input [19:0] addr_w1,
-    input [19:0] addr_w2,
-    input [19:0] addr_w3,
-    input [19:0] addr_w4,
-    input [19:0] addr_w5,
-    input [19:0] addr_w6,
-    input [19:0] addr_w7,
-    input [19:0] addr_w8,
-    input [19:0] addr_w9,
-    input [19:0] addr_w10,
-    input [19:0] addr_w11,
-    input [19:0] addr_w12,
-    input [19:0] addr_w13,
-    input [19:0] addr_w14,
-    input [19:0] addr_w15,
+
 
     output wire [7:0]  OFM_0,
     output wire [7:0]  OFM_1,
@@ -60,6 +50,8 @@ module Sub_top_CONV(
     output wire [7:0]  OFM_15,
     output wire [7:0]  OFM_16
 );
+    logic [31:0] addr_IFM;
+    logic [19:0] addr_w;
     logic [31:0] IFM_data;
     logic [31:0] Weight_0;
     logic [31:0] Weight_1;
@@ -77,144 +69,149 @@ module Sub_top_CONV(
     logic [31:0] Weight_13;
     logic [31:0] Weight_14;
     logic [31:0] Weight_15;
-    BRAM IFM_BRAM(
+    BRAM_IFM IFM_BRAM(
         .clk(clk),
-        .rd_addr(addr),
+        .rd_addr(addr_IFM),
         .wr_addr(addr),
-        .we(we),
+        .we(we_IFM),
         .data_in(data_in_IFM),
         .data_out(IFM_data)
     );
     BRAM IFM_Weight_0(
         .clk(clk),
-        .rd_addr(addr_w0),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_0),
         .data_out(Weight_0)
     );
     BRAM IFM_Weight_1(
         .clk(clk),
-        .rd_addr(addr_w1),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_1),
         .data_out(Weight_1)
     );
     BRAM IFM_Weight_2(
         .clk(clk),
-        .rd_addr(addr_w2),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_2),
         .data_out(Weight_2)
     );
     BRAM IFM_Weight_3(
         .clk(clk),
-        .rd_addr(addr_w3),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_3),
         .data_out(Weight_3)
     );
     BRAM IFM_Weight_4(
         .clk(clk),
-        .rd_addr(addr_w4),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_4),
         .data_out(Weight_4)
     );
     BRAM IFM_Weight_5(
         .clk(clk),
-        .rd_addr(addr_w5),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_5),
         .data_out(Weight_5)
     );
     BRAM IFM_Weight_6(
         .clk(clk),
-        .rd_addr(addr_w6),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_6),
         .data_out(Weight_6)
     );
     BRAM IFM_Weight_7(
         .clk(clk),
-        .rd_addr(addr_w7),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_7),
         .data_out(Weight_7)
     );
     BRAM IFM_Weight_8(
         .clk(clk),
-        .rd_addr(addr_w8),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_8),
         .data_out(Weight_8)
     );
     BRAM IFM_Weight_9(
         .clk(clk),
-        .rd_addr(addr_w9),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_9),
         .data_out(Weight_9)
     );
     BRAM IFM_Weight_10(
         .clk(clk),
-        .rd_addr(addr_w10),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_10),
         .data_out(Weight_10)
     );
     BRAM IFM_Weight_11(
         .clk(clk),
-        .rd_addr(addr_w11),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_11),
         .data_out(Weight_11)
     );
     BRAM IFM_Weight_12(
         .clk(clk),
-        .rd_addr(addr_w12),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_12),
         .data_out(Weight_12)
     );
     BRAM IFM_Weight_13(
         .clk(clk),
-        .rd_addr(addr_w13),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_13),
         .data_out(Weight_13)
     );
     BRAM IFM_Weight_14(
         .clk(clk),
-        .rd_addr(addr_w14),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_14),
         .data_out(Weight_14)
     );
     BRAM IFM_Weight_15(
         .clk(clk),
-        .rd_addr(addr_w15),
+        .rd_addr(addr_w),
         .wr_addr(addr),
-        .we(we),
+        .we(we_weight),
         .data_in(data_in_Weight_15),
         .data_out(Weight_15)
     );
     
     PE_cluster cluster(
+        .clk(clk),
+        .reset_n(reset),
+        .PE_en(PE_en),
+        .PE_finish(PE_finish),
+        .valid(valid),
         .IFM(IFM_data),
         .Weight_0(Weight_0),
         .Weight_1(Weight_1),
@@ -251,4 +248,18 @@ module Sub_top_CONV(
 
     );
     
+    address_generator addr_gen(
+        .clk(clk),
+        .rst_n(reset),
+        .KERNEL_W(3),
+        .OFM_W(56),
+        .OFM_C(32),
+        .IFM_C(16),
+        .IFM_W(58),
+        .stride(1),
+        .ready(cal_start),
+        .addr_in(0),
+        .req_addr_out_filter(addr_w),
+        .req_addr_out_ifm(addr_IFM)
+    );
 endmodule
