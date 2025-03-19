@@ -112,7 +112,7 @@ void write_hex_file(const char *filename, int16_t *data, int size) {
 int main() {
     // Kích thước đầu vào
     int input_width = 32, input_height = 32, input_channels = 3;
-    int kernel_width = 3, kernel_height = 3, output_channels = 3;
+    int kernel_width = 3, kernel_height = 3, output_channels = 1;
     int stride_width = 1, stride_height = 1;
     int padding = 1;
     int input_width_padded = input_width + 2 * padding;
@@ -126,7 +126,7 @@ int main() {
     output_size *= (input_height - kernel_height + 2 * padding) / stride_height + 1;
     output_size *= output_channels;
 
-    int ifm_used_size = output_size * kernel_width * kernel_height * input_channels;
+    int ifm_used_size = input_size_padded;
     int weight_used_size = ifm_used_size; 
     // Cấp phát bộ nhớ
     int16_t *input_data = (int16_t *)malloc(input_size * sizeof(int16_t));
@@ -142,28 +142,28 @@ int main() {
     }
 
     // Đọc dữ liệu từ file
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_depthwise.hex", input_data, input_size);
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_depthwise.hex", kernel_data, kernel_size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input.hex", input_data, input_size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight.hex", kernel_data, kernel_size);
 
     add_padding_1d(input_data, input_height, input_width, input_channels, padding, 0, input_data_padded);
 
     // Chạy tích chập
-    conv2d(
-        input_data_padded,
-        kernel_data,
-        NULL,  // Không dùng bias
-        output_data,
-        ifm_used,
-        weight_used,
-        input_width_padded, input_height_padded, input_channels,
-        kernel_width, kernel_height, output_channels,
-        stride_width, stride_height, 0
-    );
+    // conv2d(
+    //     input_data_padded,
+    //     kernel_data,
+    //     NULL,  // Không dùng bias
+    //     output_data,
+    //     ifm_used,
+    //     weight_used,
+    //     input_width_padded, input_height_padded, input_channels,
+    //     kernel_width, kernel_height, output_channels,
+    //     stride_width, stride_height, 0
+    // );
 
     // Ghi kết quả ra file
     //write_hex_file("output.hex", output_data, output_size);
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_DUT.hex", ifm_used, ifm_used_size);
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_DUT.hex", weight_used, weight_used_size);
+    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_padding.hex", input_data_padded, input_size_padded);
+    //write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight.hex", weight_used, weight_used_size);
 
     printf("Kết quả đã ghi vào output.hex\n");
     printf("Dữ liệu sau khi thêm padding:\n");
