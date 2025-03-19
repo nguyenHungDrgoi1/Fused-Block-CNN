@@ -34,21 +34,21 @@ def write_hex_file(filename, data):
                     file.write(f"{hex_value:02x}\n")  # Định dạng 2 ký tự HEX
 
 
-input_feature_height = 32
-input_feature_width = 32
-input_feature_channel = 3
+input_feature_height = 56
+input_feature_width = 56
+input_feature_channel = 16
 weight_height = 3
 weight_width = 3
 weight_channel = input_feature_channel
-weight_filter = 3
-output_feature_height = 32
-output_feature_width = 32
+weight_filter = 32
+output_feature_height = 56
+output_feature_width = 56
 output_feature_channel = weight_filter
 
 # Đường dẫn file
-input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input.hex"
-weight_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight.hex"
-output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/output.hex"
+input_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/input_56x56x16.hex"
+weight_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_16x32.hex"
+output_file = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/output.hex"
 
 # Đọc dữ liệu đầu vào
 input_data = read_hex_file(input_file, (input_feature_height, input_feature_width, input_feature_channel))
@@ -57,7 +57,7 @@ input_data = read_hex_file(input_file, (input_feature_height, input_feature_widt
 weight_data_flat = read_hex_file(weight_file, (weight_height, weight_width, weight_channel * weight_filter))
 
 # Reshape lại thành (3,3,3,1) theo thứ tự hàng → cột → channel → filter
-weight_data = weight_data_flat.reshape(weight_height, weight_width, weight_channel, weight_filter).transpose(0,1,3,2)
+weight_data = weight_data_flat.reshape(weight_height, weight_width, weight_filter, weight_channel).transpose(0,1,3,2)
 
 # In kiểm tra kernel
 # print("Kernel đọc từ file:")

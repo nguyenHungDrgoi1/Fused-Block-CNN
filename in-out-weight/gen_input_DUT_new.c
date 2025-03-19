@@ -63,26 +63,34 @@ void extract_patches_1d(const int16_t *input, int H, int W, int C, int K, int F,
 }
 void add_padding_1d(const int16_t *flat_matrix, int H, int W, int C, int P, int16_t pad_value, int16_t *padded_flat) {
     // Kích thước mới sau khi thêm padding
-    int H_new = H + 2 * P;
-    int W_new = W + 2 * P;
-    int size_new = H_new * W_new * C;
+    int C_new = C ;  // Padding theo chiều sâu (C)
+    int H_new = H + 2 * P;  // Padding theo chiều cao (H)
+    int W_new = W + 2 * P;  // Padding theo chiều rộng (W)
+    int size_new = C_new * H_new * W_new;
 
     // Khởi tạo mảng mới với giá trị pad_value
     for (int i = 0; i < size_new; i++) {
         padded_flat[i] = pad_value;
     }
 
-    // Sao chép dữ liệu từ mảng cũ vào vị trí phù hợp trong mảng mới
-    for (int c = 0; c < C; c++) {
-        for (int h = 0; h < H; h++) {
-            for (int w= 0; w < W; w++) {
-                int index_old =  (c * H * W) + (h * W) + w;
-                int index_new = (c * H_new * W_new) + ((h + P) * W_new) + (w + P);
+    // Sao chép dữ liệu từ mảng cũ vào vị trí phù hợp trong mảng mới với padding
+    for (int h = 0; h < H; h++) {  // Duyệt qua chiều cao (H)
+        for (int w = 0; w < W; w++) {  // Duyệt qua chiều rộng (W)
+            for (int c = 0; c < C; c++) {  // Duyệt qua chiều sâu (C)
+                // Chỉ số cũ trong mảng 1D
+                int index_old = (c * H * W) + (h * W) + w;
+
+                // Chỉ số mới trong mảng đã thêm padding (H_new, W_new, C_new)
+                int index_new = ((h + P) * W_new * C_new) + ((w + P) * C_new) + (c + P);
+
+                // Sao chép giá trị từ mảng cũ vào mảng mới
                 padded_flat[index_new] = flat_matrix[index_old];
             }
         }
     }
 }
+
+
 int main() {
     int H = 56, W = 56, C = 16;  // Kích thước input (4x4, 1 channel)
     int K = 3;  // Kernel 3x3
@@ -104,14 +112,14 @@ int main() {
     }
 
     // Đọc dữ liệu từ file
-    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/input_56x56x16.hex", input_data, size);
+    read_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/input_56x56x16.hex", input_data, size);
     // padding 1D
     add_padding_1d(input_data, H, W, C, P, 0, input_data_padded);
     // Trích xuất cửa sổ 3x3
     // extract_patches_1d(input_data_padded, H + 2 * P, W + 2 * P, C, K,F, output_data);
 
     // Ghi kết quả ra file
-    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/dut/input_56x56x16_pad.hex", input_data_padded, size_padded);
+    write_hex_file("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_padded, size_padded);
 
     printf("Dữ liệu đã ghi vào output.hex\n");
 
