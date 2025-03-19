@@ -1,0 +1,44 @@
+/home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v {2 {vlog -work work -vopt -stats=none /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v
+QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
+-- Compiling module address_generator
+** Warning: /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v(81): (vlog-2182) 'count_for_a_Window' might be read before written in always_comb or always @* block.
+
+Top level modules:
+	address_generator
+
+} {} {}} /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv {1 {vlog -work work -vopt -sv -stats=none /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv
+QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
+-- Compiling module Quad_PE
+
+Top level modules:
+	Quad_PE
+
+} {} {}} /home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv {1 {vlog -work work -vopt -sv -stats=none /home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv
+QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
+-- Compiling module Sub_top_CONV
+
+Top level modules:
+	Sub_top_CONV
+
+} {} {}} /home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v {1 {vlog -work work -vopt -stats=none /home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v
+QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
+-- Compiling module BRAM_IFM
+
+Top level modules:
+	BRAM_IFM
+
+} {} {}} /home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v {1 {vlog -work work -vopt -stats=none /home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v
+QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
+-- Compiling module BRAM
+
+Top level modules:
+	BRAM
+
+} {} {}} /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv {1 {vlog -work work -vopt -sv -stats=none /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv
+QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
+-- Compiling module PE_cluster
+
+Top level modules:
+	PE_cluster
+
+} {} {}}
