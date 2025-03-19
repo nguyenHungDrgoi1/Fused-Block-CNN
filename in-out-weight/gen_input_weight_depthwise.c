@@ -34,8 +34,9 @@ int main() {
     const int weight_filter = 3;
     int weight_size = weight_channel * weight_height * weight_width * weight_filter;
 
-    const char *filename_IFM = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/input_depthwise.hex";
-    const char *filename_Weight = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/in-out-weight/weight_depthwise.hex";
+    const char *filename_IFM = "/home/thanhdo/questasim/PE/Fused-Block-CNN/in-out-weight/input_32x32x3.hex";
+    
+    const char *filename_Weight = "/home/thanhdo/questasim/PE/Fused-Block-CNN/in-out-weight/weight_3x3x3x1.hex";
 
     // Gọi hàm với seed khác nhau để đảm bảo dãy số khác nhau
     generateAndWriteHexFile(filename_IFM, input_size, time(NULL));
