@@ -15,7 +15,7 @@ reg [DATA_WIDTH-1:0] bram [0:255];
 
 initial begin 
     $readmemh(/home/thanhdo/questasim/PE/Fused-Block-CNN/in-out-weight/addresses_ifm.hex", "w", bram);
-    $fopen("/home/thanhdo/questasim/PE/Fused-Block-CNN/in-out-weight/addresses_ifm.hex", "w");
+   // $fopen("/home/thanhdo/questasim/PE/Fused-Block-CNN/in-out-weight/addresses_ifm.hex", "w");
 end
 
 always @(posedge clk) begin

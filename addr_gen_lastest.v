@@ -1,5 +1,5 @@
 module address_generator #(
-    parameter TOTAL_PE   = 16,
+    parameter TOTAL_PE   = 4,
     parameter DATA_WIDTH = 32
 )(
     input  wire clk,
@@ -38,21 +38,170 @@ reg [31:0] window_start_addr_ifm;
 reg [31:0] window_start_addr_filter;
 
 
+<<<<<<< HEAD
+=======
 wire [7:0] num_of_tiles = IFM_C >> 2; 
 wire [7:0] num_of_tiles_for_PE = OFM_C >> 4;
 
+>>>>>>> 8749630b29c1a2872c0b8ba98bb2ed65b403a76e
 // FSM state encoding for IFM
-parameter START_ADDR_IFM        = 3'b000;
-parameter FETCH_WINDOW      = 3'b001;
-parameter NEXT_WINDOW      = 3'b010;
-
+parameter START_ADDR_IFM        = 2'b00;
+parameter FETCH_WINDOW          = 2'b01;
+parameter NEXT_WINDOW           = 2'b10;
 reg [2:0] current_state_IFM, next_state_IFM;
 
 
 // FSM state encoding for WEIGHT
-parameter START_ADDR_FILTER    = 1'b0;
-parameter FETCH_FILTER  = 1'b1;
+parameter START_ADDR_FILTER     = 1'b0;
+parameter FETCH_FILTER          = 1'b1;
 reg current_state_FILTER, next_state_FILTER;
+
+
+reg [7:0] num_of_mul_in_PE = 4; 
+//---------------------------------------------------LUT-num_of_mul_in_PE--------------------------------------------------------//
+reg [7:0] num_of_mul_in_PE_shift; 
+
+always @(*) begin
+    case (num_of_mul_in_PE)
+        'h2 : begin
+            num_of_mul_in_PE_shift = 'h1;
+        end
+        'h4: begin
+            num_of_mul_in_PE_shift = 'h2;
+        end
+        default : 
+            num_of_mul_in_PE_shift = 'h2;
+    endcase 
+end
+//---------------------------------------------------LUT-TOTAL_PE--------------------------------------------------------//
+reg [7:0] total_PE_shift =2; 
+
+always @(*) begin
+    case (4)
+        2 : begin
+            total_PE_shift = 'h1;
+        end
+        4: begin
+            total_PE_shift = 'h2;
+        end
+        8: begin
+            total_PE_shift = 'h3;
+        end
+        6: begin
+            total_PE_shift = 'h4;
+        end
+        32: begin
+            total_PE_shift = 'h5;
+        end
+        default : 
+            total_PE_shift = 'h2;
+    endcase
+end
+
+//---------------------------------------------------LUT-KERNEL_W--------------------------------------------------------//
+reg [7:0] num_of_KERNEL_points; // = KERNEL_W *KERNEL_W
+
+always @(*) begin
+    case (KERNEL_W)
+        'h3 : begin
+            num_of_KERNEL_points = 'h9;
+        end
+        'h2: begin
+            num_of_KERNEL_points = 'h4;
+        end
+        default : 
+            num_of_KERNEL_points = 'h9;
+    endcase
+end
+
+//---------------------------------------------------LUT-KERNEL_W--------------------------------------------------------//
+reg [7:0] num_of_OFM_points; // = KERNEL_W *KERNEL_W
+
+always @(*) begin
+    case (OFM_W)
+        'h3 : begin
+            num_of_OFM_points = 'h9;
+        end
+        'h2: begin
+            num_of_OFM_points = 'h4;
+        end
+        default : 
+            num_of_OFM_points = 'h9;
+    endcase
+end
+
+wire [7:0] num_of_tiles         = IFM_C >> num_of_mul_in_PE_shift ;
+
+wire [7:0] num_of_tiles_for_PE  = OFM_C >> total_PE_shift;
+//---------------------------------------------------LUT-num_of_tiles_shift--------------------------------------------------------//
+reg [7:0] num_of_tiles_shift; // use shift operation
+always @(*) begin
+    case (num_of_tiles)
+        'd2 : begin
+            num_of_tiles_shift = 'h1;
+        end
+        'd4: begin
+            num_of_tiles_shift = 'h2;
+        end
+        'd8: begin
+            num_of_tiles_shift = 'h3;
+        end
+        'd16: begin
+            num_of_tiles_shift = 'h4;
+        end
+        default : 
+            num_of_tiles_shift = 'h2;
+    endcase
+end
+//---------------------------------------------------LUT-IFM_C_shift--------------------------------------------------------//
+reg [7:0] IFM_C_shift; // use shift operation
+always @(*) begin
+    case (IFM_C)
+        'd2 : begin
+            IFM_C_shift = 'h1;
+        end
+        'd4: begin
+            IFM_C_shift = 'h2;
+        end
+        'd8: begin
+            IFM_C_shift = 'h3;
+        end
+        'd16: begin
+            IFM_C_shift = 'h4;
+        end
+        'd32: begin
+            IFM_C_shift = 'h5;
+        end
+        default : 
+            IFM_C_shift = 'h2;
+    endcase
+end
+//---------------------------------------------------LUT-OFM_C_shift--------------------------------------------------------//
+reg [7:0] OFM_C_shift; // use shift operation
+always @(*) begin
+    case (OFM_C)
+        'd2 : begin
+            OFM_C_shift = 'h1;
+        end
+        'd4: begin
+            OFM_C_shift = 'h2;
+        end
+        'd8: begin
+            OFM_C_shift = 'h3;
+        end
+        'd16: begin
+            OFM_C_shift = 'h4;
+        end
+        'd32: begin
+            OFM_C_shift = 'h5;
+        end
+        default : 
+            OFM_C_shift = 'h2;
+    endcase
+end
+
+
+
 
 //---------------------------------------------------IFM---------------------------------------------------------//
 // FSM State Register
@@ -63,7 +212,7 @@ always @(posedge clk or negedge rst_n) begin
         current_state_IFM <= next_state_IFM;
 end
 
-// FSM Next State Logic
+/////////////////////// FSM Next State Logic ///////////////////////
 always @(*) begin
     case (current_state_IFM)
         START_ADDR_IFM: begin
@@ -78,9 +227,9 @@ always @(*) begin
 
         FETCH_WINDOW: begin
             
-            if ( count_for_a_Window < KERNEL_W * KERNEL_W* num_of_tiles*num_of_tiles_for_PE  -1) begin
+            //if ( count_for_a_Window < num_of_KERNEL_points * num_of_tiles * num_of_tiles_for_PE  -1) begin
+            if ( count_for_a_Window <  (num_of_KERNEL_points << (IFM_C_shift - num_of_mul_in_PE_shift + OFM_C_shift - total_PE_shift) ) -1 ) begin
                 next_state_IFM =    FETCH_WINDOW ;
-                
             end else begin
                 next_state_IFM =    NEXT_WINDOW;
             end
@@ -88,21 +237,23 @@ always @(*) begin
         end
 
         NEXT_WINDOW: begin
-            count_for_a_Window  = 'b0;
-            row_index_KERNEL        <= 'b0;
-            col_index_KERNEL        <= 'b0;
+
+            count_for_a_Window      = 'b0;
+            row_index_KERNEL        = 'b0;
+            col_index_KERNEL        = 'b0;
+
             if (count_for_a_OFM < OFM_W*OFM_W -1 )   begin
-                next_state_IFM =    FETCH_WINDOW ;
-                addr_fetch_ifm          <= predict_window_addr_fetch_ifm ;
+                next_state_IFM  =   FETCH_WINDOW ;
+                addr_fetch_ifm  =   predict_window_addr_fetch_ifm ;
             end else begin
-                next_state_IFM =    START_ADDR_IFM;
-                done_compute            =  1;
+                next_state_IFM  =    START_ADDR_IFM;
+                done_compute    =  1;
             end
             addr_valid_ifm  = 1'b1;
         end
 
         default: begin
-            next_state_IFM = START_ADDR_IFM;
+            next_state_IFM  = START_ADDR_IFM;
             addr_valid_ifm  = 1'b0;
         end
 
@@ -110,7 +261,7 @@ always @(*) begin
 end
 
                 
-// FSM Output Logic
+/////////////////////// FSM Output Logic ///////////////////////
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         predict_line_addr_fetch_ifm         <= 0;
@@ -119,20 +270,27 @@ always @(posedge clk or negedge rst_n) begin
 
     end
     else begin
-        if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -4 )  ) begin 
+
+        //if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -4 )  ) begin 
+        if ( (row_index_KERNEL == (KERNEL_W  << num_of_tiles_shift) -4 )  ) begin 
             if ( col_index_KERNEL != (KERNEL_W -1))
-            predict_line_addr_fetch_ifm <= predict_line_addr_fetch_ifm + IFM_C*IFM_W ;
-            else predict_line_addr_fetch_ifm <= window_start_addr_ifm  ;
+            //predict_line_addr_fetch_ifm         <= predict_line_addr_fetch_ifm + IFM_C*IFM_W ;
+            predict_line_addr_fetch_ifm         <= predict_line_addr_fetch_ifm + (IFM_W << IFM_C_shift ) ;
+            else 
+            predict_line_addr_fetch_ifm         <= window_start_addr_ifm  ;
         end
-        if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -3 ) && ( col_index_KERNEL == KERNEL_W -1  )  && ( tiles_count == num_of_tiles_for_PE -1  ) ) begin 
-            predict_window_addr_fetch_ifm <= window_start_addr_ifm + IFM_C ;
-            //window_start_addr_ifm <= window_start_addr_ifm + IFM_C ;
-            predict_line_addr_fetch_ifm <= window_start_addr_ifm + IFM_C ;
+
+        //if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -3 ) && ( col_index_KERNEL == KERNEL_W -1  )  && ( tiles_count == num_of_tiles_for_PE -1  ) ) begin
+        if ( (row_index_KERNEL == (KERNEL_W  << num_of_tiles_shift) -3 ) && ( col_index_KERNEL == KERNEL_W -1  )  && ( tiles_count == num_of_tiles_for_PE -1  ) ) begin 
+            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + IFM_C ;
+            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + IFM_C ;
         end
-        if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -2 ) && ( col_index_KERNEL == KERNEL_W -1  ) && ( tiles_count == num_of_tiles_for_PE -1  ) && ( row_index_OFM == OFM_W -1 ) ) begin 
-            predict_window_OFM_addr_fetch_ifm <= window_start_addr_ifm + IFM_C * KERNEL_W ;
-            predict_window_addr_fetch_ifm      <= window_start_addr_ifm + IFM_C * KERNEL_W ;
-            predict_line_addr_fetch_ifm        <= window_start_addr_ifm + IFM_C * KERNEL_W ;
+        
+        //if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -2 ) && ( col_index_KERNEL == KERNEL_W -1  ) && ( tiles_count == num_of_tiles_for_PE -1  ) && ( row_index_OFM == OFM_W -1 ) ) begin 
+        if ( (row_index_KERNEL == (KERNEL_W << num_of_tiles_shift) -2 ) && ( col_index_KERNEL == KERNEL_W -1  ) && ( tiles_count == num_of_tiles_for_PE -1  ) && ( row_index_OFM == OFM_W -1 ) ) begin 
+            predict_window_OFM_addr_fetch_ifm   <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
+            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
+            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
         end
     end
 end
@@ -158,8 +316,7 @@ always @(posedge clk or negedge rst_n) begin
                     col_index_KERNEL        <= 8'b0;
                     col_index_OFM           <= 8'b0;
                     count_for_a_Window      <= 8'b0;
-                    //count_for_a_OFM         <= 8'b0;
-                    window_start_addr_ifm   <= 0;
+                    window_start_addr_ifm   <= 8'h0;
                 end else begin
                 end
                 
@@ -168,30 +325,28 @@ always @(posedge clk or negedge rst_n) begin
             FETCH_WINDOW: begin
                 count_for_a_Window  <= count_for_a_Window + 'b1;
                 
-                if ( count_for_a_Window < KERNEL_W * KERNEL_W* num_of_tiles*num_of_tiles_for_PE  -1) begin
-                    //if ( count_for_a_Window ==0  ) window_start_addr_ifm   <= addr_fetch_ifm;
-                    
-                    if (row_index_KERNEL < KERNEL_W * num_of_tiles -1 ) begin  
+                //if ( count_for_a_Window < num_of_KERNEL_points* num_of_tiles * num_of_tiles_for_PE  -1) begin
+                if ( count_for_a_Window < (num_of_KERNEL_points <<  (IFM_C_shift - num_of_mul_in_PE_shift + OFM_C_shift - total_PE_shift))   -1) begin
+                    //if (row_index_KERNEL    <   KERNEL_W * num_of_tiles -1 ) begin  
+                    if (row_index_KERNEL    <   (KERNEL_W << num_of_tiles_shift) -1 ) begin  
                         row_index_KERNEL    <= row_index_KERNEL + 1'b1;
-                        addr_fetch_ifm  <= addr_fetch_ifm + 'h4;  
-                                       
+                        addr_fetch_ifm      <= addr_fetch_ifm + 'h4;               
                     end  
                     else
                     begin
                         
-                        if (row_index_KERNEL == KERNEL_W * num_of_tiles -1) begin
-                        row_index_KERNEL        <= 'b0;
-                        addr_fetch_ifm  <= predict_line_addr_fetch_ifm;
+                        if (row_index_KERNEL == (KERNEL_W << num_of_tiles_shift) -1) begin
+                        row_index_KERNEL    <= 'b0;
+                        addr_fetch_ifm      <= predict_line_addr_fetch_ifm;
                         end
                         if (col_index_KERNEL    <   KERNEL_W -1 ) begin
-                            col_index_KERNEL        <= col_index_KERNEL + 1'b1;
+                            col_index_KERNEL    <= col_index_KERNEL + 1'b1;
                         end
                         else
                         begin
-                            col_index_KERNEL        <= 'b0;
-                            if ( tiles_count < num_of_tiles_for_PE)  begin  
-                                //addr_fetch_ifm <= window_start_addr_ifm;
-                                tiles_count <=    tiles_count +1'b1 ;
+                            col_index_KERNEL    <= 'b0;
+                            if ( tiles_count    <   num_of_tiles_for_PE)  begin  
+                                tiles_count     <=  tiles_count +1'b1 ;
                                 
                             end
                         end
@@ -204,17 +359,17 @@ always @(posedge clk or negedge rst_n) begin
 
             NEXT_WINDOW: begin
                 
-                count_for_a_OFM     <= count_for_a_OFM + 'b1;
-                tiles_count             <= 0;
-                window_start_addr_ifm   <= predict_window_addr_fetch_ifm;
-                if (row_index_KERNEL == 0) row_index_KERNEL <= row_index_KERNEL +1;
-                if (count_for_a_Window == 0) count_for_a_Window <= count_for_a_Window +1;    
+                count_for_a_OFM             <= count_for_a_OFM + 'b1;
+                tiles_count                 <= 0;
+                window_start_addr_ifm       <= predict_window_addr_fetch_ifm;
+
+                if (row_index_KERNEL == 0)      row_index_KERNEL    <= row_index_KERNEL +1;
+                if (count_for_a_Window == 0)    count_for_a_Window  <= count_for_a_Window +1;    
+
                 if (count_for_a_OFM    <   OFM_W*OFM_W-1) begin
-                    
                     if ( row_index_OFM < OFM_W-1) begin
                         addr_fetch_ifm          <= addr_fetch_ifm +'h4 ;
                         row_index_OFM           <= row_index_OFM +1;
-                        
                     end
                     else
                     begin
@@ -222,7 +377,6 @@ always @(posedge clk or negedge rst_n) begin
                         col_index_OFM           <= col_index_OFM + 1'b1;   
                         row_index_OFM           <=  0;
                         if ( col_index_OFM < OFM_W) begin
-                            //addr_fetch_ifm       <= predict_window_OFM_addr_fetch_ifm  ;
                             
                         end
                         else 
@@ -240,8 +394,6 @@ always @(posedge clk or negedge rst_n) begin
         
                 end
                 
-
-
             end
 
             default: begin
@@ -274,23 +426,29 @@ always @(*) begin
         START_ADDR_FILTER: begin
 
             if ( ready ) begin
-                next_state_FILTER           <=  FETCH_FILTER ;
-                addr_fetch_filter           <=  addr_in;
+                next_state_FILTER   =  FETCH_FILTER ;
+                addr_fetch_filter   =  addr_in;
             end else begin
-                next_state_FILTER = START_ADDR_FILTER;
+                next_state_FILTER   = START_ADDR_FILTER;
             end
 
         end
         FETCH_FILTER: begin
          
+<<<<<<< HEAD
+            //if (count_for_a_Window <  num_of_KERNEL_points * num_of_tiles * num_of_tiles_for_PE  -1) begin
+            if ( count_for_a_Window < (num_of_KERNEL_points <<  (IFM_C_shift - num_of_mul_in_PE_shift + OFM_C_shift - total_PE_shift))   -1) begin
+                next_state_FILTER   = FETCH_FILTER;
+=======
             if (count_for_a_Window <  KERNEL_W * KERNEL_W* num_of_tiles*num_of_tiles_for_PE  -1) begin
                 next_state_FILTER = FETCH_FILTER;
+>>>>>>> 8749630b29c1a2872c0b8ba98bb2ed65b403a76e
             end else begin
-                next_state_FILTER = START_ADDR_FILTER;
+                next_state_FILTER   = START_ADDR_FILTER;
             end
         end
         default: 
-            next_state_FILTER = START_ADDR_FILTER;
+                next_state_FILTER   = START_ADDR_FILTER;
     endcase
 end
 
@@ -298,22 +456,21 @@ end
 // FSM Output Logic
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-        addr_fetch_filter                           <= addr_in;
+        addr_fetch_filter   <= addr_in;
     end else begin
         case (current_state_FILTER)
             START_ADDR_FILTER: begin
                 if ( ready ) begin
-                    window_start_addr_filter        <= addr_fetch_filter;
-                    if ( addr_valid_ifm ==1 )  addr_fetch_filter               <= addr_fetch_filter + 'h4; 
+                    window_start_addr_filter    <= addr_fetch_filter;
+                    if ( addr_valid_ifm ==1 )  addr_fetch_filter    <= addr_fetch_filter + 'h4; 
                 end 
             end
 
             FETCH_FILTER: begin
                 if ( addr_valid_ifm ==1 ) begin
-                    addr_fetch_filter               <= addr_fetch_filter + 'h4;  
+                    addr_fetch_filter           <= addr_fetch_filter + 'h4;  
                 end                 
             end
-            
             default: begin
                 addr_fetch_filter  <= 'b0;
                 
@@ -326,3 +483,4 @@ assign addr_valid_filter   = addr_valid_ifm;
 assign req_addr_out_filter = addr_fetch_filter;
 
 endmodule
+

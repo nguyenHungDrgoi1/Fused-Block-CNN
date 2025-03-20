@@ -2,7 +2,7 @@
 
 module address_generator_tb;
 
-    parameter TOTAL_PE   = 16;
+    parameter TOTAL_PE   = 4;
     parameter DATA_WIDTH = 32;
 
     reg clk;
@@ -57,7 +57,7 @@ module address_generator_tb;
         OFM_W = 8;
         IFM_C = 16;
         IFM_W = 10;
-        OFM_C = 3;
+        OFM_C = 16;
         stride = 2;
         ready = 0;
         addr_in = 32'h0000;
