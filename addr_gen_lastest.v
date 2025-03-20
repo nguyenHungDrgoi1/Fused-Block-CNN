@@ -38,6 +38,12 @@ reg [31:0] window_start_addr_ifm;
 reg [31:0] window_start_addr_filter;
 
 
+<<<<<<< HEAD
+=======
+wire [7:0] num_of_tiles = IFM_C >> 2; 
+wire [7:0] num_of_tiles_for_PE = OFM_C >> 4;
+
+>>>>>>> 8749630b29c1a2872c0b8ba98bb2ed65b403a76e
 // FSM state encoding for IFM
 parameter START_ADDR_IFM        = 2'b00;
 parameter FETCH_WINDOW          = 2'b01;
@@ -429,9 +435,14 @@ always @(*) begin
         end
         FETCH_FILTER: begin
          
+<<<<<<< HEAD
             //if (count_for_a_Window <  num_of_KERNEL_points * num_of_tiles * num_of_tiles_for_PE  -1) begin
             if ( count_for_a_Window < (num_of_KERNEL_points <<  (IFM_C_shift - num_of_mul_in_PE_shift + OFM_C_shift - total_PE_shift))   -1) begin
                 next_state_FILTER   = FETCH_FILTER;
+=======
+            if (count_for_a_Window <  KERNEL_W * KERNEL_W* num_of_tiles*num_of_tiles_for_PE  -1) begin
+                next_state_FILTER = FETCH_FILTER;
+>>>>>>> 8749630b29c1a2872c0b8ba98bb2ed65b403a76e
             end else begin
                 next_state_FILTER   = START_ADDR_FILTER;
             end
