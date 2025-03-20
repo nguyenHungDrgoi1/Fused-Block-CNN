@@ -27,8 +27,18 @@ R2
 R3
 n@_opt1
 R4
+R0
+T_opt2
+!s110 1742471250
+V^:B3_=hBB_ln7d=TTJ09W0
+R1
+=4-5c619920e7f1-67dc0052-c095c-fdae
+R2
+R3
+n@_opt2
+R4
 vaddress_generator
-Z5 !s110 1742374841
+Z5 !s110 1742471248
 !i10b 1
 !s100 DC>V26b>nM2aNkc?BL>gk0
 I[ljLji9B_gfnWD=ki<lHd3
@@ -42,7 +52,7 @@ Z8 OL;L;10.7c;67
 r1
 !s85 0
 31
-Z9 !s108 1742374841.000000
+Z9 !s108 1742471248.000000
 !s107 /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v|
 !i113 0
@@ -170,11 +180,11 @@ n@sub_top_@c@o@n@v
 vSub_top_CONV_tb
 R5
 !i10b 1
-!s100 39SbI4cZk=R]ML9:93[S11
-I1igiVMSB;WWFV_M6:z6aG2
+!s100 >2V92BBzg>gcA12WmA15j1
+Im@5bB2=K^_C5JdE>i40EX0
 R6
 R7
-w1742374838
+w1742471247
 8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.v
 F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.v
 L0 5

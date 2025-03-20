@@ -52,9 +52,13 @@ module Sub_top_CONV_tb;
     reg [7:0] input_data_mem15 [0:287];
     reg [7:0] input_data_mem16 [0:287];
 
+    integer ofm_file[15:0];  // Mảng để lưu các file handle
+    integer k;
+    reg [31:0] ofm_data;
     //CAL START
     reg cal_start;
-
+    wire [15:0] valid ;
+    reg [15:0] ofm_data_byte;
 
     Sub_top_CONV uut (
         .clk(clk),
@@ -186,8 +190,52 @@ module Sub_top_CONV_tb;
 
         ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
         cal_start = 1;
+        #10
+        repeat (1000) begin
         PE_en = 16'hFFFF;
+        #10
+        PE_finish = 0;
+        PE_en = 16'b0;
+        #350
+        PE_finish = 16'hFFFF;
+        end
         #10000;
         $finish;
     end
+    initial begin
+    // Mở các file hex để lưu OFM (sẽ tạo các file nếu chưa tồn tại)
+    for (k = 0; k < 16; k = k + 1) begin
+        // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
+        ofm_file[k] = $fopen($sformatf("OFM_PE%d.hex", k), "w");
+        if (ofm_file[k] == 0) begin
+            $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
+            $finish;  // Dừng mô phỏng nếu không mở được file
+        end
+    end
+end
+
+always @(posedge clk) begin
+    if (valid == 16'hFFFF) begin
+        // Lưu giá trị OFM vào các file tương ứng
+        for (k = 0; k < 16; k = k + 1) begin
+            ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
+            // Ghi từng byte của OFM vào các file
+            ofm_data_byte = ofm_data;
+            if (ofm_file[k] != 0) begin
+                $fwrite(ofm_file[k], "%h", ofm_data_byte);  // Ghi giá trị từng byte vào file
+            end
+            ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
+        end
+    end
+end
+
+initial begin
+    // Đảm bảo đóng các file khi kết thúc mô phỏng
+    #10000;
+    for (k = 0; k < 16; k = k + 1) begin
+        if (ofm_file[k] != 0) begin
+            $fclose(ofm_file[k]);  // Đóng file nếu nó đã được mở
+        end
+    end
+end
 endmodule
