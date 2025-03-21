@@ -2,7 +2,7 @@
 
 module address_generator_tb;
 
-    parameter TOTAL_PE   = 4;
+    parameter TOTAL_PE   = 16;
     parameter DATA_WIDTH = 32;
 
     reg clk;
