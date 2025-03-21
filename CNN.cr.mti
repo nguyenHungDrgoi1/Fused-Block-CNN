@@ -1,7 +1,7 @@
 /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v {2 {vlog -work work -vopt -stats=none /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v
 QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
 -- Compiling module address_generator
-** Warning: /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v(81): (vlog-2182) 'count_for_a_Window' might be read before written in always_comb or always @* block.
+** Warning: /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v(225): (vlog-2182) 'count_for_a_Window' might be read before written in always_comb or always @* block.
 
 Top level modules:
 	address_generator
