@@ -192,7 +192,7 @@ module Sub_top_CONV_tb;
         ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
         cal_start = 1;
         #20
-        repeat (100) begin
+        repeat (5832) begin
         //#20
         PE_en = 16'hFFFF;
         PE_finish = 0;
@@ -211,7 +211,7 @@ module Sub_top_CONV_tb;
     for (k = 0; k < 16; k = k + 1) begin
         // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
          //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
-        ofm_file[k] = $fopen($sformatf("OFM_PE%d.hex", k), "w");
+        ofm_file[k] = $fopen($sformatf("OFM_PE%0d.hex", k), "w");
         if (ofm_file[k] == 0) begin
             $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
             $finish;  // Dừng mô phỏng nếu không mở được file
