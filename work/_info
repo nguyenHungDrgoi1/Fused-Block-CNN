@@ -29,16 +29,16 @@ n@_opt1
 R4
 R0
 T_opt2
-!s110 1742550455
-VghH?I8C7Z?0bn3c^Y7OCi1
+!s110 1742553069
+VDDK@OLeeEdjRmZW7cWT091
 R1
-=46-5c619920e7f1-67dd35b7-b6519-1552f
+=49-5c619920e7f1-67dd3fed-55125-1552f
 R2
 R3
 n@_opt2
 R4
 vaddress_generator
-Z5 !s110 1742550453
+Z5 !s110 1742553067
 !i10b 1
 !s100 D^]^9ZUHGeiA44?09We;43
 I66<:k]H_N3m>:=RTYH]7Z3
@@ -52,20 +52,20 @@ Z8 OL;L;10.7c;67
 r1
 !s85 0
 31
-Z9 !s108 1742550453.000000
+Z9 !s108 1742553067.000000
 !s107 /home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/addr_gen_lastest.v|
 !i113 0
 Z10 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R3
 vBRAM
-Z11 !s110 1742550452
+R5
 !i10b 1
-!s100 O8i2ERIe_F;P]JeGgK8FY0
-IZH7DTEd6GU@IYe0WP6m<=3
+!s100 X0`zFSPh]h06glf6[cf5G3
+I>6O]a0nd9GhAI<`O8;jIN1
 R6
 R7
-w1742541823
+w1742552728
 8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v
 F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v
 L0 1
@@ -73,7 +73,7 @@ R8
 r1
 !s85 0
 31
-Z12 !s108 1742550452.000000
+R9
 !s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM.v|
 !i113 0
@@ -83,11 +83,11 @@ n@b@r@a@m
 vBRAM_IFM
 R5
 !i10b 1
-!s100 d3W=hJTBULEZ<Q9bd2Sb`2
-I49h1H;g6Ek`:KkYCGVBFG2
+!s100 ;dEVnd5M6[V`CkAz3b0063
+I]H]?T@CW`XbBRX7Ab9jFf0
 R6
 R7
-w1742541801
+w1742552908
 8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v
 F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/BRAM_IFM.v
 L0 1
@@ -103,8 +103,8 @@ R10
 R3
 n@b@r@a@m_@i@f@m
 vPE_cluster
-Z13 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
-R11
+Z11 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
+R5
 !i10b 1
 !s100 AzbQVdKV7:C@Kn@kc<_hb0
 I7TJAX:GehXnn=b@9PI[_:2
@@ -112,7 +112,7 @@ R6
 !s105 PE_Cluster_sv_unit
 S1
 R7
-Z14 w1742355346
+Z12 w1742355346
 8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv
 F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv
 L0 1
@@ -120,15 +120,15 @@ R8
 r1
 !s85 0
 31
-R12
+R9
 !s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv|
 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/PE_Cluster.sv|
 !i113 0
-Z15 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z13 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R3
 n@p@e_cluster
 vQuad_PE
-R13
+R11
 R5
 !i10b 1
 !s100 bTH8Y_eZ;zW_AYman8[N40
@@ -137,7 +137,7 @@ R6
 !s105 Quad_PE_sv_unit
 S1
 R7
-R14
+R12
 8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv
 F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv
 L0 1
@@ -145,16 +145,16 @@ R8
 r1
 !s85 0
 31
-R12
+R9
 !s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv|
 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/PE_cluster/Quad_PE.sv|
 !i113 0
-R15
+R13
 R3
 n@quad_@p@e
 vSub_top_CONV
-R13
 R11
+R5
 !i10b 1
 !s100 M20GLbD>FcAgA3fk3_4Ge1
 ITai]S@H_NSQDVd1mLCKAD3
@@ -170,24 +170,24 @@ R8
 r1
 !s85 0
 31
-R12
+R9
 !s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv|
 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV.sv|
 !i113 0
-R15
+R13
 R3
 n@sub_top_@c@o@n@v
 vSub_top_CONV_tb
-R13
+R11
 R5
 !i10b 1
-!s100 V4dXLGk[8XUP;b[7PfE@;2
-ITLEb>YP:@iNIcIF;ehja<0
+!s100 Nf?^aWkKY`MX1SAn2@mE42
+IQC]YbOiNRkcUznNgaM52>0
 R6
 !s105 Sub_top_CONV_tb_sv_unit
 S1
 R7
-w1742550449
+w1742553064
 8/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.sv
 F/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.sv
 L0 5
@@ -199,6 +199,6 @@ R9
 !s107 /home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.sv|
 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|/home/manhung/Hung/CNN/Fused-Block-CNN/dut/Sub_top_CONV_tb.sv|
 !i113 0
-R15
+R13
 R3
 n@sub_top_@c@o@n@v_tb

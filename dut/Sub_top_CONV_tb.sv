@@ -135,23 +135,23 @@ module Sub_top_CONV_tb;
         
         // Load input data from file (example: input_data.hex)
        //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
-        $readmemh("address/ifm.hex", input_data_mem);
-        $readmemh("address/weight_PE0.hex", input_data_mem1);
-        $readmemh("address/weight_PE1.hex", input_data_mem2);
-        $readmemh("address/weight_PE2.hex", input_data_mem3);
-        $readmemh("address/weight_PE3.hex", input_data_mem4);
-        $readmemh("address/weight_PE4.hex", input_data_mem5);
-        $readmemh("address/weight_PE5.hex", input_data_mem6);
-        $readmemh("address/weight_PE6.hex", input_data_mem7);
-        $readmemh("address/weight_PE7.hex", input_data_mem8);
-        $readmemh("address/weight_PE8.hex", input_data_mem9);
-        $readmemh("address/weight_PE9.hex", input_data_mem10);
-        $readmemh("address/weight_PE10.hex", input_data_mem11);
-        $readmemh("address/weight_PE11.hex", input_data_mem12);
-        $readmemh("address/weight_PE12.hex", input_data_mem13);
-        $readmemh("address/weight_PE13.hex", input_data_mem14);
-        $readmemh("address/weight_PE14.hex", input_data_mem15);
-        $readmemh("address/weight_PE15.hex", input_data_mem16);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/ifm.hex", input_data_mem);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE0.hex", input_data_mem1);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE1.hex", input_data_mem2);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE2.hex", input_data_mem3);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE3.hex", input_data_mem4);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE4.hex", input_data_mem5);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE5.hex", input_data_mem6);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE6.hex", input_data_mem7);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE7.hex", input_data_mem8);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE8.hex", input_data_mem9);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE9.hex", input_data_mem10);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE10.hex", input_data_mem11);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE11.hex", input_data_mem12);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE12.hex", input_data_mem13);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE13.hex", input_data_mem14);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE14.hex", input_data_mem15);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE15.hex", input_data_mem16);
 
         
 
@@ -227,8 +227,8 @@ always @(posedge clk) begin
             // Ghi từng byte của OFM vào các file
             ofm_data_byte = ofm_data;
             //if (ofm_file[1] != 0) begin
-            $display("check");
-                $fwrite(ofm_file[k], "%H\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
+            //$display("check");
+                $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
            // end
             ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
         end
