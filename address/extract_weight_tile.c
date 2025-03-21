@@ -61,7 +61,11 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
 }
 
 int main() {
+<<<<<<< HEAD
     const char *inputFile = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/Weight.hex";  // Đường dẫn tới file nguồn
+=======
+    const char *inputFile = "address/Weight.hex";  // Đường dẫn tới file nguồn
+>>>>>>> 09ac602d97535d4e6605be900d5da09de38ec432
 
     const int PE = 16;
     const int filter = 32;
@@ -74,22 +78,22 @@ int main() {
     int offset = kernel_size * (PE - 1);   // Nhân với m để tính vị trí tiếp theo cần đọc (m*n)
 
     // Gọi hàm để thực hiện việc đọc và ghi nhiều lần vào các file khác nhau với các offset khác nhau
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE0.hex", kernel_size, offset, 2, 0); // offset = 1 cho đoạn từ 144 đến 287
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE1.hex", kernel_size, offset, 2, 1); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE2.hex", kernel_size, offset, 2, 2); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE3.hex", kernel_size, offset, 2, 3); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE4.hex", kernel_size, offset, 2, 4); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE5.hex", kernel_size, offset, 2, 5); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE6.hex", kernel_size, offset, 2, 6); // offset = 0 cho đoạn tiếp theo 
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE7.hex", kernel_size, offset, 2, 7); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE8.hex", kernel_size, offset, 2, 8); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE9.hex", kernel_size, offset, 2, 9); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE10.hex", kernel_size, offset, 2, 10); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE11.hex", kernel_size, offset, 2, 11); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE12.hex", kernel_size, offset, 2, 12); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE13.hex", kernel_size, offset, 2, 13); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE14.hex", kernel_size, offset, 2, 14); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_PE15.hex", kernel_size, offset, 2, 15); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE0.hex", kernel_size, offset, 2, 0); // offset = 1 cho đoạn từ 144 đến 287
+    readAndWriteFile(inputFile, "address/weight_PE1.hex", kernel_size, offset, 2, 1); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE2.hex", kernel_size, offset, 2, 2); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE3.hex", kernel_size, offset, 2, 3); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE4.hex", kernel_size, offset, 2, 4); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE5.hex", kernel_size, offset, 2, 5); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE6.hex", kernel_size, offset, 2, 6); // offset = 0 cho đoạn tiếp theo 
+    readAndWriteFile(inputFile, "address/weight_PE7.hex", kernel_size, offset, 2, 7); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE8.hex", kernel_size, offset, 2, 8); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE9.hex", kernel_size, offset, 2, 9); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE10.hex", kernel_size, offset, 2, 10); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE11.hex", kernel_size, offset, 2, 11); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE12.hex", kernel_size, offset, 2, 12); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE13.hex", kernel_size, offset, 2, 13); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE14.hex", kernel_size, offset, 2, 14); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "address/weight_PE15.hex", kernel_size, offset, 2, 15); // offset = 0 cho đoạn tiếp theo
 
 
     return 0;

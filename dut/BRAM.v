@@ -15,9 +15,11 @@ module BRAM(
     always @(posedge clk) begin
         if (we) begin
             bram[wr_addr] <= data_in;  // Ghi dữ liệu vào BRAM
+            data_out <= 0;
         end
         else begin
         data_out <= bram[ rd_addr >> 2 ];
+        
         // addr <= rd_addr; 
         end
     end

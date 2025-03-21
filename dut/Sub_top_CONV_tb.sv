@@ -58,7 +58,7 @@ module Sub_top_CONV_tb;
     //CAL START
     reg cal_start;
     wire [15:0] valid ;
-    reg [15:0] ofm_data_byte;
+    reg [7:0] ofm_data_byte;
 
     Sub_top_CONV uut (
         .clk(clk),
@@ -228,7 +228,7 @@ always @(posedge clk) begin
             ofm_data_byte = ofm_data;
             //if (ofm_file[1] != 0) begin
             $display("check");
-                $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
+                $fwrite(ofm_file[k], "%H\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
            // end
             ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
         end

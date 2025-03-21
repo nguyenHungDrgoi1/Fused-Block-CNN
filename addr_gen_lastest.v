@@ -1,5 +1,5 @@
 module address_generator #(
-    parameter TOTAL_PE   = 4,
+    parameter TOTAL_PE   = 16,
     parameter DATA_WIDTH = 32
 )(
     input  wire clk,
@@ -68,7 +68,7 @@ always @(*) begin
     endcase 
 end
 //---------------------------------------------------LUT-TOTAL_PE--------------------------------------------------------//
-reg [7:0] total_PE_shift =2; 
+reg [7:0] total_PE_shift =4; 
 
 always @(*) begin
     case (4)
