@@ -61,7 +61,7 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
 }
 
 int main() {
-    const char *inputFile = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/weight_16x32.hex";  // Đường dẫn tới file nguồn
+    const char *inputFile = "C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/Weight.hex";  // Đường dẫn tới file nguồn
 
     const int PE = 16;
     const int filter = 32;
