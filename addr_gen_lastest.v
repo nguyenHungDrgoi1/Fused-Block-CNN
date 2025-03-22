@@ -238,7 +238,7 @@ always @(*) begin
 
             if (count_for_a_OFM < OFM_W*OFM_W -1 )   begin
                 next_state_IFM  =   FETCH_WINDOW ;
-                addr_fetch_ifm  =   predict_window_addr_fetch_ifm ;
+                
             end else begin
                 next_state_IFM  =    START_ADDR_IFM;
                 done_compute    =  1;
@@ -347,6 +347,7 @@ always @(posedge clk or negedge rst_n) begin
                     
                     end
                 end else begin
+                    addr_fetch_ifm  =   predict_window_addr_fetch_ifm ;
                 end
             addr_valid_ifm  = 1'b1;
             end 
