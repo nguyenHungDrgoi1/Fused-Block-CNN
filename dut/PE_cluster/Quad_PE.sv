@@ -5,7 +5,7 @@ module Quad_PE(
     input  wire [7:0]  IFM1, IFM2, IFM3, IFM4,
     input  wire [7:0]  Weight1, Weight2, Weight3,Weight4,
     // Tín hiệu điều khiển
-    input  wire        PE_en,      
+    input  wire        PE_reset,      
     input  wire        PE_finish, 
     // Output
     output wire [7:0]  OFM,
@@ -41,7 +41,7 @@ module Quad_PE(
             sum_q <= sum_d; 
         end
     end
-    assign mul_sum = (PE_en) ? 0 : sum_q ;
+    assign mul_sum = (PE_reset) ? 0 : sum_q ;
 
     always @(posedge clk or negedge reset_n) begin
         if (!reset_n) begin

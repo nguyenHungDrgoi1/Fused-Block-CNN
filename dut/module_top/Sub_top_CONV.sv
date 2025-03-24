@@ -24,9 +24,10 @@ module Sub_top_CONV(
     input [31:0] data_in_Weight_15,
 
     //control signal 
-    input wire [15:0] PE_en,
+    input wire [15:0] PE_reset,
     input wire [15:0] PE_finish,
     output wire [15:0] valid,
+    output wire [15:0] done_window,
     
 
     output [31:0] OFM,
@@ -209,7 +210,7 @@ module Sub_top_CONV(
     PE_cluster cluster(
         .clk(clk),
         .reset_n(reset),
-        .PE_en(PE_en),
+        .PE_reset(PE_reset),
         .PE_finish(PE_finish),
         .valid(valid),
         .IFM(IFM_data),
@@ -260,6 +261,7 @@ module Sub_top_CONV(
         .ready(cal_start),
         .addr_in(0),
         .req_addr_out_filter(addr_w),
-        .req_addr_out_ifm(addr_IFM)
+        .req_addr_out_ifm(addr_IFM),
+        .done_window(done_window)
     );
 endmodule
