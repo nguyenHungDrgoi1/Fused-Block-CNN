@@ -134,24 +134,24 @@ module Sub_top_CONV_tb;
         data_in_Weight_15 = 0;
         
         // Load input data from file (example: input_data.hex)
-       //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
-        $readmemh("address/ifm.hex", input_data_mem);
-        $readmemh("address/weight_PE0.hex", input_data_mem1);
-        $readmemh("address/weight_PE1.hex", input_data_mem2);
-        $readmemh("address/weight_PE2.hex", input_data_mem3);
-        $readmemh("address/weight_PE3.hex", input_data_mem4);
-        $readmemh("address/weight_PE4.hex", input_data_mem5);
-        $readmemh("address/weight_PE5.hex", input_data_mem6);
-        $readmemh("address/weight_PE6.hex", input_data_mem7);
-        $readmemh("address/weight_PE7.hex", input_data_mem8);
-        $readmemh("address/weight_PE8.hex", input_data_mem9);
-        $readmemh("address/weight_PE9.hex", input_data_mem10);
-        $readmemh("address/weight_PE10.hex", input_data_mem11);
-        $readmemh("address/weight_PE11.hex", input_data_mem12);
-        $readmemh("address/weight_PE12.hex", input_data_mem13);
-        $readmemh("address/weight_PE13.hex", input_data_mem14);
-        $readmemh("address/weight_PE14.hex", input_data_mem15);
-        $readmemh("address/weight_PE15.hex", input_data_mem16);
+       //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN//home/thanhdo/questasim/PE/Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/ifm.hex", input_data_mem);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE0.hex", input_data_mem1);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE1.hex", input_data_mem2);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE2.hex", input_data_mem3);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE3.hex", input_data_mem4);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE4.hex", input_data_mem5);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE5.hex", input_data_mem6);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE6.hex", input_data_mem7);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE7.hex", input_data_mem8);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE8.hex", input_data_mem9);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE9.hex", input_data_mem10);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE10.hex", input_data_mem11);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE11.hex", input_data_mem12);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE12.hex", input_data_mem13);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE13.hex", input_data_mem14);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE14.hex", input_data_mem15);
+        $readmemh("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/weight_PE15.hex", input_data_mem16);
 
         
 
@@ -196,9 +196,9 @@ module Sub_top_CONV_tb;
         //#20
         PE_en = 16'hFFFF;
         PE_finish = 0;
-        #10
+        #10 // one cyvles
         PE_en = 16'b0;
-        #340
+        #340 // 36 -2 cyvles for one pixel in OFM = num_of_tiles * kernel_W
         PE_finish = 16'hFFFF;
         #10;
         end
@@ -211,7 +211,7 @@ module Sub_top_CONV_tb;
     for (k = 0; k < 16; k = k + 1) begin
         // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
          //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
-        ofm_file[k] = $fopen($sformatf("address/OFM_PE%0d_DUT.hex", k), "w");
+        ofm_file[k] = $fopen($sformatf("/home/thanhdo/questasim/PE/Fused-Block-CNN/address/OFM_PE%0d_DUT.hex", k), "w");
         if (ofm_file[k] == 0) begin
             $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
             $finish;  // Dừng mô phỏng nếu không mở được file

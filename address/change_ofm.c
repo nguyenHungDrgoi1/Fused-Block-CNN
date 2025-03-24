@@ -27,8 +27,8 @@ void process_pe_file(int pe_id) {
     char outputFile[256];
 
     // Tạo tên file input/output theo PE
-    sprintf(inputFile, "address/OFM_PE%d.hex", pe_id);
-    sprintf(outputFile, "address/OFM_PE%d_change.hex", pe_id);
+    sprintf(inputFile, "/home/thanhdo/questasim/PE/Fused-Block-CNN/address/OFM_PE%d.hex", pe_id);
+    sprintf(outputFile, "/home/thanhdo/questasim/PE/Fused-Block-CNN/address/OFM_PE%d_change.hex", pe_id);
 
     // Đếm số dòng trong file
     int total_lines = count_lines(inputFile);
@@ -69,6 +69,9 @@ void process_pe_file(int pe_id) {
 
     // Ghi các dòng theo thứ tự: dòng i → dòng i + OFFSET
     for (int i = 0; i < total_lines - OFFSET; i++) {
+        for (int j = 0; lines[i][j]; j++) lines[i][j] = tolower(lines[i][j]);
+for (int j = 0; lines[i + OFFSET][j]; j++) lines[i + OFFSET][j] = tolower(lines[i + OFFSET][j]);
+
         fputs(lines[i], outFile);
         fputs(lines[i + OFFSET], outFile);
     }

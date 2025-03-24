@@ -13,11 +13,11 @@ module Quad_PE(
 );
 
     // --- Các wire trung gian ---
-    wire [7:0] mul1, mul2, mul3,mul4;    // Kết quả 3 phép nhân
-    wire [7:0] add1, add2, add3;      // Kết quả cộng dồn từng bước
-    wire [7:0] sum_d;               // Giá trị tổng mới
-    reg  [7:0] sum_q;               // Thanh ghi lưu giá trị tổng
-    reg        valid_r;             // Thanh ghi xuất cờ valid
+    wire [7:0] mul1, mul2, mul3,mul4;   // Kết quả 3 phép nhân
+    wire [7:0] add1, add2, add3;        // Kết quả cộng dồn từng bước
+    wire [7:0] sum_d;                   // Giá trị tổng mới
+    reg  [7:0] sum_q;                   // Thanh ghi lưu giá trị tổng
+    reg        valid_r;                 // Thanh ghi xuất cờ valid
     reg  [7:0] mul_sum;
 
     // Nhân 3 cặp IFM*Weight
@@ -47,7 +47,6 @@ module Quad_PE(
         if (!reset_n) begin
             valid_r <= 1'b0;
         end else if (PE_finish) begin
-            // Khi PE_finish = 1, ta set valid=1 (bắn ra 1 chu kỳ)
             valid_r <= 1'b1;
         end else begin
             valid_r <= 1'b0;
