@@ -196,7 +196,7 @@ module Sub_top_CONV_tb;
         #30 // 3 chu ki
         repeat (50) begin
         //#20
-        PE_reset = 16'hFFFF;
+        PE_reset = 16'h0;
         PE_finish = 0;
         #10 // one cyvles
         PE_reset = 16'b0;
