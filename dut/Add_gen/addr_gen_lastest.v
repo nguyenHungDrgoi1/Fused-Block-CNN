@@ -287,7 +287,7 @@ always @(posedge clk or negedge rst_n) begin
             predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
             predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
         end
-        if ( ( row_index_KERNEL == 'h1 )&& ( col_index_KERNEL ==  'h0 ) ) begin 
+        if ( ( row_index_KERNEL == 'h0 )&& ( col_index_KERNEL ==  'h0 ) ) begin 
             done_window <= 'b1;
         end else  
             done_window <= 'b0;

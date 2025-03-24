@@ -27,7 +27,7 @@ module Sub_top_CONV(
     input wire [15:0] PE_reset,
     input wire [15:0] PE_finish,
     output wire [15:0] valid,
-    output wire [15:0] done_window,
+    //output wire [15:0] done_window,
     
 
     output [31:0] OFM,
@@ -70,6 +70,8 @@ module Sub_top_CONV(
     logic [31:0] Weight_13;
     logic [31:0] Weight_14;
     logic [31:0] Weight_15;
+    wire [15:0] done_window_for_PE_cluster;
+    wire        done_window_one_bit;
     BRAM_IFM IFM_BRAM(
         .clk(clk),
         .rd_addr(addr_IFM),
@@ -210,7 +212,7 @@ module Sub_top_CONV(
     PE_cluster cluster(
         .clk(clk),
         .reset_n(reset),
-        .PE_reset(PE_reset),
+        .PE_reset(done_window_for_PE_cluster),
         .PE_finish(PE_finish),
         .valid(valid),
         .IFM(IFM_data),
@@ -262,6 +264,7 @@ module Sub_top_CONV(
         .addr_in(0),
         .req_addr_out_filter(addr_w),
         .req_addr_out_ifm(addr_IFM),
-        .done_window(done_window)
+        .done_window(done_window_one_bit)
     );
+    assign done_window_for_PE_cluster = {16{done_window_one_bit}};
 endmodule

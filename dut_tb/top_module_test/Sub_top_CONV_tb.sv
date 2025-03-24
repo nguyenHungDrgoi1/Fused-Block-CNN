@@ -31,7 +31,7 @@ module Sub_top_CONV_tb;
     reg [15:0] PE_finish;
     
     wire [31:0] OFM;
-    wire [31:0] done_window;
+   
     wire [7:0] OFM_out[15:0];
     
     integer i;
@@ -90,7 +90,6 @@ module Sub_top_CONV_tb;
         .PE_reset(PE_reset),
         .PE_finish(PE_finish),
         .valid(valid),
-        .done_window(done_window),
         // .addr_w0(addr_w[0]), .addr_w1(addr_w[1]), .addr_w2(addr_w[2]), .addr_w3(addr_w[3]),
         // .addr_w4(addr_w[4]), .addr_w5(addr_w[5]), .addr_w6(addr_w[6]), .addr_w7(addr_w[7]),
         // .addr_w8(addr_w[8]), .addr_w9(addr_w[9]), .addr_w10(addr_w[10]), .addr_w11(addr_w[11]),
@@ -194,9 +193,9 @@ module Sub_top_CONV_tb;
         ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
         cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
         #30 // 3 chu ki
-        repeat (50) begin
+        repeat (3000) begin
         //#20
-        PE_reset = 16'h0;
+        PE_reset = 16'hFFFF;
         PE_finish = 0;
         #10 // one cyvles
         PE_reset = 16'b0;
