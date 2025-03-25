@@ -1,6 +1,6 @@
 module BRAM(
     input wire clk,
-    input wire we,                     // Write enable
+    input wire wr_rd_en,                     // Write enable
     input wire [6:0] wr_addr,           // Write address (6-bit → 64 hàng)
     input wire [19:0] rd_addr,           // Read address (6-bit → 64 hàng)
     input wire [31:0] data_in,          // Dữ liệu đầu vào 64-bit
@@ -13,7 +13,7 @@ module BRAM(
     
     //integer i;
     always @(posedge clk) begin
-        if (we) begin
+        if (wr_rd_en) begin
             bram[wr_addr] <= data_in;  // Ghi dữ liệu vào BRAM
             data_out <= 0;
         end
