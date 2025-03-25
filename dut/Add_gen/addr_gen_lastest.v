@@ -297,7 +297,6 @@ end
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         addr_fetch_ifm          <= addr_in;
-        addr_valid_ifm          <= 1'b0;
         count_for_a_Window      <= 1'b0;
         row_index_KERNEL        <= 8'b0;
         count_for_a_OFM         <= 8'b0;
@@ -356,7 +355,6 @@ always @(posedge clk or negedge rst_n) begin
                     row_index_KERNEL        <= 'b0;
                     col_index_KERNEL        <= 'b0;
                 end
-            addr_valid_ifm  = 1'b1;
             end 
 
             NEXT_WINDOW: begin
@@ -399,8 +397,7 @@ always @(posedge clk or negedge rst_n) begin
             end
 
             default: begin
-                addr_valid_ifm  <= 1'b0;
-                
+                addr_fetch_ifm          <= addr_in ;
             end
         endcase
     end
