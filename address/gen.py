@@ -7,7 +7,7 @@ def save_to_hex_file(data, filename):
             f.write(f"{int_val & 0xFF:02X}\n")
 
 # 1. Sinh ngẫu nhiên IFM và Weight (8-bit không dấu)
-np.random.seed(42)
+np.random.seed(30)
 IFM = np.random.randint(0, 256, size=(56, 56, 16), dtype=np.uint8)
 Weight = np.random.randint(0, 256, size=(32, 3, 3, 16), dtype=np.uint8)
 
@@ -32,18 +32,19 @@ for f in range(32):
     for i in range(OH):       # output height
         for j in range(OW):   # output width
             acc = 0
-            is_print = (f == 1 and i == 0 and j == 0)
+            is_print = (f == 0 and i == 0 and j == 0)
             if is_print:
                 print(f"  ➤ Tính OFM[{f}][{i}][{j}]:")
             for kh in range(3):       # kernel height
                 for kw in range(3):   # kernel width
                     for c in range(16):  # channels
+                        # Sửa lại chỉ số để tính toán chính xác khi có padding
                         ifm_val = int(IFM_padded[i + kh, j + kw, c])
                         w_val = int(Weight[f, kh, kw, c])
                         mul = ifm_val * w_val
                         acc += mul
                         if is_print:
-                            print(f"    IFM[{i+kh}][{j+kw}][{c}] = {ifm_val:3d} × "
+                            print(f"    IFM[{i + kh}][{j + kw}][{c}] = {ifm_val:3d} × "
                                   f"W[{f}][{kh}][{kw}][{c}] = {w_val:3d} → {mul:6d} "
                                   f"➕ acc = {acc}")
             OFM[f, i, j] = acc

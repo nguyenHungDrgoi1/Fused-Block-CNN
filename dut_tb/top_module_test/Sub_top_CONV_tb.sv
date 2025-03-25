@@ -3,6 +3,11 @@
 // kernel 3x3x16x32
 // OFM 56x56x32
 module Sub_top_CONV_tb;
+
+    int input_size = 58*58*16;
+    int weight_size = 3*3*16;
+    int tile = 2;
+
     reg clk;
     reg reset;
     reg we_IFM;
@@ -136,7 +141,11 @@ module Sub_top_CONV_tb;
         
         // Load input data from file (example: input_data.hex)
        //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/../Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
+<<<<<<< HEAD
         $readmemh("../Fused-Block-CNN/address/ifm.hex", input_data_mem);
+=======
+        $readmemh("../Fused-Block-CNN/address/ifm_padded.hex", input_data_mem);
+>>>>>>> c16af04693337eaecb5918cd72f8f9fd0159b5be
         $readmemh("../Fused-Block-CNN/address/weight_PE0.hex", input_data_mem1);
         $readmemh("../Fused-Block-CNN/address/weight_PE1.hex", input_data_mem2);
         $readmemh("../Fused-Block-CNN/address/weight_PE2.hex", input_data_mem3);
@@ -157,14 +166,14 @@ module Sub_top_CONV_tb;
         
 
         // Write data into BRAM
-        for (i = 0; i < 50176; i = i + 4) begin
+        for (i = 0; i < input_size; i = i + 4) begin
             addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
             data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
             we_IFM = 1;
             #10;
         end
         we_IFM = 0;
-        for (i = 0; i < 288; i = i + 4) begin
+        for (i = 0; i < weight_size * tile; i = i + 4) begin
             addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
             //data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
             data_in_Weight_0 = {input_data_mem1[i], input_data_mem1[i+1], input_data_mem1[i+2], input_data_mem1[i+3]};
@@ -197,7 +206,7 @@ module Sub_top_CONV_tb;
         repeat (5832) begin
 =======
         cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
-        #30 // 3 chu ki
+        #20 // 3 chu ki
         repeat (3000) begin
 >>>>>>> b4638d7d2e10f84d2c3fc05fc5800a1aebbb60ff
         //#20

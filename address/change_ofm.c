@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define MAX_LINE_LENGTH 100
-#define OFFSET 2916        // Khoảng cách dòng
+#define OFFSET 3136       // Khoảng cách dòng
 #define MAX_PE 16          // Tổng số PE: từ PE0 đến PE15
 
 // Đếm tổng số dòng trong file
@@ -27,8 +27,8 @@ void process_pe_file(int pe_id) {
     char outputFile[256];
 
     // Tạo tên file input/output theo PE
-    sprintf(inputFile, "/home/thanhdo/questasim/PE/Fused-Block-CNN/address/OFM_PE%d.hex", pe_id);
-    sprintf(outputFile, "/home/thanhdo/questasim/PE/Fused-Block-CNN/address/OFM_PE%d_change.hex", pe_id);
+    sprintf(inputFile, "../Fused-Block-CNN/address/OFM_PE%d.hex", pe_id);
+    sprintf(outputFile, "../Fused-Block-CNN/address/OFM_PE%d_change.hex", pe_id);
 
     // Đếm số dòng trong file
     int total_lines = count_lines(inputFile);
