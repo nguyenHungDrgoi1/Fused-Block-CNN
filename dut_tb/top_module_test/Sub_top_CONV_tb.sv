@@ -27,10 +27,11 @@ module Sub_top_CONV_tb;
     reg [31:0] data_in_Weight_15;
     reg [19:0] addr_w[15:0];
     reg [19:0] addr_IFM;
-    reg [15:0] PE_en;
+    reg [15:0] PE_reset;
     reg [15:0] PE_finish;
     
     wire [31:0] OFM;
+   
     wire [7:0] OFM_out[15:0];
     
     integer i;
@@ -86,7 +87,7 @@ module Sub_top_CONV_tb;
         .cal_start(cal_start),
         // .addr_IFM(addr_IFM),
         .OFM(OFM),
-        .PE_en(PE_en),
+        .PE_reset(PE_reset),
         .PE_finish(PE_finish),
         .valid(valid),
         // .addr_w0(addr_w[0]), .addr_w1(addr_w[1]), .addr_w2(addr_w[2]), .addr_w3(addr_w[3]),
@@ -108,7 +109,7 @@ module Sub_top_CONV_tb;
         ////////////////////////////////////LOAD PHASE//////////////////////////////////////////////////
         // Reset phase
         reset = 0;
-        PE_en = 0;
+        PE_reset = 0;
         #30
         reset = 1;
         we_IFM = 0;
@@ -188,16 +189,22 @@ module Sub_top_CONV_tb;
         we_weight = 0;
     
         #5000;
-
+        #5
         ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
+<<<<<<< HEAD
         cal_start = 1;
         #25
         repeat (5832) begin
+=======
+        cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
+        #30 // 3 chu ki
+        repeat (3000) begin
+>>>>>>> b4638d7d2e10f84d2c3fc05fc5800a1aebbb60ff
         //#20
-        PE_en = 16'hFFFF;
+        PE_reset = 16'hFFFF;
         PE_finish = 0;
         #10 // one cyvles
-        PE_en = 16'b0;
+        PE_reset = 16'b0;
         #340 // 36 -2 cyvles for one pixel in OFM = num_of_tiles * kernel_W
         PE_finish = 16'hFFFF;
         #10;

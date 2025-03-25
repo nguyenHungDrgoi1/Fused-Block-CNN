@@ -20,8 +20,8 @@ module PE_cluster(
     input  wire [31:0]  Weight_15,
     input  wire [31:0]  IFM,
     // Tín hiệu điều khiển
-    input  wire  [15:0]    PE_en,      
-    input  wire  [15:0]       PE_finish, 
+    input  wire  [15:0] PE_reset,      
+    input  wire  [15:0] PE_finish, 
     // Output
     output wire [7:0]  OFM_0,
     output wire [7:0]  OFM_1,
@@ -53,7 +53,7 @@ module PE_cluster(
         .Weight2(Weight_0[15:8]),
         .Weight3(Weight_0[23:16]),
         .Weight4(Weight_0[31:24]),
-        .PE_en(PE_en[0]),
+        .PE_reset(PE_reset[0]),
         .PE_finish(PE_finish[0]),
         .valid(valid[0]),
         .OFM(OFM_0)
@@ -69,7 +69,7 @@ module PE_cluster(
         .Weight2(Weight_1[15:8]),
         .Weight3(Weight_1[23:16]),
         .Weight4(Weight_1[31:24]),
-        .PE_en(PE_en[1]),
+        .PE_reset(PE_reset[1]),
         .PE_finish(PE_finish[1]),
         .valid(valid[1]),
         .OFM(OFM_1)
@@ -85,7 +85,7 @@ module PE_cluster(
         .Weight2(Weight_2[15:8]),
         .Weight3(Weight_2[23:16]),
         .Weight4(Weight_2[31:24]),
-        .PE_en(PE_en[2]),
+        .PE_reset(PE_reset[2]),
         .PE_finish(PE_finish[2]),
         .valid(valid[2]),
         .OFM(OFM_2)
@@ -101,7 +101,7 @@ module PE_cluster(
         .Weight2(Weight_3[15:8]),
         .Weight3(Weight_3[23:16]),
         .Weight4(Weight_3[31:24]),
-        .PE_en(PE_en[3]),
+        .PE_reset(PE_reset[3]),
         .PE_finish(PE_finish[3]),
         .valid(valid[3]),
         .OFM(OFM_3)
@@ -117,7 +117,7 @@ module PE_cluster(
         .Weight2(Weight_4[15:8]),
         .Weight3(Weight_4[23:16]),
         .Weight4(Weight_4[31:24]),
-        .PE_en(PE_en[4]),
+        .PE_reset(PE_reset[4]),
         .PE_finish(PE_finish[4]),
         .valid(valid[4]),
         .OFM(OFM_4)
@@ -133,7 +133,7 @@ module PE_cluster(
         .Weight2(Weight_5[15:8]),
         .Weight3(Weight_5[23:16]),
         .Weight4(Weight_5[31:24]),
-        .PE_en(PE_en[5]),
+        .PE_reset(PE_reset[5]),
         .PE_finish(PE_finish[5]),
         .valid(valid[5]),
         .OFM(OFM_5)
@@ -149,7 +149,7 @@ module PE_cluster(
         .Weight2(Weight_6[15:8]),
         .Weight3(Weight_6[23:16]),
         .Weight4(Weight_6[31:24]),
-        .PE_en(PE_en[6]),
+        .PE_reset(PE_reset[6]),
         .PE_finish(PE_finish[6]),
         .valid(valid[6]),
         .OFM(OFM_6)
@@ -165,7 +165,7 @@ module PE_cluster(
         .Weight2(Weight_7[15:8]),
         .Weight3(Weight_7[23:16]),
         .Weight4(Weight_7[31:24]),
-        .PE_en(PE_en[7]),
+        .PE_reset(PE_reset[7]),
         .PE_finish(PE_finish[7]),
         .valid(valid[7]),
         .OFM(OFM_7)
@@ -181,7 +181,7 @@ module PE_cluster(
         .Weight2(Weight_8[15:8]),
         .Weight3(Weight_8[23:16]),
         .Weight4(Weight_8[31:24]),
-        .PE_en(PE_en[8]),
+        .PE_reset(PE_reset[8]),
         .PE_finish(PE_finish[8]),
         .valid(valid[8]),
         .OFM(OFM_8)
@@ -197,7 +197,7 @@ module PE_cluster(
         .Weight2(Weight_9[15:8]),
         .Weight3(Weight_9[23:16]),
         .Weight4(Weight_9[31:24]),
-        .PE_en(PE_en[9]),
+        .PE_reset(PE_reset[9]),
         .PE_finish(PE_finish[9]),
         .valid(valid[9]),
         .OFM(OFM_9)
@@ -213,7 +213,7 @@ module PE_cluster(
         .Weight2(Weight_10[15:8]),
         .Weight3(Weight_10[23:16]),
         .Weight4(Weight_10[31:24]),
-        .PE_en(PE_en[10]),
+        .PE_reset(PE_reset[10]),
         .PE_finish(PE_finish[10]),
         .valid(valid[10]),
         .OFM(OFM_10)
@@ -229,7 +229,7 @@ module PE_cluster(
         .Weight2(Weight_11[15:8]),
         .Weight3(Weight_11[23:16]),
         .Weight4(Weight_11[31:24]),
-        .PE_en(PE_en[11]),
+        .PE_reset(PE_reset[11]),
         .PE_finish(PE_finish[11]),
         .valid(valid[11]),
         .OFM(OFM_11)
@@ -245,7 +245,7 @@ module PE_cluster(
         .Weight2(Weight_12[15:8]),
         .Weight3(Weight_12[23:16]),
         .Weight4(Weight_12[31:24]),
-        .PE_en(PE_en[12]),
+        .PE_reset(PE_reset[12]),
         .PE_finish(PE_finish[12]),
         .valid(valid[12]),
         .OFM(OFM_12)
@@ -261,7 +261,7 @@ module PE_cluster(
         .Weight2(Weight_13[15:8]),
         .Weight3(Weight_13[23:16]),
         .Weight4(Weight_13[31:24]),
-        .PE_en(PE_en[13]),
+        .PE_reset(PE_reset[13]),
         .PE_finish(PE_finish[13]),
         .valid(valid[13]),
         .OFM(OFM_13)
@@ -277,7 +277,7 @@ module PE_cluster(
         .Weight2(Weight_14[15:8]),
         .Weight3(Weight_14[23:16]),
         .Weight4(Weight_14[31:24]),
-        .PE_en(PE_en[14]),
+        .PE_reset(PE_reset[14]),
         .PE_finish(PE_finish[14]),
         .valid(valid[14]),
         .OFM(OFM_14)
@@ -293,7 +293,7 @@ module PE_cluster(
         .Weight2(Weight_15[15:8]),
         .Weight3(Weight_15[23:16]),
         .Weight4(Weight_15[31:24]),
-        .PE_en(PE_en[15]),
+        .PE_reset(PE_reset[15]),
         .PE_finish(PE_finish[15]),
         .valid(valid[15]),
         .OFM(OFM_15)

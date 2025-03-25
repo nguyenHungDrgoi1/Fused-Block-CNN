@@ -18,7 +18,7 @@ module CONV_256PE_32x32_tb();
     reg [256*8-1:0] input_feature;
     reg [7:0] weight;
     wire [256*8-1:0] output_feature;
-    reg [NUM_OF_PE - 1: 0] PE_en;
+    reg [NUM_OF_PE - 1: 0] PE_reset;
     reg [NUM_OF_PE - 1 : 0] PE_finish;
     wire [NUM_OF_PE - 1:0] valid;
     reg [7:0] fifo_input[ifm_data_size - 1 : 0];
@@ -44,7 +44,7 @@ module CONV_256PE_32x32_tb();
         .IFM(input_feature),
         .Weight(weight),
         .OFM(output_feature),
-        .PE_en(PE_en),
+        .PE_reset(PE_reset),
         .PE_finish(PE_finish),
         .valid(valid)
     );
@@ -53,7 +53,7 @@ module CONV_256PE_32x32_tb();
         clk = 0;
         input_feature = 0;
         weight = 0;
-        PE_en = 0;
+        PE_reset = 0;
         PE_finish = 0;
         
         file_input = $fopen("/home/thanhdo/questasim/PE/Fused-Block-CNN/in-out-weight/input_32x32x3_DUT.hex", "r");
@@ -83,9 +83,9 @@ module CONV_256PE_32x32_tb();
         rst = 1;
         #15;
         forever begin
-            PE_en = {NUM_OF_PE{1'b1}};
+            PE_reset = {NUM_OF_PE{1'b1}};
             #10;
-            PE_en = {NUM_OF_PE{1'b0}};
+            PE_reset = {NUM_OF_PE{1'b0}};
             #265;
             PE_finish = {NUM_OF_PE{1'b1}};
             #10;

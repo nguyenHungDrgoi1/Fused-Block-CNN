@@ -17,6 +17,7 @@ module address_generator #(
     output wire [31:0] req_addr_out_filter,
     output reg done_compute,
     output reg addr_valid_ifm,
+    output reg done_window,
     output wire addr_valid_filter
 );
 
@@ -232,9 +233,7 @@ always @(*) begin
 
         NEXT_WINDOW: begin
 
-            count_for_a_Window      = 'b0;
-            row_index_KERNEL        = 'b0;
-            col_index_KERNEL        = 'b0;
+            
 
             if (count_for_a_OFM < OFM_W*OFM_W -1 )   begin
                 next_state_IFM  =   FETCH_WINDOW ;
@@ -286,6 +285,11 @@ always @(posedge clk or negedge rst_n) begin
             predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
             predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
         end
+        if ( ( row_index_KERNEL == 'h0 )&& ( col_index_KERNEL ==  'h0 ) ) begin 
+            done_window <= 'b1;
+        end else  
+            done_window <= 'b0;
+
     end
 end
 
@@ -293,7 +297,6 @@ end
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         addr_fetch_ifm          <= addr_in;
-        addr_valid_ifm          <= 1'b0;
         count_for_a_Window      <= 1'b0;
         row_index_KERNEL        <= 8'b0;
         count_for_a_OFM         <= 8'b0;
@@ -347,9 +350,11 @@ always @(posedge clk or negedge rst_n) begin
                     
                     end
                 end else begin
-                    addr_fetch_ifm  =   predict_window_addr_fetch_ifm ;
+                    addr_fetch_ifm          <=   predict_window_addr_fetch_ifm ;
+                    count_for_a_Window      <= 'b0;
+                    row_index_KERNEL        <= 'b0;
+                    col_index_KERNEL        <= 'b0;
                 end
-            addr_valid_ifm  = 1'b1;
             end 
 
             NEXT_WINDOW: begin
@@ -392,8 +397,7 @@ always @(posedge clk or negedge rst_n) begin
             end
 
             default: begin
-                addr_valid_ifm  <= 1'b0;
-                
+                addr_fetch_ifm          <= addr_in ;
             end
         endcase
     end
@@ -422,7 +426,7 @@ always @(*) begin
 
             if ( ready ) begin
                 next_state_FILTER   =  FETCH_FILTER ;
-                addr_fetch_filter   =  addr_in;
+                
             end else begin
                 next_state_FILTER   = START_ADDR_FILTER;
             end
@@ -451,13 +455,16 @@ always @(posedge clk or negedge rst_n) begin
         case (current_state_FILTER)
             START_ADDR_FILTER: begin
                 if ( ready ) begin
-                    window_start_addr_filter    <= addr_fetch_filter;
-                    if ( addr_valid_ifm ==1 )  addr_fetch_filter    <= addr_fetch_filter + 'h4; 
+                    window_start_addr_filter    <=  addr_fetch_filter;
+                    if ( addr_valid_ifm ==1 )  addr_fetch_filter    <=  addr_fetch_filter + 'h4; 
                 end 
             end
 
             FETCH_FILTER: begin
                 if ( addr_valid_ifm ==1 ) begin
+                    if ( count_for_a_Window == (num_of_KERNEL_points <<  (IFM_C_shift - num_of_mul_in_PE_shift + OFM_C_shift - total_PE_shift)) -1 ) begin
+                    addr_fetch_filter           <=  addr_in;
+                    end else
                     addr_fetch_filter           <= addr_fetch_filter + 'h4;  
                 end                 
             end
