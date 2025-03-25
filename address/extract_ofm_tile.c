@@ -91,6 +91,5 @@ int main() {
     readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE14.hex", kernel_size, offset, 2, 14,ofm_height); // offset = 0 cho đoạn tiếp theo
     readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE15.hex", kernel_size, offset, 2, 15,ofm_height); // offset = 0 cho đoạn tiếp theo
 
-
     return 0;
 }
