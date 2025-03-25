@@ -33,24 +33,41 @@ module Sub_top_CONV(
     output [31:0] OFM,
 
 
-    output wire [7:0]  OFM_0,
-    output wire [7:0]  OFM_1,
-    output wire [7:0]  OFM_2,
-    output wire [7:0]  OFM_3,
-    output wire [7:0]  OFM_4,
-    output wire [7:0]  OFM_5,
-    output wire [7:0]  OFM_6,
-    output wire [7:0]  OFM_7,
-    output wire [7:0]  OFM_8,
-    output wire [7:0]  OFM_9,
-    output wire [7:0]  OFM_10,
-    output wire [7:0]  OFM_11,
-    output wire [7:0]  OFM_12,
-    output wire [7:0]  OFM_13,
-    output wire [7:0]  OFM_14,
-    output wire [7:0]  OFM_15,
-    output wire [7:0]  OFM_16
+    output wire [7:0]  OFM_active_0,
+    output wire [7:0]  OFM_active_1,
+    output wire [7:0]  OFM_active_2,
+    output wire [7:0]  OFM_active_3,
+    output wire [7:0]  OFM_active_4,
+    output wire [7:0]  OFM_active_5,
+    output wire [7:0]  OFM_active_6,
+    output wire [7:0]  OFM_active_7,
+    output wire [7:0]  OFM_active_8,
+    output wire [7:0]  OFM_active_9,
+    output wire [7:0]  OFM_active_10,
+    output wire [7:0]  OFM_active_11,
+    output wire [7:0]  OFM_active_12,
+    output wire [7:0]  OFM_active_13,
+    output wire [7:0]  OFM_active_14,
+    output wire [7:0]  OFM_active_15,
+    output wire [7:0]  OFM_active_16
 );
+    wire [7:0]  OFM_0,
+    wire [7:0]  OFM_1,
+    wire [7:0]  OFM_3,
+    wire [7:0]  OFM_4,
+    wire [7:0]  OFM_5,
+    wire [7:0]  OFM_2,
+    wire [7:0]  OFM_6,
+    wire [7:0]  OFM_7,
+    wire [7:0]  OFM_8,
+    wire [7:0]  OFM_9,
+    wire [7:0]  OFM_10,
+    wire [7:0]  OFM_11,
+    wire [7:0]  OFM_12,
+    wire [7:0]  OFM_13,
+    wire [7:0]  OFM_14,
+    wire [7:0]  OFM_15,
+    wire [7:0]  OFM_16
     logic [31:0] addr_IFM;
     logic [19:0] addr_w;
     logic [31:0] IFM_data;
@@ -250,6 +267,71 @@ module Sub_top_CONV(
         .OFM_14(OFM_14),
         .OFM_15(OFM_15)
 
+    );
+    
+    ReLu6 active0(
+        .OFM(OFM_0),
+        OFM_active(OFM_active_0)
+    );
+    ReLu6 active1(
+        .OFM(OFM_1),
+        OFM_active(OFM_active_1)
+    );
+    ReLu6 active2(
+        .OFM(OFM_2),
+        OFM_active(OFM_active_2)
+    );
+    ReLu6 active3(
+        .OFM(OFM_0),
+        OFM_active(OFM_active_3)
+    );
+    ReLu6 active4(
+        .OFM(OFM_4),
+        OFM_active(OFM_active_4)
+    );
+    ReLu6 active5(
+        .OFM(OFM_0),
+        OFM_active(OFM_active_5)
+    );
+    ReLu6 active6(
+        .OFM(OFM_6),
+        OFM_active(OFM_active_6)
+    );
+    ReLu6 active7(
+        .OFM(OFM_7),
+        OFM_active(OFM_active_7)
+    );
+    ReLu6 active8(
+        .OFM(OFM_8),
+        OFM_active(OFM_active_8)
+    );
+    ReLu6 active9(
+        .OFM(OFM_9),
+        OFM_active(OFM_active_9)
+    );
+    ReLu6 active10(
+        .OFM(OFM_10),
+        OFM_active(OFM_active_10)
+    );
+    ReLu6 active11(
+        .OFM(OFM_11),
+        OFM_active(OFM_active_11)
+    );
+    ReLu6 active12(
+        .OFM(OFM_12),
+        OFM_active(OFM_active_12)
+    );
+    ReLu6 active13(
+        .OFM(OFM_13),
+        OFM_active(OFM_active_13)
+    );
+    ReLu6 active14(
+        .OFM(OFM_14),
+        OFM_active(OFM_active_14)
+    );
+    ReLu6 active15(
+        .OFM(OFM_15),
+        OFM_active(OFM_active_14)
     );
     
     address_generator addr_gen(
