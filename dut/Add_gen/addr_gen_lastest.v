@@ -233,9 +233,7 @@ always @(*) begin
 
         NEXT_WINDOW: begin
 
-            count_for_a_Window      = 'b0;
-            row_index_KERNEL        = 'b0;
-            col_index_KERNEL        = 'b0;
+            
 
             if (count_for_a_OFM < OFM_W*OFM_W -1 )   begin
                 next_state_IFM  =   FETCH_WINDOW ;
@@ -353,7 +351,10 @@ always @(posedge clk or negedge rst_n) begin
                     
                     end
                 end else begin
-                    addr_fetch_ifm  =   predict_window_addr_fetch_ifm ;
+                    addr_fetch_ifm          <=   predict_window_addr_fetch_ifm ;
+                    count_for_a_Window      <= 'b0;
+                    row_index_KERNEL        <= 'b0;
+                    col_index_KERNEL        <= 'b0;
                 end
             addr_valid_ifm  = 1'b1;
             end 
