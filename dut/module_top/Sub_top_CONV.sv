@@ -212,7 +212,7 @@ module Sub_top_CONV(
     PE_cluster cluster(
         .clk(clk),
         .reset_n(reset),
-        .PE_reset(done_window_for_PE_cluster),
+        .PE_reset(PE_reset),
         .PE_finish(PE_finish),
         .valid(valid),
         .IFM(IFM_data),
