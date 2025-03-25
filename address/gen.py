@@ -52,5 +52,5 @@ for f in range(32):
     print(f"✅ Đã xong Filter {f}.\n")
 
 # 5. Lưu toàn bộ OFM vào file
-save_to_hex_file(OFM, "address/ofm.hex")
+# save_to_hex_file(OFM, "address/ofm.hex")
 print("✅ Đã lưu toàn bộ OFM vào ofm.hex")
