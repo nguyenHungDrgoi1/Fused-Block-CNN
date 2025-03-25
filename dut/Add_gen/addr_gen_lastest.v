@@ -429,7 +429,7 @@ always @(*) begin
 
             if ( ready ) begin
                 next_state_FILTER   =  FETCH_FILTER ;
-                addr_fetch_filter   =  addr_in;
+                
             end else begin
                 next_state_FILTER   = START_ADDR_FILTER;
             end
@@ -458,13 +458,16 @@ always @(posedge clk or negedge rst_n) begin
         case (current_state_FILTER)
             START_ADDR_FILTER: begin
                 if ( ready ) begin
-                    window_start_addr_filter    <= addr_fetch_filter;
-                    if ( addr_valid_ifm ==1 )  addr_fetch_filter    <= addr_fetch_filter + 'h4; 
+                    window_start_addr_filter    <=  addr_fetch_filter;
+                    if ( addr_valid_ifm ==1 )  addr_fetch_filter    <=  addr_fetch_filter + 'h4; 
                 end 
             end
 
             FETCH_FILTER: begin
                 if ( addr_valid_ifm ==1 ) begin
+                    if ( count_for_a_Window == (num_of_KERNEL_points <<  (IFM_C_shift - num_of_mul_in_PE_shift + OFM_C_shift - total_PE_shift)) -1 ) begin
+                    addr_fetch_filter           <=  addr_in;
+                    end else
                     addr_fetch_filter           <= addr_fetch_filter + 'h4;  
                 end                 
             end
