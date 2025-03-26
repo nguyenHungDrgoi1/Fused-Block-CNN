@@ -22,7 +22,7 @@ save_to_hex_file(Weight, "address/weight.hex")
 print("✅ Đã lưu IFM (có padding) và Weight vào ifm_padded.hex, weight.hex")
 
 # 4. Tính toàn bộ OFM (stride=1, có padding)
-OH, OW = 56, 56  # Kích thước đầu ra giữ nguyên do padding
+OH, OW = 56,56 # Kích thước đầu ra giữ nguyên do padding
 OFM = np.zeros((32, OH, OW), dtype=int)  # 32 filters
 
 print("\n🎯 BẮT ĐẦU TÍNH TOÁN TOÀN BỘ OFM (32 FILTERS)\n")
