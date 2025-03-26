@@ -27,8 +27,8 @@ void process_pe_file(int pe_id) {
     char outputFile[256];
 
     // Tạo tên file input/output theo PE
-    sprintf(inputFile, "../Fused-Block-CNN/address/OFM_PE%d.hex", pe_id);
-    sprintf(outputFile, "../Fused-Block-CNN/address/OFM_PE%d_change.hex", pe_id);
+    sprintf(inputFile, "OFM_PE%d.hex", pe_id);
+    sprintf(outputFile, "OFM_PE%d_change.hex", pe_id);
 
     // Đếm số dòng trong file
     int total_lines = count_lines(inputFile);

@@ -189,6 +189,12 @@ always @(*) begin
         'd32: begin
             OFM_C_shift = 'h5;
         end
+        'd64: begin
+            OFM_C_shift = 'h6;
+        end
+        'd128: begin
+            OFM_C_shift = 'h7;
+        end
         default : 
             OFM_C_shift = 'h2;
     endcase

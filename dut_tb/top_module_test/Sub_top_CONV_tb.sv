@@ -204,7 +204,7 @@ module Sub_top_CONV_tb;
 
         cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
         #20 // 3 chu ki
-        repeat (3000) begin
+        repeat (200) begin
         //#20
         PE_reset = 16'hFFFF;
         PE_finish = 0;

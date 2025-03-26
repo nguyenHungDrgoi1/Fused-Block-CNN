@@ -61,7 +61,7 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
 }
 
 int main() {
-    const char *inputFile = "../Fused-Block-CNN/address/ofm.hex";  // Đường dẫn tới file nguồn
+    const char *inputFile = "ofm.hex";  // Đường dẫn tới file nguồn
 
     const int PE = 16;
     const int filter = 32;
@@ -74,22 +74,22 @@ int main() {
     int offset = ofm_height * ofm_height * (PE - 1);   // Nhân với m để tính vị trí tiếp theo cần đọc (m*n)
 
     // Gọi hàm để thực hiện việc đọc và ghi nhiều lần vào các file khác nhau với các offset khác nhau
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE0.hex", kernel_size, offset, 2, 0,ofm_height); // offset = 1 cho đoạn từ 144 đến 287
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE1.hex", kernel_size, offset, 2, 1,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE2.hex", kernel_size, offset, 2, 2,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE3.hex", kernel_size, offset, 2, 3,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE4.hex", kernel_size, offset, 2, 4,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE5.hex", kernel_size, offset, 2, 5,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE6.hex", kernel_size, offset, 2, 6,ofm_height); // offset = 0 cho đoạn tiếp theo 
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE7.hex", kernel_size, offset, 2, 7,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE8.hex", kernel_size, offset, 2, 8,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE9.hex", kernel_size, offset, 2, 9,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE10.hex", kernel_size, offset, 2, 10,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE11.hex", kernel_size, offset, 2, 11,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE12.hex", kernel_size, offset, 2, 12,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE13.hex", kernel_size, offset, 2, 13,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE14.hex", kernel_size, offset, 2, 14,ofm_height); // offset = 0 cho đoạn tiếp theo
-    readAndWriteFile(inputFile, "../Fused-Block-CNN/address/OFM_PE15.hex", kernel_size, offset, 2, 15,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE0.hex", kernel_size, offset, 2, 0,ofm_height); // offset = 1 cho đoạn từ 144 đến 287
+    readAndWriteFile(inputFile, "OFM_PE1.hex", kernel_size, offset, 2, 1,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE2.hex", kernel_size, offset, 2, 2,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE3.hex", kernel_size, offset, 2, 3,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE4.hex", kernel_size, offset, 2, 4,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE5.hex", kernel_size, offset, 2, 5,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE6.hex", kernel_size, offset, 2, 6,ofm_height); // offset = 0 cho đoạn tiếp theo 
+    readAndWriteFile(inputFile, "OFM_PE7.hex", kernel_size, offset, 2, 7,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE8.hex", kernel_size, offset, 2, 8,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE9.hex", kernel_size, offset, 2, 9,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE10.hex", kernel_size, offset, 2, 10,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE11.hex", kernel_size, offset, 2, 11,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE12.hex", kernel_size, offset, 2, 12,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE13.hex", kernel_size, offset, 2, 13,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE14.hex", kernel_size, offset, 2, 14,ofm_height); // offset = 0 cho đoạn tiếp theo
+    readAndWriteFile(inputFile, "OFM_PE15.hex", kernel_size, offset, 2, 15,ofm_height); // offset = 0 cho đoạn tiếp theo
 
     return 0;
 }

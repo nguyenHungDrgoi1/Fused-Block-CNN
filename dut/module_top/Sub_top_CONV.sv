@@ -230,7 +230,7 @@ module Sub_top_CONV(
     PE_cluster cluster(
         .clk(clk),
         .reset_n(reset),
-        .PE_reset(PE_reset),
+        .PE_reset(done_window_for_PE_cluster),
         .PE_finish(PE_finish),
         //.valid(valid),
         .IFM(IFM_data),
@@ -250,98 +250,98 @@ module Sub_top_CONV(
         .Weight_13(Weight_13),
         .Weight_14(Weight_14),
         .Weight_15(Weight_15),
-        .OFM_0(OFM_0),
-        .OFM_1(OFM_1),
-        .OFM_2(OFM_2),
-        .OFM_3(OFM_3),
-        .OFM_4(OFM_4),
-        .OFM_5(OFM_5),
-        .OFM_6(OFM_6),
-        .OFM_7(OFM_7),
-        .OFM_8(OFM_8),
-        .OFM_9(OFM_9),
-        .OFM_10(OFM_10),
-        .OFM_11(OFM_11),
-        .OFM_12(OFM_12),
-        .OFM_13(OFM_13),
-        .OFM_14(OFM_14),
-        .OFM_15(OFM_15)
+        .OFM_0(OFM_active_0),
+        .OFM_1(OFM_active_1),
+        .OFM_2(OFM_active_2),
+        .OFM_3(OFM_active_3),
+        .OFM_4(OFM_active_4),
+        .OFM_5(OFM_active_5),
+        .OFM_6(OFM_active_6),
+        .OFM_7(OFM_active_7),
+        .OFM_8(OFM_active_8),
+        .OFM_9(OFM_active_9),
+        .OFM_10(OFM_active_10),
+        .OFM_11(OFM_active_11),
+        .OFM_12(OFM_active_12),
+        .OFM_13(OFM_active_13),
+        .OFM_14(OFM_active_14),
+        .OFM_15(OFM_active_15)
 
     );
     
-    ReLU6 active0(
-        .OFM(OFM_0),
-        .OFM_active(OFM_active_0)
-    );
-    ReLU6 active1(
-        .OFM(OFM_1),
-        .OFM_active(OFM_active_1)
-    );
-    ReLU6 active2(
-        .OFM(OFM_2),
-        .OFM_active(OFM_active_2)
-    );
-    ReLU6 active3(
-        .OFM(OFM_0),
-        .OFM_active(OFM_active_3)
-    );
-    ReLU6 active4(
-        .OFM(OFM_4),
-        .OFM_active(OFM_active_4)
-    );
-    ReLU6 active5(
-        .OFM(OFM_0),
-        .OFM_active(OFM_active_5)
-    );
-    ReLU6 active6(
-        .OFM(OFM_6),
-        .OFM_active(OFM_active_6)
-    );
-    ReLU6 active7(
-        .OFM(OFM_7),
-        .OFM_active(OFM_active_7)
-    );
-    ReLU6 active8(
-        .OFM(OFM_8),
-        .OFM_active(OFM_active_8)
-    );
-    ReLU6 active9(
-        .OFM(OFM_9),
-        .OFM_active(OFM_active_9)
-    );
-    ReLU6 active10(
-        .OFM(OFM_10),
-        .OFM_active(OFM_active_10)
-    );
-    ReLU6 active11(
-        .OFM(OFM_11),
-        .OFM_active(OFM_active_11)
-    );
-    ReLU6 active12(
-        .OFM(OFM_12),
-        .OFM_active(OFM_active_12)
-    );
-    ReLU6 active13(
-        .OFM(OFM_13),
-        .OFM_active(OFM_active_13)
-    );
-    ReLU6 active14(
-        .OFM(OFM_14),
-        .OFM_active(OFM_active_14)
-    );
-    ReLU6 active15(
-        .OFM(OFM_15),
-        .OFM_active(OFM_active_14)
-    );
+    // ReLU6 active0(
+    //     .OFM(OFM_0),
+    //     .OFM_active(OFM_active_0)
+    // );
+    // ReLU6 active1(
+    //     .OFM(OFM_1),
+    //     .OFM_active(OFM_active_1)
+    // );
+    // ReLU6 active2(
+    //     .OFM(OFM_2),
+    //     .OFM_active(OFM_active_2)
+    // );
+    // ReLU6 active3(
+    //     .OFM(OFM_0),
+    //     .OFM_active(OFM_active_3)
+    // );
+    // ReLU6 active4(
+    //     .OFM(OFM_4),
+    //     .OFM_active(OFM_active_4)
+    // );
+    // ReLU6 active5(
+    //     .OFM(OFM_0),
+    //     .OFM_active(OFM_active_5)
+    // );
+    // ReLU6 active6(
+    //     .OFM(OFM_6),
+    //     .OFM_active(OFM_active_6)
+    // );
+    // ReLU6 active7(
+    //     .OFM(OFM_7),
+    //     .OFM_active(OFM_active_7)
+    // );
+    // ReLU6 active8(
+    //     .OFM(OFM_8),
+    //     .OFM_active(OFM_active_8)
+    // );
+    // ReLU6 active9(
+    //     .OFM(OFM_9),
+    //     .OFM_active(OFM_active_9)
+    // );
+    // ReLU6 active10(
+    //     .OFM(OFM_10),
+    //     .OFM_active(OFM_active_10)
+    // );
+    // ReLU6 active11(
+    //     .OFM(OFM_11),
+    //     .OFM_active(OFM_active_11)
+    // );
+    // ReLU6 active12(
+    //     .OFM(OFM_12),
+    //     .OFM_active(OFM_active_12)
+    // );
+    // ReLU6 active13(
+    //     .OFM(OFM_13),
+    //     .OFM_active(OFM_active_13)
+    // );
+    // ReLU6 active14(
+    //     .OFM(OFM_14),
+    //     .OFM_active(OFM_active_14)
+    // );
+    // ReLU6 active15(
+    //     .OFM(OFM_15),
+    //     .OFM_active(OFM_active_14)
+    // );
     
     address_generator addr_gen(
         .clk(clk),
         .rst_n(reset),
         .KERNEL_W(3),
-        .OFM_W(54),
-        .OFM_C(32),
-        .IFM_C(16),
-        .IFM_W(56),
+        .OFM_W(56),
+        .OFM_C(128),
+        .IFM_C(32),
+        .IFM_W(58),
         .stride(1),
         .ready(cal_start),
         .addr_in(0),
