@@ -26,10 +26,18 @@ module Sub_top_CONV(
     //control signal 
     input wire [15:0] PE_reset,
     input wire [15:0] PE_finish,
-    output wire [15:0] valid,
-    //output wire [15:0] done_window,
+
+    input  wire [3:0] KERNEL_W,
+    input  wire [7:0] OFM_W,
+    input  wire [7:0] OFM_C,
+    input  wire [7:0] IFM_C,
+    input  wire [7:0] IFM_W,
+    input  wire [1:0] stride,
     
 
+    
+    output wire [15:0] valid,
+    //output wire [15:0] done_window,
     output [31:0] OFM,
 
 
@@ -48,8 +56,7 @@ module Sub_top_CONV(
     output wire [7:0]  OFM_active_12,
     output wire [7:0]  OFM_active_13,
     output wire [7:0]  OFM_active_14,
-    output wire [7:0]  OFM_active_15,
-    output wire [7:0]  OFM_active_16
+    output wire [7:0]  OFM_active_15
 );
     wire [7:0]  OFM_0;
     wire [7:0]  OFM_1;
@@ -90,6 +97,9 @@ module Sub_top_CONV(
     wire [15:0] done_window_for_PE_cluster;
     wire [15:0] finish_for_PE_cluster;
     wire        done_window_one_bit;
+
+    logic [31:0] base_addr =0;
+
     BRAM_IFM IFM_BRAM(
         .clk(clk),
         .rd_addr(addr_IFM),
@@ -337,14 +347,14 @@ module Sub_top_CONV(
     address_generator addr_gen(
         .clk(clk),
         .rst_n(reset),
-        .KERNEL_W(3),
-        .OFM_W(56),
-        .OFM_C(128),
-        .IFM_C(32),
-        .IFM_W(58),
-        .stride(1),
+        .KERNEL_W(KERNEL_W),
+        .OFM_W(OFM_W),
+        .OFM_C(OFM_C),
+        .IFM_C(IFM_C),
+        .IFM_W(IFM_W),
+        .stride(stride),
         .ready(cal_start),
-        .addr_in(0),
+        .addr_in(base_addr),
         .req_addr_out_filter(addr_w),
         .req_addr_out_ifm(addr_IFM),
         .done_window(done_window_one_bit)

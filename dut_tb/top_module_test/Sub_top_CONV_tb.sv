@@ -12,6 +12,14 @@ module Sub_top_CONV_tb;
     reg reset;
     reg wr_rd_en_IFM;
     reg wr_rd_en_Weight;
+
+    reg [3:0] KERNEL_W;
+    reg [7:0] OFM_C;
+    reg [7:0] OFM_W;
+    reg [7:0] IFM_C;
+    reg [7:0] IFM_W;
+    reg [1:0] stride;
+
     reg [31:0] addr;
     reg [31:0] data_in_IFM;
     reg [31:0] data_in_Weight_0;
@@ -94,6 +102,14 @@ module Sub_top_CONV_tb;
         .OFM(OFM_active),
         .PE_reset(PE_reset),
         .PE_finish(PE_finish),
+
+        .KERNEL_W(KERNEL_W),
+        .OFM_C(OFM_C),
+        .OFM_W(OFM_W),
+        .IFM_C(IFM_C),
+        .IFM_W(IFM_W),
+        .stride(stride),
+
         .valid(valid),
         // .addr_w0(addr_w[0]), .addr_w1(addr_w[1]), .addr_w2(addr_w[2]), .addr_w3(addr_w[3]),
         // .addr_w4(addr_w[4]), .addr_w5(addr_w[5]), .addr_w6(addr_w[6]), .addr_w7(addr_w[7]),
@@ -120,6 +136,15 @@ module Sub_top_CONV_tb;
         wr_rd_en_IFM = 0;
         wr_rd_en_Weight = 0;
         addr = 0;
+
+        KERNEL_W = 3;
+        OFM_W = 56;
+        OFM_C = 128;
+        IFM_C = 32;
+        IFM_W = 58;
+
+        stride = 1;
+
         cal_start = 0;
         data_in_IFM = 0;
         data_in_Weight_0 = 0;
