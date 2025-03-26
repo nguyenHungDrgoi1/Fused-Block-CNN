@@ -64,6 +64,9 @@ always @(*) begin
         'h4: begin
             num_of_mul_in_PE_shift = 'h2;
         end
+        'h8: begin
+            num_of_mul_in_PE_shift = 'h3;
+        end
         default : 
             num_of_mul_in_PE_shift = 'h2;
     endcase 
@@ -189,6 +192,12 @@ always @(*) begin
         end
         'd32: begin
             OFM_C_shift = 'h5;
+        end
+        'd64: begin
+            OFM_C_shift = 'h6;
+        end
+        'd128: begin
+            OFM_C_shift = 'h7;
         end
         default : 
             OFM_C_shift = 'h2;
