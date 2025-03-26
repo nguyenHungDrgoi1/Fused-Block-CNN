@@ -22,7 +22,7 @@ module address_generator #(
 );
 
 wire in_progress;
-reg [7:0] count_for_a_Window;
+reg [9:0] count_for_a_Window;
 reg [7:0] count_for_a_OFM;
 reg [7:0] row_index_KERNEL;
 reg [7:0] col_index_KERNEL;
