@@ -5,6 +5,6 @@ module ReLU6(
     wire [7:0] tmp;
 
     assign tmp = OFM[7] ? 0 : OFM;
-    assign OFM_active = (tmp < 6) ? tmp: 6;
+    assign OFM_active = OFM;
 
 endmodule

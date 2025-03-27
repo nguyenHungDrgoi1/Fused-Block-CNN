@@ -1,0 +1,4 @@
+cd 
+cd /home/thanhdo/questasim
+sudo ./linux_x86_64/mgls/bin/lmgrd -c ./LICENSE.dat
+cd /home/thanhdo/questasim/PE/work/

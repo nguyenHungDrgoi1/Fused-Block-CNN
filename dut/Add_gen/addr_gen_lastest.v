@@ -1,4 +1,4 @@
-module Address_generator #(
+module address_generator #(
     parameter TOTAL_PE   = 16,
     parameter DATA_WIDTH = 32
 )(
@@ -489,4 +489,3 @@ assign addr_valid_filter   = addr_valid_ifm;
 assign req_addr_out_filter = addr_fetch_filter;
 
 endmodule
-

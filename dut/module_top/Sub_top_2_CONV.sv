@@ -1,35 +1,4 @@
-module control_unit #(
-    parameter TOTAL_PE  =16
-)(
-    input  wire clk,
-    input  wire rst_n,
-    input  wire [3:0]   KERNEL_W,
-    input  wire [7:0]   OFM_W,
-    input  wire [7:0]   OFM_C,
-    input  wire [7:0]   IFM_C,
-    input  wire [7:0]   IFM_W,
-    input  wire [1:0]   stride,
-    input  wire         addr_valid,
-    input  wire         done_compute,
-
-    output  wire        cal_start,
-    output  wire        wr_rd_req,
-    output  wire [31:0]  base_addr,
-    
-    output  wire [3:0]   KERNEL_W,
-    output  wire [7:0]   OFM_W,
-    output  wire [7:0]   OFM_C,
-    output  wire [7:0]   IFM_C,
-    output  wire [7:0]   IFM_W,
-    output  wire [1:0]   stride
-    
-)
-
-
-
-endmodule
-
-module Sub_top_CONV(
+module Sub_top_2_CONV(
     input clk,
     input reset,
     input [31:0] addr,
@@ -53,35 +22,72 @@ module Sub_top_CONV(
     input [31:0] data_in_Weight_13,
     input [31:0] data_in_Weight_14,
     input [31:0] data_in_Weight_15,
-
+    input [1:0] control_mux,
     //control signal 
     input wire [15:0] PE_reset,
     input wire [15:0] PE_finish,
     output wire [15:0] valid,
     //output wire [15:0] done_window,
-    
-
+    output wr_en_next,
+    output [31:0] addr_ram_next_rd,
+    output [31:0] addr_ram_next_wr,
     output [31:0] OFM,
 
 
-    output wire [7:0]  OFM_0,
-    output wire [7:0]  OFM_1,
-    output wire [7:0]  OFM_2,
-    output wire [7:0]  OFM_3,
-    output wire [7:0]  OFM_4,
-    output wire [7:0]  OFM_5,
-    output wire [7:0]  OFM_6,
-    output wire [7:0]  OFM_7,
-    output wire [7:0]  OFM_8,
-    output wire [7:0]  OFM_9,
-    output wire [7:0]  OFM_10,
-    output wire [7:0]  OFM_11,
-    output wire [7:0]  OFM_12,
-    output wire [7:0]  OFM_13,
-    output wire [7:0]  OFM_14,
-    output wire [7:0]  OFM_15,
-    output wire [7:0]  OFM_16
+    output [31:0] out_BRAM_CONV
 );
+    wire [31:0] data_out_mux;
+    wire [7:0]  OFM_n_CONV_0;
+    wire [7:0]  OFM_n_CONV_1;
+    wire [7:0]  OFM_n_CONV_2;
+    wire [7:0]  OFM_n_CONV_3;
+    wire [7:0]  OFM_n_CONV_4;
+    wire [7:0]  OFM_n_CONV_5;
+    wire [7:0]  OFM_n_CONV_6;
+    wire [7:0]  OFM_n_CONV_7;
+    wire [7:0]  OFM_n_CONV_8;
+    wire [7:0]  OFM_n_CONV_9;
+    wire [7:0]  OFM_n_CONV_10;
+    wire [7:0]  OFM_n_CONV_11;
+    wire [7:0]  OFM_n_CONV_12;
+    wire [7:0]  OFM_n_CONV_13;
+    wire [7:0]  OFM_n_CONV_14;
+    wire [7:0]  OFM_n_CONV_15;
+    wire [7:0]  OFM_n_CONV_16;
+    wire [7:0]  OFM_active_0;
+    wire [7:0]  OFM_active_1;
+    wire [7:0]  OFM_active_2;
+    wire [7:0]  OFM_active_3;
+    wire [7:0]  OFM_active_4;
+    wire [7:0]  OFM_active_5;
+    wire [7:0]  OFM_active_6;
+    wire [7:0]  OFM_active_7;
+    wire [7:0]  OFM_active_8;
+    wire [7:0]  OFM_active_9;
+    wire [7:0]  OFM_active_10;
+    wire [7:0]  OFM_active_11;
+    wire [7:0]  OFM_active_12;
+    wire [7:0]  OFM_active_13;
+    wire [7:0]  OFM_active_14;
+    wire [7:0]  OFM_active_15;
+    wire [7:0]  OFM_active_16;
+    wire [7:0]  OFM_0;
+    wire [7:0]  OFM_1;
+    wire [7:0]  OFM_2;
+    wire [7:0]  OFM_3;
+    wire [7:0]  OFM_4;
+    wire [7:0]  OFM_5;
+    wire [7:0]  OFM_6;
+    wire [7:0]  OFM_7;
+    wire [7:0]  OFM_8;
+    wire [7:0]  OFM_9;
+    wire [7:0]  OFM_10;
+    wire [7:0]  OFM_11;
+    wire [7:0]  OFM_12;
+    wire [7:0]  OFM_13;
+    wire [7:0]  OFM_14;
+    wire [7:0]  OFM_15;
+    wire [7:0]  OFM_16;
     logic [31:0] addr_IFM;
     logic [19:0] addr_w;
     logic [31:0] IFM_data;
@@ -244,7 +250,7 @@ module Sub_top_CONV(
     PE_cluster cluster(
         .clk(clk),
         .reset_n(reset),
-        .PE_reset(done_window_for_PE_cluster),
+        .PE_reset(PE_reset),
         .PE_finish(PE_finish),
         //.valid(valid),
         .IFM(IFM_data),
@@ -283,6 +289,139 @@ module Sub_top_CONV(
 
     );
     
+    ReLU6 active0(
+        .OFM(OFM_0),
+        .OFM_active(OFM_active_0)
+    );
+    ReLU6 active1(
+        .OFM(OFM_1),
+        .OFM_active(OFM_active_1)
+    );
+    ReLU6 active2(
+        .OFM(OFM_2),
+        .OFM_active(OFM_active_2)
+    );
+    ReLU6 active3(
+        .OFM(OFM_0),
+        .OFM_active(OFM_active_3)
+    );
+    ReLU6 active4(
+        .OFM(OFM_4),
+        .OFM_active(OFM_active_4)
+    );
+    ReLU6 active5(
+        .OFM(OFM_0),
+        .OFM_active(OFM_active_5)
+    );
+    ReLU6 active6(
+        .OFM(OFM_6),
+        .OFM_active(OFM_active_6)
+    );
+    ReLU6 active7(
+        .OFM(OFM_7),
+        .OFM_active(OFM_active_7)
+    );
+    ReLU6 active8(
+        .OFM(OFM_8),
+        .OFM_active(OFM_active_8)
+    );
+    ReLU6 active9(
+        .OFM(OFM_9),
+        .OFM_active(OFM_active_9)
+    );
+    ReLU6 active10(
+        .OFM(OFM_10),
+        .OFM_active(OFM_active_10)
+    );
+    ReLU6 active11(
+        .OFM(OFM_11),
+        .OFM_active(OFM_active_11)
+    );
+    ReLU6 active12(
+        .OFM(OFM_12),
+        .OFM_active(OFM_active_12)
+    );
+    ReLU6 active13(
+        .OFM(OFM_13),
+        .OFM_active(OFM_active_13)
+    );
+    ReLU6 active14(
+        .OFM(OFM_14),
+        .OFM_active(OFM_active_14)
+    );
+    ReLU6 active15(
+        .OFM(OFM_15),
+        .OFM_active(OFM_active_14)
+    );
+    Register_for_pipeline Reg_1(
+        .clk(clk),
+        .reset_n(reset_n),
+        .valid_data(done_window_for_PE_cluster),
+        .data_in_0(OFM_active_0),
+        .data_in_1(OFM_active_1),
+        .data_in_2(OFM_active_2),
+        .data_in_3(OFM_active_3),
+        .data_in_4(OFM_active_4),
+        .data_in_5(OFM_active_5),
+        .data_in_6(OFM_active_6),
+        .data_in_7(OFM_active_7),
+        .data_in_8(OFM_active_8),
+        .data_in_9(OFM_active_9),
+        .data_in_10(OFM_active_10),
+        .data_in_11(OFM_active_11),
+        .data_in_12(OFM_active_12),
+        .data_in_13(OFM_active_13),
+        .data_in_14(OFM_active_14),
+        .data_in_15(OFM_active_15),
+        .data_out_0(OFM_n_CONV_0),
+        .data_out_1(OFM_n_CONV_1),
+        .data_out_2(OFM_n_CONV_2),
+        .data_out_3(OFM_n_CONV_3),
+        .data_out_4(OFM_n_CONV_4),
+        .data_out_5(OFM_n_CONV_5),
+        .data_out_6(OFM_n_CONV_6),
+        .data_out_7(OFM_n_CONV_7),
+        .data_out_8(OFM_n_CONV_8),
+        .data_out_9(OFM_n_CONV_9),
+        .data_out_10(OFM_n_CONV_10),
+        .data_out_11(OFM_n_CONV_11),
+        .data_out_12(OFM_n_CONV_12),
+        .data_out_13(OFM_n_CONV_13),
+        .data_out_14(OFM_n_CONV_14),
+        .data_out_15(OFM_n_CONV_15)
+    );
+
+    MUX_pipeline mux(
+        .control(control_mux),
+
+        .data_in_0(OFM_active_0),
+        .data_in_1(OFM_active_1),
+        .data_in_2(OFM_active_2),
+        .data_in_3(OFM_active_3),
+        .data_in_4(OFM_active_4),
+        .data_in_5(OFM_active_5),
+        .data_in_6(OFM_active_6),
+        .data_in_7(OFM_active_7),
+        .data_in_8(OFM_active_8),
+        .data_in_9(OFM_active_9),
+        .data_in_10(OFM_active_10),
+        .data_in_11(OFM_active_11),
+        .data_in_12(OFM_active_12),
+        .data_in_13(OFM_active_13),
+        .data_in_14(OFM_active_14),
+        .data_in_15(OFM_active_15),
+
+        .data_out(out_BRAM_CONV)
+    );
+
+    BRAM_IFM BRAM_pipeline(
+        .clk(clk),
+        .rd_addr(addr_ram_next_wr),
+        .wr_addr(addr_ram_next_rd),
+        .wr_rd_en(wr_en_next),
+        .data_in(data_out_mux),
+        .data_out(out_BRAM_CONV)
+    );
     address_generator addr_gen(
         .clk(clk),
         .rst_n(reset),

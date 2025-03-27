@@ -33,12 +33,15 @@ module Sub_top_CONV(
     input  wire [7:0] IFM_C,
     input  wire [7:0] IFM_W,
     input  wire [1:0] stride,
-    
-
-    
     output wire [15:0] valid,
     //output wire [15:0] done_window,
+    
+
     output [31:0] OFM,
+
+    // for Control_unit
+    input wire        run,
+    input wire [3:0]  instrution,
 
 
     output wire [7:0]  OFM_active_0,
@@ -56,7 +59,8 @@ module Sub_top_CONV(
     output wire [7:0]  OFM_active_12,
     output wire [7:0]  OFM_active_13,
     output wire [7:0]  OFM_active_14,
-    output wire [7:0]  OFM_active_15
+    output wire [7:0]  OFM_active_15,
+    output wire [7:0]  OFM_active_16
 );
     wire [7:0]  OFM_0;
     wire [7:0]  OFM_1;
@@ -97,9 +101,31 @@ module Sub_top_CONV(
     wire [15:0] done_window_for_PE_cluster;
     wire [15:0] finish_for_PE_cluster;
     wire        done_window_one_bit;
+    wire        addr_valid;
 
     logic [31:0] base_addr =0;
 
+    Control_unit Control_unit(
+        .clk(clk),
+        .rst_n(reset),
+        .run(run),
+        .instrution(instrution),
+        .KERNEL_W(KERNEL_W),
+        .OFM_W(OFM_W),
+        .OFM_C(OFM_C),
+        .IFM_C(IFM_C),
+        .IFM_W(IFM_W),
+        .stride(stride),
+        .addr_valid(addr_valid),
+        .done_compute(done_compute),
+        .cal_start(),
+        .wr_rd_req_IFM(),
+        .wr_addr_IFM(),
+        .wr_rd_req_Weight(),
+        .wr_addr_Weight(),
+        .base_addr(),
+        .current_state()
+    );
     BRAM_IFM IFM_BRAM(
         .clk(clk),
         .rd_addr(addr_IFM),
@@ -240,9 +266,9 @@ module Sub_top_CONV(
     PE_cluster cluster(
         .clk(clk),
         .reset_n(reset),
-        .PE_reset(done_window_for_PE_cluster),
+        .PE_reset(PE_reset),
         .PE_finish(PE_finish),
-        //.valid(valid),
+        .valid(valid),
         .IFM(IFM_data),
         .Weight_0(Weight_0),
         .Weight_1(Weight_1),
@@ -260,89 +286,89 @@ module Sub_top_CONV(
         .Weight_13(Weight_13),
         .Weight_14(Weight_14),
         .Weight_15(Weight_15),
-        .OFM_0(OFM_active_0),
-        .OFM_1(OFM_active_1),
-        .OFM_2(OFM_active_2),
-        .OFM_3(OFM_active_3),
-        .OFM_4(OFM_active_4),
-        .OFM_5(OFM_active_5),
-        .OFM_6(OFM_active_6),
-        .OFM_7(OFM_active_7),
-        .OFM_8(OFM_active_8),
-        .OFM_9(OFM_active_9),
-        .OFM_10(OFM_active_10),
-        .OFM_11(OFM_active_11),
-        .OFM_12(OFM_active_12),
-        .OFM_13(OFM_active_13),
-        .OFM_14(OFM_active_14),
-        .OFM_15(OFM_active_15)
+        .OFM_0(OFM_0),
+        .OFM_1(OFM_1),
+        .OFM_2(OFM_2),
+        .OFM_3(OFM_3),
+        .OFM_4(OFM_4),
+        .OFM_5(OFM_5),
+        .OFM_6(OFM_6),
+        .OFM_7(OFM_7),
+        .OFM_8(OFM_8),
+        .OFM_9(OFM_9),
+        .OFM_10(OFM_10),
+        .OFM_11(OFM_11),
+        .OFM_12(OFM_12),
+        .OFM_13(OFM_13),
+        .OFM_14(OFM_14),
+        .OFM_15(OFM_15)
 
     );
     
-    // ReLU6 active0(
-    //     .OFM(OFM_0),
-    //     .OFM_active(OFM_active_0)
-    // );
-    // ReLU6 active1(
-    //     .OFM(OFM_1),
-    //     .OFM_active(OFM_active_1)
-    // );
-    // ReLU6 active2(
-    //     .OFM(OFM_2),
-    //     .OFM_active(OFM_active_2)
-    // );
-    // ReLU6 active3(
-    //     .OFM(OFM_0),
-    //     .OFM_active(OFM_active_3)
-    // );
-    // ReLU6 active4(
-    //     .OFM(OFM_4),
-    //     .OFM_active(OFM_active_4)
-    // );
-    // ReLU6 active5(
-    //     .OFM(OFM_0),
-    //     .OFM_active(OFM_active_5)
-    // );
-    // ReLU6 active6(
-    //     .OFM(OFM_6),
-    //     .OFM_active(OFM_active_6)
-    // );
-    // ReLU6 active7(
-    //     .OFM(OFM_7),
-    //     .OFM_active(OFM_active_7)
-    // );
-    // ReLU6 active8(
-    //     .OFM(OFM_8),
-    //     .OFM_active(OFM_active_8)
-    // );
-    // ReLU6 active9(
-    //     .OFM(OFM_9),
-    //     .OFM_active(OFM_active_9)
-    // );
-    // ReLU6 active10(
-    //     .OFM(OFM_10),
-    //     .OFM_active(OFM_active_10)
-    // );
-    // ReLU6 active11(
-    //     .OFM(OFM_11),
-    //     .OFM_active(OFM_active_11)
-    // );
-    // ReLU6 active12(
-    //     .OFM(OFM_12),
-    //     .OFM_active(OFM_active_12)
-    // );
-    // ReLU6 active13(
-    //     .OFM(OFM_13),
-    //     .OFM_active(OFM_active_13)
-    // );
-    // ReLU6 active14(
-    //     .OFM(OFM_14),
-    //     .OFM_active(OFM_active_14)
-    // );
-    // ReLU6 active15(
-    //     .OFM(OFM_15),
-    //     .OFM_active(OFM_active_14)
-    // );
+    ReLU6 active0(
+        .OFM(OFM_0),
+        .OFM_active(OFM_active_0)
+    );
+    ReLU6 active1(
+        .OFM(OFM_1),
+        .OFM_active(OFM_active_1)
+    );
+    ReLU6 active2(
+        .OFM(OFM_2),
+        .OFM_active(OFM_active_2)
+    );
+    ReLU6 active3(
+        .OFM(OFM_3),
+        .OFM_active(OFM_active_3)
+    );
+    ReLU6 active4(
+        .OFM(OFM_4),
+        .OFM_active(OFM_active_4)
+    );
+    ReLU6 active5(
+        .OFM(OFM_5),
+        .OFM_active(OFM_active_5)
+    );
+    ReLU6 active6(
+        .OFM(OFM_6),
+        .OFM_active(OFM_active_6)
+    );
+    ReLU6 active7(
+        .OFM(OFM_7),
+        .OFM_active(OFM_active_7)
+    );
+    ReLU6 active8(
+        .OFM(OFM_8),
+        .OFM_active(OFM_active_8)
+    );
+    ReLU6 active9(
+        .OFM(OFM_9),
+        .OFM_active(OFM_active_9)
+    );
+    ReLU6 active10(
+        .OFM(OFM_10),
+        .OFM_active(OFM_active_10)
+    );
+    ReLU6 active11(
+        .OFM(OFM_11),
+        .OFM_active(OFM_active_11)
+    );
+    ReLU6 active12(
+        .OFM(OFM_12),
+        .OFM_active(OFM_active_12)
+    );
+    ReLU6 active13(
+        .OFM(OFM_13),
+        .OFM_active(OFM_active_13)
+    );
+    ReLU6 active14(
+        .OFM(OFM_14),
+        .OFM_active(OFM_active_14)
+    );
+    ReLU6 active15(
+        .OFM(OFM_15),
+        .OFM_active(OFM_active_15)
+    );
     
     address_generator addr_gen(
         .clk(clk),
@@ -357,9 +383,10 @@ module Sub_top_CONV(
         .addr_in(base_addr),
         .req_addr_out_filter(addr_w),
         .req_addr_out_ifm(addr_IFM),
-        .done_window(done_window_one_bit)
+        .done_window(done_window_one_bit),
+        .addr_valid_filter(addr_valid)
     );
     assign done_window_for_PE_cluster       =   {16{done_window_one_bit}};
     assign finish_for_PE_cluster            =   (cal_start) && ( addr_IFM != 'b0 )  ? {16{done_window_one_bit}} : 16'b0;
-    assign valid                            =   finish_for_PE_cluster;
+    //assign valid                            =   finish_for_PE_cluster;
 endmodule
