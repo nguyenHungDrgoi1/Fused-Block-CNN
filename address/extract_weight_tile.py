@@ -1,11 +1,11 @@
-def read_and_write_file(input_file, output_file, n, m, num_segments, offset, ofm_height):
+def read_and_write_file(input_file, output_file, n, m, num_segments, offset, weight_height, weight_channel):
     try:
         with open(input_file, "r") as in_file:
             lines = in_file.readlines()
 
         start_offset = 0
         if offset != 0:
-            start_offset = ofm_height * ofm_height * offset
+            start_offset = weight_height * weight_height * weight_channel * offset
 
         current_index = start_offset
         output_lines = []
@@ -28,20 +28,21 @@ def read_and_write_file(input_file, output_file, n, m, num_segments, offset, ofm
 
 
 def main():
-    input_file = "../Fused-Block-CNN/address/ofm.hex"
+    input_file = "../Fused-Block-CNN/address/weight.hex"
 
     PE = 16
     filter_count = 128
     tile = filter_count // PE
 
-    ofm_height = 56
-    ofm_size = ofm_height * ofm_height
-    offset = ofm_height * ofm_height * (PE - 1)
-    num_segments = 8
+    weight_height = 3
+    weight_channel = 32
+    weight_size = weight_height * weight_height * weight_channel
+    offset = weight_size * (PE - 1)
+    num_segments = filter_count // PE
 
     for pe in range(PE):
-        output_file = f"../Fused-Block-CNN/address/OFM_PE{pe}.hex"
-        read_and_write_file(input_file, output_file, ofm_size, offset, num_segments, pe, ofm_height)
+        output_file = f"../Fused-Block-CNN/address/weight_PE{pe}.hex"
+        read_and_write_file(input_file, output_file, weight_size, offset, num_segments, pe, weight_height, weight_channel)
 
 
 if __name__ == "__main__":

@@ -232,7 +232,7 @@ module Sub_top_CONV(
         .reset_n(reset),
         .PE_reset(PE_reset),
         .PE_finish(PE_finish),
-        //.valid(valid),
+        .valid(valid),
         .IFM(IFM_data),
         .Weight_0(Weight_0),
         .Weight_1(Weight_1),
@@ -282,7 +282,7 @@ module Sub_top_CONV(
         .OFM_active(OFM_active_2)
     );
     ReLU6 active3(
-        .OFM(OFM_0),
+        .OFM(OFM_3),
         .OFM_active(OFM_active_3)
     );
     ReLU6 active4(
@@ -290,7 +290,7 @@ module Sub_top_CONV(
         .OFM_active(OFM_active_4)
     );
     ReLU6 active5(
-        .OFM(OFM_0),
+        .OFM(OFM_5),
         .OFM_active(OFM_active_5)
     );
     ReLU6 active6(
@@ -331,17 +331,17 @@ module Sub_top_CONV(
     );
     ReLU6 active15(
         .OFM(OFM_15),
-        .OFM_active(OFM_active_14)
+        .OFM_active(OFM_active_15)
     );
     
     address_generator addr_gen(
         .clk(clk),
         .rst_n(reset),
         .KERNEL_W(3),
-        .OFM_W(54),
-        .OFM_C(32),
-        .IFM_C(16),
-        .IFM_W(56),
+        .OFM_W(56),
+        .OFM_C(128),
+        .IFM_C(32),
+        .IFM_W(58),
         .stride(1),
         .ready(cal_start),
         .addr_in(0),
@@ -351,5 +351,5 @@ module Sub_top_CONV(
     );
     assign done_window_for_PE_cluster       =   {16{done_window_one_bit}};
     assign finish_for_PE_cluster            =   (cal_start) && ( addr_IFM != 'b0 )  ? {16{done_window_one_bit}} : 16'b0;
-    assign valid                            =   finish_for_PE_cluster;
+    //assign valid                            =   finish_for_PE_cluster;
 endmodule

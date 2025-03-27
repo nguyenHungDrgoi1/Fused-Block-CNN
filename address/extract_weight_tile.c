@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int m, int num_segments, int offset) {
+void readAndWriteFile(const char *inputFile, const char *outputFile, int kernel_size, int m, int num_segments, int offset_PE) {
     FILE *inFile = fopen(inputFile, "r");
     FILE *outFile = fopen(outputFile, "w");
 
@@ -10,7 +10,7 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
         return;
     }
 
-    int *buffer = (int *)malloc(n * sizeof(int));  // Dùng buffer để lưu n giá trị
+    int *buffer = (int *)malloc(kernel_size * sizeof(int));  // Dùng buffer để lưu n giá trị
 
     if (buffer == NULL) {
         printf("Lỗi cấp phát bộ nhớ!\n");
@@ -21,8 +21,8 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
 
     // Nếu offset = 1, đọc từ giá trị 144 đến 287
     int start_offset = 0;
-    if (offset != 0) {
-        start_offset = 144 * offset;
+    if (offset_PE != 0) {
+        start_offset = 144 * offset_PE ;
     }
 
     // Di chuyển con trỏ tới start_offset nếu offset = 1
@@ -30,8 +30,9 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
 
     for (int segment = 0; segment < num_segments; segment++) {
         // Đọc n giá trị từ file vào buffer
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < kernel_size; i++) {
             if (fscanf(inFile, "%x", &buffer[i]) != 1) {  // Đọc dữ liệu hex từ file
+                printf("Lỗi đọc dữ liệu từ file tại dòng %d!\n", segment * kernel_size + i);
                 printf("Lỗi đọc dữ liệu từ file!\n");
                 free(buffer);
                 fclose(inFile);
@@ -41,7 +42,7 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
         }
 
         // Ghi n giá trị vào file đích
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < kernel_size; i++) {
             fprintf(outFile, "%02X\n", buffer[i]);  // Ghi giá trị ra file đích
         }
 
@@ -61,7 +62,7 @@ void readAndWriteFile(const char *inputFile, const char *outputFile, int n, int 
 }
 
 int main() {
-    const char *inputFile = "address/Weight.hex";  // Đường dẫn tới file nguồn
+    const char *inputFile = "address/weight.hex";  // Đường dẫn tới file nguồn
 
     const int PE = 16;
     const int filter = 32;

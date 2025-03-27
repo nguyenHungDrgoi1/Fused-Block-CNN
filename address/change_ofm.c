@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE_LENGTH 100
+#define MAX_LINE_LENGTH 100000
 #define OFFSET 3136       // Khoảng cách dòng
 #define MAX_PE 16          // Tổng số PE: từ PE0 đến PE15
 

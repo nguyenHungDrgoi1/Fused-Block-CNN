@@ -4,9 +4,9 @@
 // OFM 56x56x32
 module Sub_top_CONV_tb;
 
-    int input_size = 58*58*16;
-    int weight_size = 3*3*16;
-    int tile = 2;
+    int input_size = 58*58*32;
+    int weight_size = 3*3*32;
+    int tile = 8;
 
     reg clk;
     reg reset;
@@ -40,23 +40,23 @@ module Sub_top_CONV_tb;
     wire [7:0] OFM_out[15:0];
     
     integer i;
-    reg [7:0] input_data_mem [0:53823]; // BRAM input data
-    reg [7:0] input_data_mem1 [0:287];
-    reg [7:0] input_data_mem2 [0:287];
-    reg [7:0] input_data_mem3 [0:287];
-    reg [7:0] input_data_mem4 [0:287];
-    reg [7:0] input_data_mem5 [0:287];
-    reg [7:0] input_data_mem6 [0:287];
-    reg [7:0] input_data_mem7 [0:287];
-    reg [7:0] input_data_mem8 [0:287];
-    reg [7:0] input_data_mem9 [0:287];
-    reg [7:0] input_data_mem10 [0:287];
-    reg [7:0] input_data_mem11 [0:287];
-    reg [7:0] input_data_mem12 [0:287];
-    reg [7:0] input_data_mem13 [0:287];
-    reg [7:0] input_data_mem14 [0:287];
-    reg [7:0] input_data_mem15 [0:287];
-    reg [7:0] input_data_mem16 [0:287];
+    reg [7:0] input_data_mem [0:107648]; // BRAM input data
+    reg [7:0] input_data_mem1 [0:2303];
+    reg [7:0] input_data_mem2 [0:2303];
+    reg [7:0] input_data_mem3 [0:2303];
+    reg [7:0] input_data_mem4 [0:2303];
+    reg [7:0] input_data_mem5 [0:2303];
+    reg [7:0] input_data_mem6 [0:2303];
+    reg [7:0] input_data_mem7 [0:2303];
+    reg [7:0] input_data_mem8 [0:2303];
+    reg [7:0] input_data_mem9 [0:2303];
+    reg [7:0] input_data_mem10 [0:2303];
+    reg [7:0] input_data_mem11 [0:2303];
+    reg [7:0] input_data_mem12 [0:2303];
+    reg [7:0] input_data_mem13 [0:2303];
+    reg [7:0] input_data_mem14 [0:2303];
+    reg [7:0] input_data_mem15 [0:2303];
+    reg [7:0] input_data_mem16 [0:2303];
 
     integer ofm_file[15:0];  // Mảng để lưu các file handle
     integer k;
@@ -141,7 +141,7 @@ module Sub_top_CONV_tb;
         
         // Load input data from file (example: input_data.hex)
        //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/../Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
-        $readmemh("../Fused-Block-CNN/address/ifm.hex", input_data_mem);
+        $readmemh("../Fused-Block-CNN/address/ifm_padded.hex", input_data_mem);
 
         //$readmemh("../Fused-Block-CNN/address/ifm_padded.hex", input_data_mem);
 
@@ -173,7 +173,7 @@ module Sub_top_CONV_tb;
         end
 
         wr_rd_en_IFM = 0;
-        for (i = 0; i < 288; i = i + 4) begin
+        for (i = 0; i < 2304; i = i + 4) begin
 
             addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
             //data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
@@ -203,19 +203,19 @@ module Sub_top_CONV_tb;
         ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
 
         cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
-        #20 // 3 chu ki
-        repeat (3000) begin
+        #25 // 3 chu ki
+        repeat (25088) begin
         //#20
         PE_reset = 16'hFFFF;
         PE_finish = 0;
         #10 // one cyvles
         PE_reset = 16'b0;
-        #340 // 36 -2 cyvles for one pixel in OFM = num_of_tiles * kernel_W
+        #700 // 36 -2 cyvles for one pixel in OFM = num_of_tiles * kernel_W
         PE_finish = 16'hFFFF;
         #10;
         end
         PE_finish = 0;
-        #10000;
+        #100000;
         $finish;
     end
     initial begin
