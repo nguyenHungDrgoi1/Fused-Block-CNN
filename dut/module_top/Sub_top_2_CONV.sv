@@ -22,35 +22,38 @@ module Sub_top_2_CONV(
     input [31:0] data_in_Weight_13,
     input [31:0] data_in_Weight_14,
     input [31:0] data_in_Weight_15,
-
+    input [1:0] control_mux,
     //control signal 
     input wire [15:0] PE_reset,
     input wire [15:0] PE_finish,
     output wire [15:0] valid,
     //output wire [15:0] done_window,
-    
-
+    output wr_en_next,
+    output [31:0] addr_ram_next_rd,
+    output [31:0] addr_ram_next_wr,
     output [31:0] OFM,
 
 
-    output wire [7:0]  OFM_n_CONV_0,
-    output wire [7:0]  OFM_n_CONV_1,
-    output wire [7:0]  OFM_n_CONV_2,
-    output wire [7:0]  OFM_n_CONV_3,
-    output wire [7:0]  OFM_n_CONV_4,
-    output wire [7:0]  OFM_n_CONV_5,
-    output wire [7:0]  OFM_n_CONV_6,
-    output wire [7:0]  OFM_n_CONV_7,
-    output wire [7:0]  OFM_n_CONV_8,
-    output wire [7:0]  OFM_n_CONV_9,
-    output wire [7:0]  OFM_n_CONV_10,
-    output wire [7:0]  OFM_n_CONV_11,
-    output wire [7:0]  OFM_n_CONV_12,
-    output wire [7:0]  OFM_n_CONV_13,
-    output wire [7:0]  OFM_n_CONV_14,
-    output wire [7:0]  OFM_n_CONV_15,
-    output wire [7:0]  OFM_n_CONV_16
+    output [31:0] out_BRAM_CONV
 );
+    wire [31:0] data_out_mux;
+    wire [7:0]  OFM_n_CONV_0;
+    wire [7:0]  OFM_n_CONV_1;
+    wire [7:0]  OFM_n_CONV_2;
+    wire [7:0]  OFM_n_CONV_3;
+    wire [7:0]  OFM_n_CONV_4;
+    wire [7:0]  OFM_n_CONV_5;
+    wire [7:0]  OFM_n_CONV_6;
+    wire [7:0]  OFM_n_CONV_7;
+    wire [7:0]  OFM_n_CONV_8;
+    wire [7:0]  OFM_n_CONV_9;
+    wire [7:0]  OFM_n_CONV_10;
+    wire [7:0]  OFM_n_CONV_11;
+    wire [7:0]  OFM_n_CONV_12;
+    wire [7:0]  OFM_n_CONV_13;
+    wire [7:0]  OFM_n_CONV_14;
+    wire [7:0]  OFM_n_CONV_15;
+    wire [7:0]  OFM_n_CONV_16;
     wire [7:0]  OFM_active_0;
     wire [7:0]  OFM_active_1;
     wire [7:0]  OFM_active_2;
@@ -386,6 +389,38 @@ module Sub_top_2_CONV(
         .data_out_13(OFM_n_CONV_13),
         .data_out_14(OFM_n_CONV_14),
         .data_out_15(OFM_n_CONV_15)
+    );
+
+    MUX_pipeline mux(
+        .control(control_mux),
+
+        .data_in_0(OFM_active_0),
+        .data_in_1(OFM_active_1),
+        .data_in_2(OFM_active_2),
+        .data_in_3(OFM_active_3),
+        .data_in_4(OFM_active_4),
+        .data_in_5(OFM_active_5),
+        .data_in_6(OFM_active_6),
+        .data_in_7(OFM_active_7),
+        .data_in_8(OFM_active_8),
+        .data_in_9(OFM_active_9),
+        .data_in_10(OFM_active_10),
+        .data_in_11(OFM_active_11),
+        .data_in_12(OFM_active_12),
+        .data_in_13(OFM_active_13),
+        .data_in_14(OFM_active_14),
+        .data_in_15(OFM_active_15),
+
+        .data_out(out_BRAM_CONV)
+    );
+
+    BRAM_IFM BRAM_pipeline(
+        .clk(clk),
+        .rd_addr(addr_ram_next_wr),
+        .wr_addr(addr_ram_next_rd),
+        .wr_rd_en(wr_en_next),
+        .data_in(data_out_mux),
+        .data_out(out_BRAM_CONV)
     );
     address_generator addr_gen(
         .clk(clk),
