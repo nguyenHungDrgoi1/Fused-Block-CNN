@@ -101,6 +101,7 @@ module Sub_top_CONV(
     wire [15:0] done_window_for_PE_cluster;
     wire [15:0] finish_for_PE_cluster;
     wire        done_window_one_bit;
+    wire        done_compute;
     wire        addr_valid;
 
     logic [31:0] base_addr =0;
@@ -124,7 +125,7 @@ module Sub_top_CONV(
         .wr_rd_req_Weight(),
         .wr_addr_Weight(),
         .base_addr(),
-        .current_state()
+        .current_state_o()
     );
     BRAM_IFM IFM_BRAM(
         .clk(clk),
@@ -266,9 +267,9 @@ module Sub_top_CONV(
     PE_cluster cluster(
         .clk(clk),
         .reset_n(reset),
-        .PE_reset(PE_reset),
+        .PE_reset(done_window_for_PE_cluster),
         .PE_finish(PE_finish),
-        .valid(valid),
+        //.valid(valid),
         .IFM(IFM_data),
         .Weight_0(Weight_0),
         .Weight_1(Weight_1),
@@ -383,10 +384,11 @@ module Sub_top_CONV(
         .addr_in(base_addr),
         .req_addr_out_filter(addr_w),
         .req_addr_out_ifm(addr_IFM),
+        .done_compute(done_compute),
         .done_window(done_window_one_bit),
         .addr_valid_filter(addr_valid)
     );
     assign done_window_for_PE_cluster       =   {16{done_window_one_bit}};
     assign finish_for_PE_cluster            =   (cal_start) && ( addr_IFM != 'b0 )  ? {16{done_window_one_bit}} : 16'b0;
-    //assign valid                            =   finish_for_PE_cluster;
+    assign valid                            =   finish_for_PE_cluster;
 endmodule

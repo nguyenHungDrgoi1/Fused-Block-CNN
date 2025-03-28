@@ -19,7 +19,7 @@ module Control_unit #(
     output reg wr_rd_req_IFM,
     output reg wr_rd_req_Weight,
     output reg [31:0] base_addr,
-    output reg [31:0] current_state,
+    output wire [2:0] current_state_o,
 
     output reg [31:0] wr_addr_IFM,
     output reg [31:0] wr_addr_Weight,
@@ -40,26 +40,26 @@ parameter    S_CAL     = 3'b010;
 parameter    S_STORE   = 3'b011;
 
 
-reg [2:0] state, next_state;
+reg [2:0] current_state, next_state;
 
 // Internal counters
-reg [15:0] IFM_size_counter;
-reg [15:0] Weight_size_counter;
+reg [32:0] IFM_size_counter;
+reg [32:0] Weight_size_counter;
 reg [15:0] num_of_bytes_shift = 2; // num_of_bytes = 4 per one time read data from BRAM
 
 // State transition logic
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n)
-        state <= S_REFRESH;
+        current_state <= S_REFRESH;
     //else if (run && !inprogress)  // Only trigger state change if run is asserted and inprogress is 0
     else if (run)  // Only trigger state change if run is asserted and inprogress is 0
-        state <= next_state;
+        current_state <= next_state;
 end
 
 // Next state logic and control signals
 always @(*) begin
     // Default values for control signals
-    next_state = state;
+    next_state = current_state;
     cal_start = 0;
     wr_rd_req_IFM = 0;
     wr_rd_req_Weight = 0;
@@ -67,7 +67,7 @@ always @(*) begin
     wr_addr_Weight = 0;
     base_addr = 0;
     
-    case (state)
+    case (current_state)
         S_REFRESH: begin
             cal_start = 0;
             wr_rd_req_IFM = 0;
@@ -75,7 +75,7 @@ always @(*) begin
             wr_addr_IFM = 0;
             wr_addr_Weight = 0;
             base_addr = 0;
-            //if (instrution == 4'd1 && !inprogress) next_state = S_LOAD; // Transition to LOAD state when inprogress is 0
+            //if (instrution == 4'd1 && !inprogress) next_state = S_LOAD; // Transition to LOAD current_state when inprogress is 0
             if (instrution == 4'd1) next_state = S_LOAD; // Transition to LOAD state when inprogress is 0    
         end
 
@@ -83,7 +83,7 @@ always @(*) begin
             base_addr = 0; // Base address for memory
     
             // IFM Load
-            if (IFM_size_counter < 58*58*16) begin
+            if (IFM_size_counter < 58*58*32) begin
                 wr_rd_req_IFM = 1;
                 wr_addr_IFM = IFM_size_counter >> num_of_bytes_shift;
             end else begin
@@ -101,7 +101,7 @@ always @(*) begin
             end
 
             // Check if both IFM and weights are loaded
-            if (IFM_size_counter >= 58*58*16 && Weight_size_counter >= 288) begin
+            if (IFM_size_counter >= 58*58*32 && Weight_size_counter >= 288) begin
                 next_state = S_CAL; // Transition to CAL state
             end
         end
@@ -132,9 +132,9 @@ always @(posedge clk or negedge rst_n) begin
         Weight_size_counter <= 0;
     end else begin
         if (wr_rd_req_IFM)
-            IFM_size_counter <= IFM_size_counter + 1;
+            IFM_size_counter <= IFM_size_counter + 4;
         if (wr_rd_req_Weight)
-            Weight_size_counter <= Weight_size_counter + 1;
+            Weight_size_counter <= Weight_size_counter + 4;
     end
 end
 
@@ -157,4 +157,6 @@ always @(posedge clk or negedge rst_n) begin
     end
 end
 
+
+assign current_state_o = current_state;
 endmodule

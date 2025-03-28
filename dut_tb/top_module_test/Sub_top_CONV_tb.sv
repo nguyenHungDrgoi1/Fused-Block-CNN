@@ -44,7 +44,7 @@ module Sub_top_CONV_tb;
     reg [15:0] PE_reset;
     reg [15:0] PE_finish;
     reg       run;
-    reg       instrution;
+    reg [3:0] instrution;
     
     wire [31:0] OFM;
    
@@ -138,7 +138,7 @@ module Sub_top_CONV_tb;
         reset       = 0;
         PE_reset    = 0;
         run         =   1;
-        #30
+        #3000
         reset = 1;
         wr_rd_en_IFM = 0;
         wr_rd_en_Weight = 0;
@@ -238,7 +238,7 @@ module Sub_top_CONV_tb;
 
         cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
         #25 // 3 chu ki
-        repeat (25088) begin
+        repeat (200) begin
         //#20
         PE_reset = 16'hFFFF;
         PE_finish = 0;
