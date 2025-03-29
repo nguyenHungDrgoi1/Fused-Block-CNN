@@ -35,6 +35,7 @@ module Sub_top_CONV(
     input  wire [1:0] stride,
     output wire [15:0] valid,
     //output wire [15:0] done_window,
+    output wire        done_compute,
     
 
     output [31:0] OFM,
@@ -107,7 +108,7 @@ module Sub_top_CONV(
     wire        done_window_one_bit;
     wire        finish_for_PE;
     wire [7:0] count_for_a_OFM_o;
-    wire        done_compute;
+    
     wire        addr_valid;
     wire        cal_start_ctl;
     wire        wr_rd_req_IFM;
@@ -414,8 +415,8 @@ module Sub_top_CONV(
         .IFM_C(IFM_C),
         .IFM_W(IFM_W),
         .stride(stride),
-        .ready(cal_start),
-        //.ready(cal_start_ctl),
+        //.ready(cal_start),
+        .ready(cal_start_ctl),
         .addr_in(base_addr),
         .req_addr_out_filter(addr_w),
         .req_addr_out_ifm(addr_IFM),
@@ -425,6 +426,6 @@ module Sub_top_CONV(
         .addr_valid_filter(addr_valid)
     );
     assign done_window_for_PE_cluster       =   {16{done_window_one_bit}};
-    assign finish_for_PE_cluster            =   (cal_start) && ( addr_IFM != 'b0 )   ? {16{finish_for_PE}} : 16'b0;
+    assign finish_for_PE_cluster            =   (cal_start_ctl) && ( addr_IFM != 'b0 )   ? {16{finish_for_PE}} : 16'b0;
     assign valid                            =   finish_for_PE_cluster;
 endmodule

@@ -43,6 +43,7 @@ module Sub_top_CONV_tb;
     reg [19:0] addr_IFM;
     reg [15:0] PE_reset;
     reg [15:0] PE_finish;
+    wire       done_compute;
 
     reg       run;
     reg [3:0] instrution;
@@ -127,6 +128,7 @@ module Sub_top_CONV_tb;
         .stride(stride),
 
         .valid(valid),
+        .done_compute(done_compute),
         // .addr_w0(addr_w[0]), .addr_w1(addr_w[1]), .addr_w2(addr_w[2]), .addr_w3(addr_w[3]),
         // .addr_w4(addr_w[4]), .addr_w5(addr_w[5]), .addr_w6(addr_w[6]), .addr_w7(addr_w[7]),
         // .addr_w8(addr_w[8]), .addr_w9(addr_w[9]), .addr_w10(addr_w[10]), .addr_w11(addr_w[11]),
@@ -263,6 +265,7 @@ module Sub_top_CONV_tb;
         // PE_finish = 16'hFFFF;
         #10;
         end
+        @(posedge done_compute);
         PE_finish = 0;
       #100000;
         $finish;
@@ -280,20 +283,20 @@ module Sub_top_CONV_tb;
     end
 end
 
-always @(posedge clk) begin
-    if (valid == 16'hFFFF) begin
-        // Lưu giá trị OFM vào các file tương ứng
-        for (k = 0; k < 16; k = k + 1) begin
-            ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
-            // Ghi từng byte của OFM vào các file
-            ofm_data_byte = ofm_data;
-            //if (ofm_file[1] != 0) begin
-            //$display("check");
-                $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
-           // end
-            ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
-        end
-    end
-end
+// always @(posedge clk) begin
+//     if (valid == 16'hFFFF) begin
+//         // Lưu giá trị OFM vào các file tương ứng
+//         for (k = 0; k < 16; k = k + 1) begin
+//             ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
+//             // Ghi từng byte của OFM vào các file
+//             ofm_data_byte = ofm_data;
+//             //if (ofm_file[1] != 0) begin
+//             //$display("check");
+//                 $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
+//            // end
+//             ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
+//         end
+//     end
+// end
 
 endmodule
