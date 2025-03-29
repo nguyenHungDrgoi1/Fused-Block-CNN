@@ -92,7 +92,7 @@ always @(*) begin
             end
 
             // Weight Load
-            if (Weight_size_counter < 288) begin
+            if (Weight_size_counter < 32*9*8) begin
                 wr_rd_req_Weight = 1;
                 wr_addr_Weight = Weight_size_counter >> num_of_bytes_shift;
             end else begin
@@ -101,7 +101,7 @@ always @(*) begin
             end
 
             // Check if both IFM and weights are loaded
-            if (IFM_size_counter >= 58*58*32 && Weight_size_counter >= 288) begin
+            if (IFM_size_counter >= 58*58*32 && Weight_size_counter >= 32*9*8) begin
                 next_state = S_CAL; // Transition to CAL state
             end
         end

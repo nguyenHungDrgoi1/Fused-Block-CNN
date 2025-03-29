@@ -16,6 +16,7 @@ module address_generator #(
     output wire [31:0] req_addr_out_ifm,
     output wire [31:0] req_addr_out_filter,
     output reg done_compute,
+    output reg finish_for_PE,
     output reg addr_valid_ifm,
     output reg done_window,
     output wire addr_valid_filter
@@ -294,10 +295,16 @@ always @(posedge clk or negedge rst_n) begin
             predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
             predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
         end
-        if ( ( row_index_KERNEL == 'h0 )&& ( col_index_KERNEL ==  'h0 ) ) begin 
+        if ( ( row_index_KERNEL == 'h0 )&& ( col_index_KERNEL ==  'h0 )  ) begin 
             done_window <= 'b1;
-        end else  
+            if (count_for_a_OFM =='h0 && count_for_a_Window=='h0 && tiles_count=='h0)
+                finish_for_PE <='h0;
+            else
+                finish_for_PE<= 'b1;   
+        end else begin
             done_window <= 'b0;
+            finish_for_PE<= 'b0; 
+        end
 
     end
 end
@@ -487,5 +494,6 @@ end
 
 assign addr_valid_filter   = addr_valid_ifm;
 assign req_addr_out_filter = addr_fetch_filter;
+
 
 endmodule
