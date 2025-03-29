@@ -40,8 +40,12 @@ module Sub_top_CONV(
     output [31:0] OFM,
 
     // for Control_unit
-    input wire        run,
-    input wire [3:0]  instrution,
+    input  wire        run,
+    input  wire [3:0]  instrution,
+    output wire        wr_rd_req_IFM_for_tb,
+    output wire [31:0] wr_addr_IFM_for_tb,
+    output wire        wr_rd_req_Weight_for_tb,
+    output wire [31:0] wr_addr_Weight_for_tb,
 
 
     output wire [7:0]  OFM_active_0,
@@ -101,8 +105,15 @@ module Sub_top_CONV(
     wire [15:0] done_window_for_PE_cluster;
     wire [15:0] finish_for_PE_cluster;
     wire        done_window_one_bit;
+    wire        finish_for_PE;
+    wire [7:0] count_for_a_OFM_o;
     wire        done_compute;
     wire        addr_valid;
+    wire        cal_start_ctl;
+    wire        wr_rd_req_IFM;
+    wire        wr_rd_req_Weight;
+    wire [31:0] wr_addr_Weight;
+    wire [31:0] wr_addr_IFM;
 
     logic [31:0] base_addr =0;
 
@@ -119,147 +130,170 @@ module Sub_top_CONV(
         .stride(stride),
         .addr_valid(addr_valid),
         .done_compute(done_compute),
-        .cal_start(),
-        .wr_rd_req_IFM(),
-        .wr_addr_IFM(),
-        .wr_rd_req_Weight(),
-        .wr_addr_Weight(),
+        .cal_start(cal_start_ctl),
+        .wr_rd_req_IFM(wr_rd_req_IFM),
+        .wr_addr_IFM(wr_addr_IFM),
+        .wr_rd_req_Weight(wr_rd_req_Weight),
+        .wr_addr_Weight(wr_addr_Weight),
         .base_addr(),
         .current_state_o()
     );
+
+    assign wr_rd_req_IFM_for_tb = wr_rd_req_IFM;
+    assign wr_addr_IFM_for_tb   = wr_addr_IFM;
+    assign wr_rd_req_Weight_for_tb = wr_rd_req_Weight;
+    assign wr_addr_Weight_for_tb   = wr_addr_Weight;
+
     BRAM_IFM IFM_BRAM(
         .clk(clk),
         .rd_addr(addr_IFM),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_IFM),
+        .wr_addr(wr_addr_IFM),
+        //.wr_rd_en(wr_rd_en_IFM),
+        .wr_rd_en(wr_rd_req_IFM),
         .data_in(data_in_IFM),
         .data_out(IFM_data)
     );
     BRAM IFM_Weight_0(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_0),
         .data_out(Weight_0)
     );
     BRAM IFM_Weight_1(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_1),
         .data_out(Weight_1)
     );
     BRAM IFM_Weight_2(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_2),
         .data_out(Weight_2)
     );
     BRAM IFM_Weight_3(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_3),
         .data_out(Weight_3)
     );
     BRAM IFM_Weight_4(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_4),
         .data_out(Weight_4)
     );
     BRAM IFM_Weight_5(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_5),
         .data_out(Weight_5)
     );
     BRAM IFM_Weight_6(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_6),
         .data_out(Weight_6)
     );
     BRAM IFM_Weight_7(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+.wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_7),
         .data_out(Weight_7)
     );
     BRAM IFM_Weight_8(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_8),
         .data_out(Weight_8)
     );
     BRAM IFM_Weight_9(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_9),
         .data_out(Weight_9)
     );
     BRAM IFM_Weight_10(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_10),
         .data_out(Weight_10)
     );
     BRAM IFM_Weight_11(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_11),
         .data_out(Weight_11)
     );
     BRAM IFM_Weight_12(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_12),
         .data_out(Weight_12)
     );
     BRAM IFM_Weight_13(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_13),
         .data_out(Weight_13)
     );
     BRAM IFM_Weight_14(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_14),
         .data_out(Weight_14)
     );
     BRAM IFM_Weight_15(
         .clk(clk),
         .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
+        .wr_addr(wr_addr_Weight),
+        //.wr_rd_en(wr_rd_en_Weight),
+        .wr_rd_en(wr_rd_req_Weight),
         .data_in(data_in_Weight_15),
         .data_out(Weight_15)
     );
@@ -381,14 +415,16 @@ module Sub_top_CONV(
         .IFM_W(IFM_W),
         .stride(stride),
         .ready(cal_start),
+        //.ready(cal_start_ctl),
         .addr_in(base_addr),
         .req_addr_out_filter(addr_w),
         .req_addr_out_ifm(addr_IFM),
         .done_compute(done_compute),
         .done_window(done_window_one_bit),
+        .finish_for_PE(finish_for_PE),
         .addr_valid_filter(addr_valid)
     );
     assign done_window_for_PE_cluster       =   {16{done_window_one_bit}};
-    assign finish_for_PE_cluster            =   (cal_start) && ( addr_IFM != 'b0 )  ? {16{done_window_one_bit}} : 16'b0;
+    assign finish_for_PE_cluster            =   (cal_start) && ( addr_IFM != 'b0 )   ? {16{finish_for_PE}} : 16'b0;
     assign valid                            =   finish_for_PE_cluster;
 endmodule

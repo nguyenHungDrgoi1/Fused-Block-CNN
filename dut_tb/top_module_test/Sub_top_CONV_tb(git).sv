@@ -43,20 +43,14 @@ module Sub_top_CONV_tb;
     reg [19:0] addr_IFM;
     reg [15:0] PE_reset;
     reg [15:0] PE_finish;
-
     reg       run;
     reg [3:0] instrution;
-    wire        wr_rd_req_IFM_for_tb;
-    wire [31:0] wr_addr_IFM_for_tb;
-    wire        wr_rd_req_Weight_for_tb;
-    wire [31:0] wr_addr_Weight_for_tb;
-
     
     wire [31:0] OFM;
    
     wire [7:0] OFM_out[15:0];
     
-    integer i,j=0;
+    integer i;
     reg [7:0] input_data_mem [0:107648]; // BRAM input data
     reg [7:0] input_data_mem0 [0:2303];
     reg [7:0] input_data_mem1 [0:2303];
@@ -114,10 +108,6 @@ module Sub_top_CONV_tb;
         // for Control_unit
         .run(run),
         .instrution(instrution),
-        .wr_rd_req_IFM_for_tb(wr_rd_req_IFM_for_tb),
-        .wr_addr_IFM_for_tb(wr_addr_IFM_for_tb),
-        .wr_rd_req_Weight_for_tb(wr_rd_req_Weight_for_tb),
-        .wr_addr_Weight_for_tb(wr_addr_Weight_for_tb),
 
         .KERNEL_W(KERNEL_W),
         .OFM_C(OFM_C),
@@ -207,45 +197,40 @@ module Sub_top_CONV_tb;
         run         =   1;
         instrution  =   1;
         #5;
-        fork
-            begin
-                // Write data into BRAM
-                for (i = 0; i < input_size; i = i + 4) begin
-                    //addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
-                    data_in_IFM = {input_data_mem[wr_addr_IFM_for_tb*4], input_data_mem[wr_addr_IFM_for_tb*4+1], input_data_mem[wr_addr_IFM_for_tb*4+2], input_data_mem[wr_addr_IFM_for_tb*4+3]};
-                    //wr_rd_en_IFM <= 1;
-                    #10;
-                end
-                wr_rd_en_IFM = 0;
-            end
-            begin
-                for (j = 0; j < IFM_C*KERNEL_W*KERNEL_W*tile +1; j = j + 4) begin
+        // Write data into BRAM
+        for (i = 0; i < input_size; i = i + 4) begin
+            addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
+            data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
+            wr_rd_en_IFM = 1;
+            #10;
+        end
 
-                    addr <= j >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
-                    data_in_Weight_0 = {input_data_mem0 [addr*4], input_data_mem0[addr*4+1], input_data_mem0[addr*4+2], input_data_mem0[addr*4+3]};
-                    data_in_Weight_1 = {input_data_mem1 [addr*4], input_data_mem1[addr*4+1], input_data_mem1[addr*4+2], input_data_mem1[addr*4+3]};
-                    data_in_Weight_2 = {input_data_mem2 [addr*4], input_data_mem2[addr*4+1], input_data_mem2[addr*4+2], input_data_mem2[addr*4+3]};
-                    data_in_Weight_3 = {input_data_mem3 [addr*4], input_data_mem3[addr*4+1], input_data_mem3[addr*4+2], input_data_mem3[addr*4+3]};
-                    data_in_Weight_4 = {input_data_mem4 [addr*4], input_data_mem4[addr*4+1], input_data_mem4[addr*4+2], input_data_mem4[addr*4+3]};
-                    data_in_Weight_5 = {input_data_mem5 [addr*4], input_data_mem5[addr*4+1], input_data_mem5[addr*4+2], input_data_mem5[addr*4+3]};
-                    data_in_Weight_6 = {input_data_mem6 [addr*4], input_data_mem6[addr*4+1], input_data_mem6[addr*4+2], input_data_mem6[addr*4+3]};
-                    data_in_Weight_7 = {input_data_mem7 [addr*4], input_data_mem7[addr*4+1], input_data_mem7[addr*4+2], input_data_mem7[addr*4+3]};
-                    data_in_Weight_8 = {input_data_mem8 [addr*4], input_data_mem8[addr*4+1], input_data_mem8[addr*4+2], input_data_mem8[addr*4+3]};
-                    data_in_Weight_9 = {input_data_mem9 [addr*4], input_data_mem9[addr*4+1], input_data_mem9[addr*4+2], input_data_mem9[addr*4+3]};
-                    data_in_Weight_10 = {input_data_mem10[addr*4], input_data_mem10[addr*4+1], input_data_mem10[addr*4+2], input_data_mem10[addr*4+3]};
-                    data_in_Weight_11 = {input_data_mem11[addr*4], input_data_mem11[addr*4+1], input_data_mem11[addr*4+2], input_data_mem11[addr*4+3]};
-                    data_in_Weight_12 = {input_data_mem12[addr*4], input_data_mem12[addr*4+1], input_data_mem12[addr*4+2], input_data_mem12[addr*4+3]};
-                    data_in_Weight_13 = {input_data_mem13[addr*4], input_data_mem13[addr*4+1], input_data_mem13[addr*4+2], input_data_mem13[addr*4+3]};
-                    data_in_Weight_14 = {input_data_mem14[addr*4], input_data_mem14[addr*4+1], input_data_mem14[addr*4+2], input_data_mem14[addr*4+3]};
-                    data_in_Weight_15 = {input_data_mem15[addr*4], input_data_mem15[addr*4+1], input_data_mem15[addr*4+2], input_data_mem15[addr*4+3]};
+        wr_rd_en_IFM = 0;
+        for (i = 0; i < IFM_C*KERNEL_W*KERNEL_W*tile; i = i + 4) begin
 
-                    wr_rd_en_Weight = 1;
-                    #10;
-                end
-                wr_rd_en_Weight = 0;
-            end
-        join
-        //wr_rd_en_Weight = 0;
+            addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
+            //data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
+            data_in_Weight_0 = {input_data_mem0[i], input_data_mem0[i+1], input_data_mem0[i+2], input_data_mem0[i+3]};
+            data_in_Weight_1 = {input_data_mem1[i], input_data_mem1[i+1], input_data_mem1[i+2], input_data_mem1[i+3]};
+            data_in_Weight_2 = {input_data_mem2[i], input_data_mem2[i+1], input_data_mem2[i+2], input_data_mem2[i+3]};
+            data_in_Weight_3 = {input_data_mem3[i], input_data_mem3[i+1], input_data_mem3[i+2], input_data_mem3[i+3]};
+            data_in_Weight_4 = {input_data_mem4[i], input_data_mem4[i+1], input_data_mem4[i+2], input_data_mem4[i+3]};
+            data_in_Weight_5 = {input_data_mem5[i], input_data_mem5[i+1], input_data_mem5[i+2], input_data_mem5[i+3]};
+            data_in_Weight_6 = {input_data_mem6[i], input_data_mem6[i+1], input_data_mem6[i+2], input_data_mem6[i+3]};
+            data_in_Weight_7 = {input_data_mem7[i], input_data_mem7[i+1], input_data_mem7[i+2], input_data_mem7[i+3]};
+            data_in_Weight_8 = {input_data_mem8[i], input_data_mem8[i+1], input_data_mem8[i+2], input_data_mem8[i+3]};
+            data_in_Weight_9 = {input_data_mem9[i], input_data_mem9[i+1], input_data_mem9[i+2], input_data_mem9[i+3]};
+            data_in_Weight_10 = {input_data_mem10[i], input_data_mem10[i+1], input_data_mem10[i+2], input_data_mem10[i+3]};
+            data_in_Weight_11 = {input_data_mem11[i], input_data_mem11[i+1], input_data_mem11[i+2], input_data_mem11[i+3]};
+            data_in_Weight_12 = {input_data_mem12[i], input_data_mem12[i+1], input_data_mem12[i+2], input_data_mem12[i+3]};
+            data_in_Weight_13 = {input_data_mem13[i], input_data_mem13[i+1], input_data_mem13[i+2], input_data_mem13[i+3]};
+            data_in_Weight_14 = {input_data_mem14[i], input_data_mem14[i+1], input_data_mem14[i+2], input_data_mem14[i+3]};
+            data_in_Weight_15 = {input_data_mem15[i], input_data_mem15[i+1], input_data_mem15[i+2], input_data_mem15[i+3]};
+
+            wr_rd_en_Weight = 1;
+            #10;
+        end
+        wr_rd_en_Weight = 0;
     
         #5000;
         #5
