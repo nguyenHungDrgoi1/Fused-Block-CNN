@@ -23,14 +23,14 @@ module address_generator #(
 );
 
 wire in_progress;
-reg [9:0] count_for_a_Window;
-reg [7:0] count_for_a_OFM;
-reg [7:0] row_index_KERNEL;
-reg [7:0] col_index_KERNEL;
+reg [15:0] count_for_a_Window;
+reg [15:0] count_for_a_OFM;
+reg [15:0] row_index_KERNEL;
+reg [15:0] col_index_KERNEL;
 
-reg [7:0] row_index_OFM;
-reg [7:0] col_index_OFM;
-reg [7:0] tiles_count;
+reg [15:0] row_index_OFM;
+reg [15:0] col_index_OFM;
+reg [15:0] tiles_count;
 reg [31:0] addr_fetch_ifm;
 reg [31:0] predict_line_addr_fetch_ifm;
 reg [31:0] predict_window_addr_fetch_ifm;
@@ -225,7 +225,7 @@ always @(*) begin
                 next_state_IFM =    FETCH_WINDOW ;
             end else begin
                 next_state_IFM =    START_ADDR_IFM;
-                done_compute            <=  0;
+                
             end
             addr_valid_ifm  = 1'b0;
         end
@@ -239,6 +239,7 @@ always @(*) begin
                 next_state_IFM =    NEXT_WINDOW;
             end
             addr_valid_ifm  = 1'b1;
+            done_compute    =  0;
         end
 
         NEXT_WINDOW: begin

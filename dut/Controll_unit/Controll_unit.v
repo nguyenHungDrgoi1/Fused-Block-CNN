@@ -116,7 +116,7 @@ always @(*) begin
         end
 
         S_STORE: begin
-            next_state = S_REFRESH;
+            next_state = S_STORE;
         end
 
         default: begin

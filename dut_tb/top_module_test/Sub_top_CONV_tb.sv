@@ -283,20 +283,20 @@ module Sub_top_CONV_tb;
     end
 end
 
-// always @(posedge clk) begin
-//     if (valid == 16'hFFFF) begin
-//         // Lưu giá trị OFM vào các file tương ứng
-//         for (k = 0; k < 16; k = k + 1) begin
-//             ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
-//             // Ghi từng byte của OFM vào các file
-//             ofm_data_byte = ofm_data;
-//             //if (ofm_file[1] != 0) begin
-//             //$display("check");
-//                 $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
-//            // end
-//             ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
-//         end
-//     end
-// end
+always @(posedge clk) begin
+    if (valid == 16'hFFFF) begin
+        // Lưu giá trị OFM vào các file tương ứng
+        for (k = 0; k < 16; k = k + 1) begin
+            ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
+            // Ghi từng byte của OFM vào các file
+            ofm_data_byte = ofm_data;
+            //if (ofm_file[1] != 0) begin
+            //$display("check");
+                $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
+           // end
+            ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
+        end
+    end
+end
 
 endmodule
