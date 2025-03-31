@@ -12,7 +12,7 @@ def count_lines(filename):
         return -1
 
 # Hàm xử lý 1 PE
-def process_pe_file(pe_id, OFFSET):
+def process_pe_file(pe_id, OFFSET, tile):
     input_file = f"../Fused-Block-CNN/address/OFM_PE{pe_id}.hex"
     output_file = f"../Fused-Block-CNN/address/OFM_PE{pe_id}_change.hex"
 
@@ -39,7 +39,7 @@ def process_pe_file(pe_id, OFFSET):
                 out_file.write(lines[i + OFFSET])
 
                 # Ghi thêm các dòng i + a * OFFSET, với a từ 2 đến 8
-                for a in range(2, 3):
+                for a in range(2, tile + 1):
                     index = i + a * OFFSET
                     if index < total_lines:
                         lines[index] = lines[index].lower()
@@ -56,10 +56,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ofm_width", type=int, required=True)
     parser.add_argument("--max_pe", type=int, default=16)
+    parser.add_argument("--weight_filter", type = int, required=True)
     args = parser.parse_args()
+    tile = args.weight_filter // args.max_pe
     OFFSET = args.ofm_width * args.ofm_width   # Khoảng cách dòng
     for pe in range(args.max_pe):
-        process_pe_file(pe, OFFSET)
+        process_pe_file(pe, OFFSET, tile)
 
     print(f"\n🚀 Đã xử lý xong tất cả {args.max_pe} PE!")
 
