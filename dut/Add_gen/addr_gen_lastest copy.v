@@ -52,8 +52,6 @@ parameter START_ADDR_FILTER     = 1'b0;
 parameter FETCH_FILTER          = 1'b1;
 reg current_state_FILTER, next_state_FILTER;
 
-wire [2:0] stride_shift;
-assign stride_shift = (stride == 1 ) ? 0 : (stride == 2 ? 1 : 0);
 
 reg [7:0] num_of_mul_in_PE = 4; 
 //---------------------------------------------------LUT-num_of_mul_in_PE--------------------------------------------------------//
@@ -265,14 +263,7 @@ always @(*) begin
 
     endcase
 end
-/////////////////////// stride logic  ///////////////////////
-reg [31:0] stride_offset_for_col;
-always @(*) begin  
-    case ( stride )
-    'h1: stride_offset_for_col  =   0;
-    'h2: stride_offset_for_col  =   ( IFM_W << (stride_shift-1) << IFM_C_shift );
-    endcase
-end
+
                 
 /////////////////////// FSM Output Logic ///////////////////////
 always @(posedge clk or negedge rst_n) begin
@@ -284,22 +275,26 @@ always @(posedge clk or negedge rst_n) begin
     end
     else begin
 
+        //if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -4 )  ) begin 
         if ( (row_index_KERNEL == (KERNEL_W  << num_of_tiles_shift) -4 )  ) begin 
             if ( col_index_KERNEL != (KERNEL_W -1))
+            //predict_line_addr_fetch_ifm         <= predict_line_addr_fetch_ifm + IFM_C*IFM_W ;
             predict_line_addr_fetch_ifm         <= predict_line_addr_fetch_ifm + (IFM_W << IFM_C_shift ) ;
             else 
             predict_line_addr_fetch_ifm         <= window_start_addr_ifm  ;
         end
 
+        //if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -3 ) && ( col_index_KERNEL == KERNEL_W -1  )  && ( tiles_count == num_of_tiles_for_PE -1  ) ) begin
         if ( (row_index_KERNEL == (KERNEL_W  << num_of_tiles_shift) -3 ) && ( col_index_KERNEL == KERNEL_W -1  )  && ( tiles_count == num_of_tiles_for_PE -1  ) ) begin 
-            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( IFM_C << stride_shift );
-            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( IFM_C << stride_shift );
+            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + IFM_C ;
+            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + IFM_C ;
         end
         
+        //if ( (row_index_KERNEL == KERNEL_W * num_of_tiles -2 ) && ( col_index_KERNEL == KERNEL_W -1  ) && ( tiles_count == num_of_tiles_for_PE -1  ) && ( row_index_OFM == OFM_W -1 ) ) begin 
         if ( (row_index_KERNEL == (KERNEL_W << num_of_tiles_shift) -2 ) && ( col_index_KERNEL == KERNEL_W -1  ) && ( tiles_count == num_of_tiles_for_PE -1  ) && ( row_index_OFM == OFM_W -1 ) ) begin 
-            predict_window_OFM_addr_fetch_ifm   <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col;
-            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col;
-            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col;
+            predict_window_OFM_addr_fetch_ifm   <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
+            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
+            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift );
         end
         if ( ( row_index_KERNEL == 'h0 )&& ( col_index_KERNEL ==  'h0 )  ) begin 
             done_window <= 'b1;
