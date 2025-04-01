@@ -110,6 +110,7 @@ module Sub_top_CONV(
     wire [7:0] count_for_a_OFM_o;
     
     wire        addr_valid;
+    wire [7:0]  tile;
     wire        cal_start_ctl;
     wire        wr_rd_req_IFM;
     wire        wr_rd_req_Weight;
@@ -131,6 +132,7 @@ module Sub_top_CONV(
         .stride(stride),
         .addr_valid(addr_valid),
         .done_compute(done_compute),
+        .tile(tile),
         .cal_start(cal_start_ctl),
         .wr_rd_req_IFM(wr_rd_req_IFM),
         .wr_addr_IFM(wr_addr_IFM),
@@ -423,7 +425,8 @@ module Sub_top_CONV(
         .done_compute(done_compute),
         .done_window(done_window_one_bit),
         .finish_for_PE(finish_for_PE),
-        .addr_valid_filter(addr_valid)
+        .addr_valid_filter(addr_valid),
+        .num_of_tiles_for_PE(tile)
     );
     assign done_window_for_PE_cluster       =   {16{done_window_one_bit}};
     assign finish_for_PE_cluster            =   (cal_start_ctl) && ( addr_IFM != 'b0 )   ? {16{finish_for_PE}} : 16'b0;

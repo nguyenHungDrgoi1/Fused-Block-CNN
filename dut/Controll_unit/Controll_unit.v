@@ -14,6 +14,7 @@ module Control_unit #(
     input  wire [1:0] stride,
     input  wire addr_valid,
     input  wire done_compute,
+    input  wire [7:0] tile,
 
     output reg cal_start,
     output reg wr_rd_req_IFM,
@@ -83,7 +84,7 @@ always @(*) begin
             base_addr = 0; // Base address for memory
     
             // IFM Load
-            if (IFM_size_counter < 58*58*32) begin
+            if (IFM_size_counter < IFM_W*IFM_W*IFM_C) begin
                 wr_rd_req_IFM = 1;
                 wr_addr_IFM = IFM_size_counter >> num_of_bytes_shift;
             end else begin
@@ -92,7 +93,7 @@ always @(*) begin
             end
 
             // Weight Load
-            if (Weight_size_counter < 32*9*8) begin
+            if (Weight_size_counter < IFM_C*KERNEL_W*KERNEL_W*tile) begin
                 wr_rd_req_Weight = 1;
                 wr_addr_Weight = Weight_size_counter >> num_of_bytes_shift;
             end else begin
@@ -101,7 +102,7 @@ always @(*) begin
             end
 
             // Check if both IFM and weights are loaded
-            if (IFM_size_counter >= 58*58*32 && Weight_size_counter >= 32*9*8) begin
+            if (IFM_size_counter >= IFM_W*IFM_W*IFM_C && Weight_size_counter >= IFM_C*KERNEL_W*KERNEL_W*tile) begin
                 next_state = S_CAL; // Transition to CAL state
             end
         end

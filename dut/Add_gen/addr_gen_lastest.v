@@ -19,7 +19,8 @@ module address_generator #(
     output reg finish_for_PE,
     output reg addr_valid_ifm,
     output reg done_window,
-    output wire addr_valid_filter
+    output wire addr_valid_filter,
+    output wire [7:0] num_of_tiles_for_PE
 );
 
 wire in_progress;
@@ -119,7 +120,7 @@ end
 reg [7:0] num_of_OFM_points; // = KERNEL_W *KERNEL_W
 
 always @(*) begin
-    case (OFM_W)
+    case (KERNEL_W)
         'h3 : begin
             num_of_OFM_points = 'h9;
         end
@@ -133,7 +134,7 @@ end
 
 wire [7:0] num_of_tiles         = IFM_C >> num_of_mul_in_PE_shift ;
 
-wire [7:0] num_of_tiles_for_PE  = OFM_C >> total_PE_shift;
+assign num_of_tiles_for_PE  = OFM_C >> total_PE_shift;
 //---------------------------------------------------LUT-num_of_tiles_shift--------------------------------------------------------//
 reg [7:0] num_of_tiles_shift; // use shift operation
 always @(*) begin
@@ -241,19 +242,18 @@ always @(*) begin
                 next_state_IFM =    NEXT_WINDOW;
             end
             addr_valid_ifm  = 1'b1;
-            done_compute    =  0;
+            if ( count_for_a_OFM == OFM_W*OFM_W ) done_compute    =  1;
+            else done_compute    =  0;
         end
 
         NEXT_WINDOW: begin
-
-            
 
             if (count_for_a_OFM < OFM_W*OFM_W -1 )   begin
                 next_state_IFM  =   FETCH_WINDOW ;
                 
             end else begin
                 next_state_IFM  =    START_ADDR_IFM;
-                done_compute    =  1;
+                
             end
             addr_valid_ifm  = 1'b1;
         end
@@ -406,7 +406,6 @@ always @(posedge clk or negedge rst_n) begin
                             
                         end
                     end
-
 
                 end else begin    
                 end
