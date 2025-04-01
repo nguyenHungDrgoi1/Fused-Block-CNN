@@ -38,7 +38,11 @@ module Sub_top_2_CONV_tb;
     wire [31:0] OFM;
    
     wire [7:0] OFM_out[15:0];
-    
+    reg wr_en_next;
+    reg [31:0] addr_ram_next_rd;
+    reg [31:0] addr_ram_next_wr;
+    wire [31:0] out_BRAM_CONV;
+    reg [1:0] control_mux;
     integer i;
     reg [7:0] input_data_mem [0:53823]; // BRAM input data
     reg [7:0] input_data_mem1 [0:287];
@@ -103,15 +107,27 @@ module Sub_top_2_CONV_tb;
         .PE_reset(PE_reset),
         .PE_finish(PE_finish),
         .valid(valid),
+        .wr_en_next(wr_en_next),
+        .addr_ram_next_rd(addr_ram_next_rd),
+        .addr_ram_next_wr(addr_ram_next_wr),
+        .out_BRAM_CONV(out_BRAM_CONV),
+        .control_mux(control_mux)
         // .addr_w0(addr_w[0]), .addr_w1(addr_w[1]), .addr_w2(addr_w[2]), .addr_w3(addr_w[3]),
         // .addr_w4(addr_w[4]), .addr_w5(addr_w[5]), .addr_w6(addr_w[6]), .addr_w7(addr_w[7]),
         // .addr_w8(addr_w[8]), .addr_w9(addr_w[9]), .addr_w10(addr_w[10]), .addr_w11(addr_w[11]),
         // .addr_w12(addr_w[12]), .addr_w13(addr_w[13]), .addr_w14(addr_w[14]), .addr_w15(addr_w[15]),
+<<<<<<< HEAD
         .OFM_n_CONV_0(OFM_out[0]), .OFM_n_CONV_1(OFM_out[1]), .OFM_n_CONV_2(OFM_out[2]), .OFM_n_CONV_3(OFM_out[3]),
         .OFM_n_CONV_4(OFM_out[4]), .OFM_n_CONV_5(OFM_out[5]), .OFM_n_CONV_6(OFM_out[6]), .OFM_n_CONV_7(OFM_out[7]),
         .OFM_n_CONV_8(OFM_out[8]), .OFM_n_CONV_9(OFM_out[9]), .OFM_n_CONV_10(OFM_out[10]), .OFM_n_CONV_11(OFM_out[11]),
         .addr_w_n_state(addr_w_n_state), .OFM_0_n_state(OFM_0_n_state), .OFM_1_n_state(OFM_1_n_state), .OFM_2_n_state(OFM_2_n_state) ,.OFM_3_n_state(OFM_3_n_state),
         .OFM_n_CONV_12(OFM_out[12]), .OFM_n_CONV_13(OFM_out[13]), .OFM_n_CONV_14(OFM_out[14]), .OFM_n_CONV_15(OFM_out[15])
+=======
+        // .OFM_n_CONV_0(OFM_out[0]), .OFM_n_CONV_1(OFM_out[1]), .OFM_n_CONV_2(OFM_out[2]), .OFM_n_CONV_3(OFM_out[3]),
+        // .OFM_n_CONV_4(OFM_out[4]), .OFM_n_CONV_5(OFM_out[5]), .OFM_n_CONV_6(OFM_out[6]), .OFM_n_CONV_7(OFM_out[7]),
+        // .OFM_n_CONV_8(OFM_out[8]), .OFM_n_CONV_9(OFM_out[9]), .OFM_n_CONV_10(OFM_out[10]), .OFM_n_CONV_11(OFM_out[11]),
+        // .OFM_n_CONV_12(OFM_out[12]), .OFM_n_CONV_13(OFM_out[13]), .OFM_n_CONV_14(OFM_out[14]), .OFM_n_CONV_15(OFM_out[15])
+>>>>>>> 4f388184e78c06bc44d7984633963ff8bcec8287
     );
 
     initial begin
@@ -147,7 +163,9 @@ module Sub_top_2_CONV_tb;
         data_in_Weight_13 = 0;
         data_in_Weight_14 = 0;
         data_in_Weight_15 = 0;
-        
+        addr_ram_next_rd = 0;
+        addr_ram_next_wr = -1;
+        wr_en_next = 0;
         // Load input data from file (example: input_data.hex)
        //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/../Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
         $readmemh("../Fused-Block-CNN/address/ifm.hex", input_data_mem);
@@ -171,8 +189,9 @@ module Sub_top_2_CONV_tb;
         $readmemh("../Fused-Block-CNN/address/weight_PE14.hex", input_data_mem15);
         $readmemh("../Fused-Block-CNN/address/weight_PE15.hex", input_data_mem16);
 
-        
-
+        //@ ( posedge clk );
+        //wait( clk == 1);
+        #5
         // Write data into BRAM
         for (i = 0; i < input_size; i = i + 4) begin
             addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
@@ -212,19 +231,25 @@ module Sub_top_2_CONV_tb;
         ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
 
         cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
-        #20 // 3 chu ki
+        #15 // 3 chu ki
         repeat (3000) begin
         //#20
-        PE_reset = 16'hFFFF;
-        PE_finish = 0;
+        PE_reset <= 16'hFFFF;
+        PE_finish <= 0;
         #10 // one cyvles
-        PE_reset = 16'b0;
+        PE_reset <= 16'b0;
         #340 // 36 -2 cyvles for one pixel in OFM = num_of_tiles * kernel_W
-        PE_finish = 16'hFFFF;
+        PE_finish <= 16'hFFFF;
         #10;
         end
         PE_finish = 0;
         #10000;
+        repeat (10000) begin
+            @(posedge clk) begin
+            addr_ram_next_rd = addr_ram_next_rd + 4;
+            #10;
+            end
+        end
         $finish;
     end
     initial begin
@@ -239,7 +264,29 @@ module Sub_top_2_CONV_tb;
         end
     end
 end
-
+    initial begin
+        forever begin
+        @ ( posedge clk ) begin
+            if(valid == 16'hFFFF) begin
+            //#10
+            control_mux <= 0;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            wr_en_next <= 1;
+            @ ( posedge clk )
+            control_mux <= 1;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk )
+            control_mux <= 2;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk )
+            control_mux <= 3;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk ) 
+            wr_en_next <= 0;
+            end
+        end
+        end
+    end
 always @(posedge clk) begin
     if (valid == 16'hFFFF) begin
         // Lưu giá trị OFM vào các file tương ứng
@@ -247,6 +294,7 @@ always @(posedge clk) begin
             ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
             // Ghi từng byte của OFM vào các file
             ofm_data_byte = ofm_data;
+            //$display("%h",ofm_data);
             //if (ofm_file[1] != 0) begin
             //$display("check");
                 $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file

@@ -1,9 +1,9 @@
 import os
 
 MAX_LINE_LENGTH = 100
-OFFSET = 3136  # Khoảng cách dòng
+OFFSET = 2916  # Khoảng cách dòng Kich thuoc cua 1 ofm
 MAX_PE = 16  # Tổng số PE: từ PE0 đến PE15
-SIZE = 25088 
+
 
 # Đếm tổng số dòng trong file
 def count_lines(filename):
