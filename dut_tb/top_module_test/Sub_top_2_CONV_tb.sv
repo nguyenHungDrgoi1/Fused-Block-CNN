@@ -58,6 +58,14 @@ module Sub_top_2_CONV_tb;
     reg [7:0] input_data_mem15 [0:287];
     reg [7:0] input_data_mem16 [0:287];
 
+    reg [31:0] addr_w_n_state,
+    wire [7:0] OFM_1_n_state,
+    wire [7:0] OFM_2_n_state,
+    wire [7:0] OFM_3_n_state,
+    wire [7:0] OFM_4_n_state,
+    reg [3:0] PE_reset_n_state
+
+
     integer ofm_file[15:0];  // Mảng để lưu các file handle
     integer k;
     reg [31:0] ofm_data;
@@ -102,6 +110,7 @@ module Sub_top_2_CONV_tb;
         .OFM_n_CONV_0(OFM_out[0]), .OFM_n_CONV_1(OFM_out[1]), .OFM_n_CONV_2(OFM_out[2]), .OFM_n_CONV_3(OFM_out[3]),
         .OFM_n_CONV_4(OFM_out[4]), .OFM_n_CONV_5(OFM_out[5]), .OFM_n_CONV_6(OFM_out[6]), .OFM_n_CONV_7(OFM_out[7]),
         .OFM_n_CONV_8(OFM_out[8]), .OFM_n_CONV_9(OFM_out[9]), .OFM_n_CONV_10(OFM_out[10]), .OFM_n_CONV_11(OFM_out[11]),
+        .addr_w_n_state(addr_w_n_state), .OFM_0_n_state(OFM_0_n_state), .OFM_1_n_state(OFM_1_n_state), .OFM_2_n_state(OFM_2_n_state) ,.OFM_3_n_state(OFM_3_n_state),
         .OFM_n_CONV_12(OFM_out[12]), .OFM_n_CONV_13(OFM_out[13]), .OFM_n_CONV_14(OFM_out[14]), .OFM_n_CONV_15(OFM_out[15])
     );
 

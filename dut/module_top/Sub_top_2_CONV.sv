@@ -38,10 +38,10 @@ module Sub_top_2_CONV(
     input [31:0] addr_ram_next_wr,
     output [31:0] OFM,
     input [31:0] addr_w_n_state,
+    output [7:0] OFM_0_n_state,
     output [7:0] OFM_1_n_state,
     output [7:0] OFM_2_n_state,
     output [7:0] OFM_3_n_state,
-    output [7:0] OFM_4_n_state,
     input [3:0] PE_reset_n_state
 
     
