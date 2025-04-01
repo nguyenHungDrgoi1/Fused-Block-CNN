@@ -31,13 +31,13 @@ def main():
     input_file = "../Fused-Block-CNN/address/ofm.hex"
 
     PE = 16
-    filter_count = 128
+    filter_count = 32
     tile = filter_count // PE
 
-    ofm_height = 56
+    ofm_height = 54
     ofm_size = ofm_height * ofm_height
     offset = ofm_height * ofm_height * (PE - 1)
-    num_segments = 8
+    num_segments = 2
 
     for pe in range(PE):
         output_file = f"../Fused-Block-CNN/address/OFM_PE{pe}.hex"
