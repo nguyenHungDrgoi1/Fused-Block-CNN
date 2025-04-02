@@ -1,18 +1,26 @@
 `timescale 1ns / 1ps
-// input 58x58x16
+// input 9x9x16
 // kernel 3x3x16x32
 // OFM 56x56x32
+
+`define IFM_W_para 56
+`define IFM_C_para 16
+`define KERNEL_W_para 3
+`define OFM_C_para 64
+`define Stride_para 2
+
+`define Num_of_PE_para 16
+
 module Sub_top_CONV_tb;
 
-    int input_size = 58*58*32;
-    int weight_size = 3*3*32;
-    int tile = 8;
-    const int filter_size = 32*3*3*tile;
+    
 
     reg clk;
     reg reset;
     reg wr_rd_en_IFM;
     reg wr_rd_en_Weight;
+    reg wr_rd_en_Weight_lay2;
+
 
     reg [3:0] KERNEL_W;
     reg [7:0] OFM_C;
@@ -21,7 +29,7 @@ module Sub_top_CONV_tb;
     reg [7:0] IFM_W;
     reg [1:0] stride;
 
-    reg [31:0] addr;
+    reg [31:0] addr, addr_lay2;
     reg [31:0] data_in_IFM;
     reg [31:0] data_in_Weight_0;
     reg [31:0] data_in_Weight_1;
@@ -39,6 +47,20 @@ module Sub_top_CONV_tb;
     reg [31:0] data_in_Weight_13;
     reg [31:0] data_in_Weight_14;
     reg [31:0] data_in_Weight_15;
+
+    reg [31:0] data_in_Weight_0_n_state;
+    reg [31:0] data_in_Weight_1_n_state;
+    reg [31:0] data_in_Weight_2_n_state;
+    reg [31:0] data_in_Weight_3_n_state;
+
+    reg [1:0] control_mux;
+    reg       wr_en_next;
+    reg [31:0] addr_ram_next_rd;
+    reg [31:0] addr_ram_next_wr;
+
+    reg [3:0] PE_next_valid;
+
+    
     reg [19:0] addr_w[15:0];
     reg [19:0] addr_IFM;
     reg [15:0] PE_reset;
@@ -51,13 +73,19 @@ module Sub_top_CONV_tb;
     wire [31:0] wr_addr_IFM_for_tb;
     wire        wr_rd_req_Weight_for_tb;
     wire [31:0] wr_addr_Weight_for_tb;
+    reg [31:0] addr_w_n_state;
+    wire [7:0] OFM_0_n_state;
+    wire [7:0] OFM_1_n_state;
+    wire [7:0] OFM_2_n_state;
+    wire [7:0] OFM_3_n_state;
+    reg [3:0] PE_reset_n_state;
 
     
     wire [31:0] OFM;
    
     wire [7:0] OFM_out[15:0];
     
-    integer i,j=0;
+    integer i,j,k=0;
     reg [7:0] input_data_mem [0:107648]; // BRAM input data
     reg [7:0] input_data_mem0 [0:2303];
     reg [7:0] input_data_mem1 [0:2303];
@@ -76,19 +104,27 @@ module Sub_top_CONV_tb;
     reg [7:0] input_data_mem14 [0:2303];
     reg [7:0] input_data_mem15 [0:2303];
 
+    reg [7:0] input_data_mem0_n_state [0:53823]; // BRAM input data
+    reg [7:0] input_data_mem1_n_state [0:2303];
+    reg [7:0] input_data_mem2_n_state [0:2303];
+    reg [7:0] input_data_mem3_n_state [0:2303];
+
+
     integer ofm_file[15:0];  // Mảng để lưu các file handle
-    integer k;
+
     reg [31:0] ofm_data;
     //CAL START
     reg cal_start;
     wire [15:0] valid ;
     reg [7:0] ofm_data_byte;
+    reg [7:0] ofm_data_byte1;
 
+    int count_valid;
     Sub_top_CONV uut (
         .clk(clk),
         .reset(reset),
         .wr_rd_en_IFM(wr_rd_en_IFM),
-        .wr_rd_en_Weight(wr_rd_en_Weight),
+        .wr_rd_en_Weight(wr_rd_en_Weight_lay2),
         .data_in_IFM(data_in_IFM),
         .data_in_Weight_0(data_in_Weight_0),
         .data_in_Weight_1(data_in_Weight_1),
@@ -106,19 +142,14 @@ module Sub_top_CONV_tb;
         .data_in_Weight_13(data_in_Weight_13),
         .data_in_Weight_14(data_in_Weight_14),
         .data_in_Weight_15(data_in_Weight_15),
+
         .addr(addr),
         .cal_start(cal_start),
         // .addr_IFM(addr_IFM),
-        .OFM(OFM_active),
+
+        //control signal layer 1
         .PE_reset(PE_reset),
         .PE_finish(PE_finish),
-        // for Control_unit
-        .run(run),
-        .instrution(instrution),
-        .wr_rd_req_IFM_for_tb(wr_rd_req_IFM_for_tb),
-        .wr_addr_IFM_for_tb(wr_addr_IFM_for_tb),
-        .wr_rd_req_Weight_for_tb(wr_rd_req_Weight_for_tb),
-        .wr_addr_Weight_for_tb(wr_addr_Weight_for_tb),
 
         .KERNEL_W(KERNEL_W),
         .OFM_C(OFM_C),
@@ -126,9 +157,18 @@ module Sub_top_CONV_tb;
         .IFM_C(IFM_C),
         .IFM_W(IFM_W),
         .stride(stride),
-
         .valid(valid),
         .done_compute(done_compute),
+
+        // for Control_unit
+        .run(run),
+        .instrution(instrution),
+        .wr_rd_req_IFM_for_tb(wr_rd_req_IFM_for_tb),
+        .wr_addr_IFM_for_tb(wr_addr_IFM_for_tb),
+        .wr_rd_req_Weight_for_tb(wr_rd_req_Weight_for_tb),
+        .wr_addr_Weight_for_tb(wr_addr_Weight_for_tb),
+        
+        
         // .addr_w0(addr_w[0]), .addr_w1(addr_w[1]), .addr_w2(addr_w[2]), .addr_w3(addr_w[3]),
         // .addr_w4(addr_w[4]), .addr_w5(addr_w[5]), .addr_w6(addr_w[6]), .addr_w7(addr_w[7]),
         // .addr_w8(addr_w[8]), .addr_w9(addr_w[9]), .addr_w10(addr_w[10]), .addr_w11(addr_w[11]),
@@ -136,14 +176,28 @@ module Sub_top_CONV_tb;
         .OFM_active_0(OFM_out[0]), .OFM_active_1(OFM_out[1]), .OFM_active_2(OFM_out[2]), .OFM_active_3(OFM_out[3]),
         .OFM_active_4(OFM_out[4]), .OFM_active_5(OFM_out[5]), .OFM_active_6(OFM_out[6]), .OFM_active_7(OFM_out[7]),
         .OFM_active_8(OFM_out[8]), .OFM_active_9(OFM_out[9]), .OFM_active_10(OFM_out[10]), .OFM_active_11(OFM_out[11]),
-        .OFM_active_12(OFM_out[12]), .OFM_active_13(OFM_out[13]), .OFM_active_14(OFM_out[14]), .OFM_active_15(OFM_out[15])
+        .OFM_active_12(OFM_out[12]), .OFM_active_13(OFM_out[13]), .OFM_active_14(OFM_out[14]), .OFM_active_15(OFM_out[15]),
+
+        .data_in_Weight_0_n_state(data_in_Weight_0_n_state),    // layer 2
+        .data_in_Weight_1_n_state(data_in_Weight_1_n_state),    // layer 2
+        .data_in_Weight_2_n_state(data_in_Weight_2_n_state),    // layer 2
+        .data_in_Weight_3_n_state(data_in_Weight_3_n_state),    // layer 2
+        .control_mux(control_mux),                              // controll  layer1_2
+        .wr_en_next (wr_en_next),                               // controll  layer1_2
+        .addr_ram_next_rd(addr_ram_next_rd),                
+        .addr_ram_next_wr(addr_ram_next_wr),
+        .PE_reset_n_state(PE_reset_n_state),
+        .addr_w_n_state(addr_w_n_state),
+        .OFM_0_n_state(OFM_0_n_state), .OFM_1_n_state(OFM_1_n_state), .OFM_2_n_state(OFM_2_n_state) ,.OFM_3_n_state(OFM_3_n_state)
+
     );
 
     initial begin
         clk = 0;
         forever #5 clk = ~clk;
     end
-    
+    int input_size = `IFM_W_para*`IFM_W_para*`IFM_C_para;
+    int tile = `OFM_C_para/`Num_of_PE_para;
     initial begin
         ////////////////////////////////////LOAD PHASE//////////////////////////////////////////////////
         // Reset phase
@@ -154,15 +208,16 @@ module Sub_top_CONV_tb;
         reset = 1;
         wr_rd_en_IFM = 0;
         wr_rd_en_Weight = 0;
+        wr_rd_en_Weight_lay2=0;
         addr = 0;
 
-        KERNEL_W = 3;
-        OFM_W = 56;
-        OFM_C = 128;
-        IFM_C = 32;
-        IFM_W = 58;
+        KERNEL_W = `KERNEL_W_para ;
+        OFM_W = ((`IFM_W_para+ 2*0 -`KERNEL_W_para)/ `Stride_para )+1;
+        OFM_C = `OFM_C_para;
+        IFM_C = `IFM_C_para;
+        IFM_W = `IFM_W_para;
 
-        stride = 1;
+        stride = `Stride_para;
 
         cal_start = 0;
         data_in_IFM = 0;
@@ -183,6 +238,9 @@ module Sub_top_CONV_tb;
         data_in_Weight_14 = 0;
         data_in_Weight_15 = 0;
         
+        addr_ram_next_wr = -1;
+        wr_en_next = 0;
+
         // Load input data from file (example: input_data.hex)
        //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/../Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
         $readmemh("../Fused-Block-CNN/address/ifm_padded.hex", input_data_mem);
@@ -206,13 +264,18 @@ module Sub_top_CONV_tb;
         $readmemh("../Fused-Block-CNN/address/weight_PE14.hex", input_data_mem14);
         $readmemh("../Fused-Block-CNN/address/weight_PE15.hex", input_data_mem15);
 
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE0.hex", input_data_mem0_n_state);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE1.hex", input_data_mem1_n_state);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE2.hex", input_data_mem2_n_state);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE3.hex", input_data_mem3_n_state);
+
         run         =   1;
         instrution  =   1;
         #5;
         fork
             begin
                 // Write data into BRAM
-                for (i = 0; i < input_size; i = i + 4) begin
+                for (i = 0; i < input_size+1; i = i + 4) begin
                     //addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
                     data_in_IFM = {input_data_mem[wr_addr_IFM_for_tb*4], input_data_mem[wr_addr_IFM_for_tb*4+1], input_data_mem[wr_addr_IFM_for_tb*4+2], input_data_mem[wr_addr_IFM_for_tb*4+3]};
                     //wr_rd_en_IFM <= 1;
@@ -246,6 +309,19 @@ module Sub_top_CONV_tb;
                 end
                 wr_rd_en_Weight = 0;
             end
+            begin
+                for (k = 0; k < IFM_C*KERNEL_W*KERNEL_W*tile +1; k = k + 4) begin
+
+                    addr <= k >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
+                    data_in_Weight_0_n_state = {input_data_mem0_n_state[i], input_data_mem0_n_state[i+1], input_data_mem0_n_state[i+2], input_data_mem0_n_state[i+3]};
+                    data_in_Weight_1_n_state = {input_data_mem1_n_state[i], input_data_mem1_n_state[i+1], input_data_mem1_n_state[i+2], input_data_mem1_n_state[i+3]};
+                    data_in_Weight_2_n_state = {input_data_mem2_n_state[i], input_data_mem2_n_state[i+1], input_data_mem2_n_state[i+2], input_data_mem2_n_state[i+3]};
+                    data_in_Weight_3_n_state = {input_data_mem3_n_state[i], input_data_mem3_n_state[i+1], input_data_mem3_n_state[i+2], input_data_mem3_n_state[i+3]};
+                    wr_rd_en_Weight_lay2 = 1;
+                    #10;
+                end
+                wr_rd_en_Weight_lay2 = 0;
+            end
         join
         //wr_rd_en_Weight = 0;
     
@@ -267,7 +343,7 @@ module Sub_top_CONV_tb;
         end
         @(posedge done_compute);
         PE_finish = 0;
-      #100000;
+      //#100000;
         $finish;
     end
     initial begin
@@ -282,6 +358,153 @@ module Sub_top_CONV_tb;
         end
     end
 end
+
+initial begin
+        forever begin
+            @ ( posedge clk ) begin
+            if(valid == 16'hFFFF) begin
+                count_valid = count_valid + 1;
+            end
+            if(count_valid % 8 == 0  && count_valid != 0) begin
+                count_valid = 0;
+                repeat(6) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                PE_next_valid = 0;
+                addr_w_n_state = addr_w_n_state + 4;
+                addr_ram_next_rd = addr_ram_next_rd + 4;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+    
+                addr_w_n_state = addr_w_n_state + 4;
+                addr_ram_next_rd = addr_ram_next_rd + 4;
+                repeat(30)  begin
+                    @(posedge clk)
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                addr_w_n_state = 0;
+                @(posedge clk) 
+                PE_next_valid = 0;
+                PE_reset_n_state = 0;
+                
+                // PE_reset = 1;
+                // @(negedge clk)
+                // PE_reset = 0;                                                       
+            end
+        end 
+        end
+    end
+    //--------------------------------Data_controller--------------------------------------------//
+    initial begin
+        forever begin
+        @ ( posedge clk ) begin
+            if(valid == 16'hFFFF) begin
+            //#10
+            control_mux <= 0;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            wr_en_next <= 1;
+            @ ( posedge clk )
+            control_mux <= 1;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk )
+            control_mux <= 2;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk )
+            control_mux <= 3;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk ) 
+            wr_en_next <= 0;
+            end
+        end
+        end
+    end
+
+
 
 always @(posedge clk) begin
     if (valid == 16'hFFFF) begin

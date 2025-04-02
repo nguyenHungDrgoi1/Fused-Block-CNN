@@ -273,6 +273,20 @@ always @(*) begin
     'h2: stride_offset_for_col  =   ( IFM_W << (stride_shift-1) << IFM_C_shift );
     endcase
 end
+
+reg [7:0] skip_a_pixel;
+always @(*) begin  
+    case ( IFM_W[0] )
+    
+    'b0: begin 
+        if (stride ==2) skip_a_pixel    =   IFM_C;
+        else            skip_a_pixel    =   0;
+    end
+    'b1: begin 
+                        skip_a_pixel    =   0;
+    end
+    endcase
+end
                 
 /////////////////////// FSM Output Logic ///////////////////////
 always @(posedge clk or negedge rst_n) begin
@@ -297,9 +311,9 @@ always @(posedge clk or negedge rst_n) begin
         end
         
         if ( (row_index_KERNEL == (KERNEL_W << num_of_tiles_shift) -2 ) && ( col_index_KERNEL == KERNEL_W -1  ) && ( tiles_count == num_of_tiles_for_PE -1  ) && ( row_index_OFM == OFM_W -1 ) ) begin 
-            predict_window_OFM_addr_fetch_ifm   <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col;
-            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col;
-            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col;
+            predict_window_OFM_addr_fetch_ifm   <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col + skip_a_pixel;
+            predict_window_addr_fetch_ifm       <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col + skip_a_pixel;
+            predict_line_addr_fetch_ifm         <= window_start_addr_ifm + ( KERNEL_W << IFM_C_shift ) + stride_offset_for_col + skip_a_pixel;
         end
         if ( ( row_index_KERNEL == 'h0 )&& ( col_index_KERNEL ==  'h0 )  ) begin 
             done_window <= 'b1;

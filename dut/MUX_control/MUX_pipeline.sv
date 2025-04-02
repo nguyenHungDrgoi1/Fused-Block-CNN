@@ -26,7 +26,7 @@ module MUX_pipeline(
             2'd1 : data_out = {data_in_4,data_in_5,data_in_6,data_in_7} ;
             2'd2 : data_out = {data_in_8,data_in_9,data_in_10,data_in_11} ;
             2'd3 : data_out = {data_in_12,data_in_13,data_in_14,data_in_15} ;
-            default: 
+            default: data_out =0;
         endcase
     end
 endmodule

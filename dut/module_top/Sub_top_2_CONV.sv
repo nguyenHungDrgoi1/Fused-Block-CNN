@@ -1,443 +1,472 @@
-module Sub_top_2_CONV(
-    input clk,
-    input reset,
-    input [31:0] addr,
-    input wr_rd_en_IFM,
-    input wr_rd_en_Weight,
-    input cal_start,
-    input [31:0] data_in_IFM,
-    input [31:0] data_in_Weight_0,
-    input [31:0] data_in_Weight_1,
-    input [31:0] data_in_Weight_2,
-    input [31:0] data_in_Weight_3,
-    input [31:0] data_in_Weight_4,
-    input [31:0] data_in_Weight_5,
-    input [31:0] data_in_Weight_6,
-    input [31:0] data_in_Weight_7,
-    input [31:0] data_in_Weight_8,
-    input [31:0] data_in_Weight_9,
-    input [31:0] data_in_Weight_10,
-    input [31:0] data_in_Weight_11,
-    input [31:0] data_in_Weight_12,
-    input [31:0] data_in_Weight_13,
-    input [31:0] data_in_Weight_14,
-    input [31:0] data_in_Weight_15,
-    input [1:0] control_mux,
-    //control signal 
-    input wire [15:0] PE_reset,
-    input wire [15:0] PE_finish,
-    output wire [15:0] valid,
-    //output wire [15:0] done_window,
-    output wr_en_next,
-    output [31:0] addr_ram_next_rd,
-    output [31:0] addr_ram_next_wr,
-    output [31:0] OFM,
+`timescale 1ns / 1ps
+// input 58x58x16
+// kernel 3x3x16x32
+// OFM 56x56x32
+module Sub_top_2_CONV_tb;
+
+    int input_size = 58*58*32;
+    int weight_size = 3*3*32;
+    int tile = 8;
+    int tile_conv2 = 8;
+
+    reg clk;
+    reg reset;
+    reg wr_rd_en_IFM;
+    reg wr_rd_en_Weight;
+    reg [31:0] addr;
+    reg [31:0] data_in_IFM;
+    reg [31:0] data_in_Weight_0;
+    reg [31:0] data_in_Weight_1;
+    reg [31:0] data_in_Weight_2;
+    reg [31:0] data_in_Weight_3;
+    reg [31:0] data_in_Weight_4;
+    reg [31:0] data_in_Weight_5;
+    reg [31:0] data_in_Weight_6;
+    reg [31:0] data_in_Weight_7;
+    reg [31:0] data_in_Weight_8;
+    reg [31:0] data_in_Weight_9;
+    reg [31:0] data_in_Weight_10;
+    reg [31:0] data_in_Weight_11;
+    reg [31:0] data_in_Weight_12;
+    reg [31:0] data_in_Weight_13;
+    reg [31:0] data_in_Weight_14;
+    reg [31:0] data_in_Weight_15;
+
+    reg [31:0] data_in_Weight_0_n_state;
+    reg [31:0] data_in_Weight_1_n_state;
+    reg [31:0] data_in_Weight_2_n_state;
+    reg [31:0] data_in_Weight_3_n_state;
 
 
-    output [31:0] out_BRAM_CONV
-);
-    wire [31:0] data_out_mux;
-    wire [7:0]  OFM_n_CONV_0;
-    wire [7:0]  OFM_n_CONV_1;
-    wire [7:0]  OFM_n_CONV_2;
-    wire [7:0]  OFM_n_CONV_3;
-    wire [7:0]  OFM_n_CONV_4;
-    wire [7:0]  OFM_n_CONV_5;
-    wire [7:0]  OFM_n_CONV_6;
-    wire [7:0]  OFM_n_CONV_7;
-    wire [7:0]  OFM_n_CONV_8;
-    wire [7:0]  OFM_n_CONV_9;
-    wire [7:0]  OFM_n_CONV_10;
-    wire [7:0]  OFM_n_CONV_11;
-    wire [7:0]  OFM_n_CONV_12;
-    wire [7:0]  OFM_n_CONV_13;
-    wire [7:0]  OFM_n_CONV_14;
-    wire [7:0]  OFM_n_CONV_15;
-    wire [7:0]  OFM_n_CONV_16;
-    wire [7:0]  OFM_active_0;
-    wire [7:0]  OFM_active_1;
-    wire [7:0]  OFM_active_2;
-    wire [7:0]  OFM_active_3;
-    wire [7:0]  OFM_active_4;
-    wire [7:0]  OFM_active_5;
-    wire [7:0]  OFM_active_6;
-    wire [7:0]  OFM_active_7;
-    wire [7:0]  OFM_active_8;
-    wire [7:0]  OFM_active_9;
-    wire [7:0]  OFM_active_10;
-    wire [7:0]  OFM_active_11;
-    wire [7:0]  OFM_active_12;
-    wire [7:0]  OFM_active_13;
-    wire [7:0]  OFM_active_14;
-    wire [7:0]  OFM_active_15;
-    wire [7:0]  OFM_active_16;
-    wire [7:0]  OFM_0;
-    wire [7:0]  OFM_1;
-    wire [7:0]  OFM_2;
-    wire [7:0]  OFM_3;
-    wire [7:0]  OFM_4;
-    wire [7:0]  OFM_5;
-    wire [7:0]  OFM_6;
-    wire [7:0]  OFM_7;
-    wire [7:0]  OFM_8;
-    wire [7:0]  OFM_9;
-    wire [7:0]  OFM_10;
-    wire [7:0]  OFM_11;
-    wire [7:0]  OFM_12;
-    wire [7:0]  OFM_13;
-    wire [7:0]  OFM_14;
-    wire [7:0]  OFM_15;
-    wire [7:0]  OFM_16;
-    logic [31:0] addr_IFM;
-    logic [19:0] addr_w;
-    logic [31:0] IFM_data;
-    logic [31:0] Weight_0;
-    logic [31:0] Weight_1;
-    logic [31:0] Weight_2;
-    logic [31:0] Weight_3;
-    logic [31:0] Weight_4;
-    logic [31:0] Weight_5;
-    logic [31:0] Weight_6;
-    logic [31:0] Weight_7;
-    logic [31:0] Weight_8;
-    logic [31:0] Weight_9;
-    logic [31:0] Weight_10;
-    logic [31:0] Weight_11;
-    logic [31:0] Weight_12;
-    logic [31:0] Weight_13;
-    logic [31:0] Weight_14;
-    logic [31:0] Weight_15;
-    wire [15:0] done_window_for_PE_cluster;
-    wire [15:0] finish_for_PE_cluster;
-    wire        done_window_one_bit;
-    BRAM_IFM IFM_BRAM(
-        .clk(clk),
-        .rd_addr(addr_IFM),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_IFM),
-        .data_in(data_in_IFM),
-        .data_out(IFM_data)
-    );
-    BRAM IFM_Weight_0(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_0),
-        .data_out(Weight_0)
-    );
-    BRAM IFM_Weight_1(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_1),
-        .data_out(Weight_1)
-    );
-    BRAM IFM_Weight_2(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_2),
-        .data_out(Weight_2)
-    );
-    BRAM IFM_Weight_3(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_3),
-        .data_out(Weight_3)
-    );
-    BRAM IFM_Weight_4(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_4),
-        .data_out(Weight_4)
-    );
-    BRAM IFM_Weight_5(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_5),
-        .data_out(Weight_5)
-    );
-    BRAM IFM_Weight_6(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_6),
-        .data_out(Weight_6)
-    );
-    BRAM IFM_Weight_7(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_7),
-        .data_out(Weight_7)
-    );
-    BRAM IFM_Weight_8(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_8),
-        .data_out(Weight_8)
-    );
-    BRAM IFM_Weight_9(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_9),
-        .data_out(Weight_9)
-    );
-    BRAM IFM_Weight_10(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_10),
-        .data_out(Weight_10)
-    );
-    BRAM IFM_Weight_11(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_11),
-        .data_out(Weight_11)
-    );
-    BRAM IFM_Weight_12(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_12),
-        .data_out(Weight_12)
-    );
-    BRAM IFM_Weight_13(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_13),
-        .data_out(Weight_13)
-    );
-    BRAM IFM_Weight_14(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_14),
-        .data_out(Weight_14)
-    );
-    BRAM IFM_Weight_15(
-        .clk(clk),
-        .rd_addr(addr_w),
-        .wr_addr(addr),
-        .wr_rd_en(wr_rd_en_Weight),
-        .data_in(data_in_Weight_15),
-        .data_out(Weight_15)
-    );
+    reg [19:0] addr_w[15:0];
+    reg [19:0] addr_IFM;
+    reg [15:0] PE_reset;
+    reg [15:0] PE_finish;
     
-    PE_cluster cluster(
+    wire [31:0] OFM;
+   
+    wire [7:0] OFM_out[15:0];
+    reg wr_en_next;
+    reg [31:0] addr_ram_next_rd;
+    reg [31:0] addr_ram_next_wr;
+    wire [31:0] out_BRAM_CONV;
+    reg [1:0] control_mux;
+
+    reg [3:0] PE_next_valid;
+
+    integer i;
+    reg [7:0] input_data_mem [0:107647]; // BRAM input data
+    reg [7:0] input_data_mem1 [0:2303];
+    reg [7:0] input_data_mem2 [0:2303];
+    reg [7:0] input_data_mem3 [0:2303];
+    reg [7:0] input_data_mem4 [0:2303];
+    reg [7:0] input_data_mem5 [0:2303];
+    reg [7:0] input_data_mem6 [0:2303];
+    reg [7:0] input_data_mem7 [0:2303];
+    reg [7:0] input_data_mem8 [0:2303];
+    reg [7:0] input_data_mem9 [0:2303];
+    reg [7:0] input_data_mem10 [0:2303];
+    reg [7:0] input_data_mem11 [0:2303];
+    reg [7:0] input_data_mem12 [0:2303];
+    reg [7:0] input_data_mem13 [0:2303];
+    reg [7:0] input_data_mem14 [0:2303];
+    reg [7:0] input_data_mem15 [0:2303];
+    reg [7:0] input_data_mem16 [0:2303];
+
+
+    reg [7:0] input_data_mem0_n_state [0:53823]; // BRAM input data
+    reg [7:0] input_data_mem1_n_state [0:2303];
+    reg [7:0] input_data_mem2_n_state [0:2303];
+    reg [7:0] input_data_mem3_n_state [0:2303];
+
+    reg [31:0] addr_w_n_state;
+    wire [7:0] OFM_1_n_state;
+    wire [7:0] OFM_2_n_state;
+    wire [7:0] OFM_3_n_state;
+    wire [7:0] OFM_4_n_state;
+    reg [3:0] PE_reset_n_state;
+
+
+    integer ofm_file[15:0];  // Mảng để lưu các file handle
+    integer ofm_file_2[3:0];
+    integer k;
+    integer m;
+    reg [31:0] ofm_data;
+    reg [31:0] ofm1_data;
+    //CAL START
+    reg cal_start;
+    wire [15:0] valid ;
+    reg [7:0] ofm_data_byte;
+    reg [7:0] ofm_data_byte1;
+
+    int count_valid;
+    Sub_top_2_CONV uut (
         .clk(clk),
-        .reset_n(reset),
+        .reset(reset),
+        .wr_rd_en_IFM(wr_rd_en_IFM),
+        .wr_rd_en_Weight(wr_rd_en_Weight),
+        .data_in_IFM(data_in_IFM),
+        .data_in_Weight_0(data_in_Weight_0),
+        .data_in_Weight_1(data_in_Weight_1),
+        .data_in_Weight_2(data_in_Weight_2),
+        .data_in_Weight_3(data_in_Weight_3),
+        .data_in_Weight_4(data_in_Weight_4),
+        .data_in_Weight_5(data_in_Weight_5),
+        .data_in_Weight_6(data_in_Weight_6),
+        .data_in_Weight_7(data_in_Weight_7),
+        .data_in_Weight_8(data_in_Weight_8),
+        .data_in_Weight_9(data_in_Weight_9),
+        .data_in_Weight_10(data_in_Weight_10),
+        .data_in_Weight_11(data_in_Weight_11),
+        .data_in_Weight_12(data_in_Weight_12),
+        .data_in_Weight_13(data_in_Weight_13),
+        .data_in_Weight_14(data_in_Weight_14),
+        .data_in_Weight_15(data_in_Weight_15),
+        .addr(addr),
+        .cal_start(cal_start),
+        // .addr_IFM(addr_IFM),
+        //.OFM(OFM_active),
         .PE_reset(PE_reset),
         .PE_finish(PE_finish),
-        //.valid(valid),
-        .IFM(IFM_data),
-        .Weight_0(Weight_0),
-        .Weight_1(Weight_1),
-        .Weight_2(Weight_2),
-        .Weight_3(Weight_3),
-        .Weight_4(Weight_4),
-        .Weight_5(Weight_5),
-        .Weight_6(Weight_6),
-        .Weight_7(Weight_7),
-        .Weight_8(Weight_8),
-        .Weight_9(Weight_9),
-        .Weight_10(Weight_10),
-        .Weight_11(Weight_11),
-        .Weight_12(Weight_12),
-        .Weight_13(Weight_13),
-        .Weight_14(Weight_14),
-        .Weight_15(Weight_15),
-        .OFM_0(OFM_0),
-        .OFM_1(OFM_1),
-        .OFM_2(OFM_2),
-        .OFM_3(OFM_3),
-        .OFM_4(OFM_4),
-        .OFM_5(OFM_5),
-        .OFM_6(OFM_6),
-        .OFM_7(OFM_7),
-        .OFM_8(OFM_8),
-        .OFM_9(OFM_9),
-        .OFM_10(OFM_10),
-        .OFM_11(OFM_11),
-        .OFM_12(OFM_12),
-        .OFM_13(OFM_13),
-        .OFM_14(OFM_14),
-        .OFM_15(OFM_15)
-
+        .valid(valid),
+        .wr_en_next(wr_en_next),
+        .addr_ram_next_rd(addr_ram_next_rd),
+        .addr_ram_next_wr(addr_ram_next_wr),
+        //.out_BRAM_CONV(out_BRAM_CONV),
+        .control_mux(control_mux),
+        // .addr_w0(addr_w[0]), .addr_w1(addr_w[1]), .addr_w2(addr_w[2]), .addr_w3(addr_w[3]),
+        // .addr_w4(addr_w[4]), .addr_w5(addr_w[5]), .addr_w6(addr_w[6]), .addr_w7(addr_w[7]),
+        // .addr_w8(addr_w[8]), .addr_w9(addr_w[9]), .addr_w10(addr_w[10]), .addr_w11(addr_w[11]),
+        // .addr_w12(addr_w[12]), .addr_w13(addr_w[13]), .addr_w14(addr_w[14]), .addr_w15(addr_w[15]),
+        // .OFM_n_CONV_0(OFM_out[0]), .OFM_n_CONV_1(OFM_out[1]), .OFM_n_CONV_2(OFM_out[2]), .OFM_n_CONV_3(OFM_out[3]),
+        // .OFM_n_CONV_4(OFM_out[4]), .OFM_n_CONV_5(OFM_out[5]), .OFM_n_CONV_6(OFM_out[6]), .OFM_n_CONV_7(OFM_out[7]),
+        // .OFM_n_CONV_8(OFM_out[8]), .OFM_n_CONV_9(OFM_out[9]), .OFM_n_CONV_10(OFM_out[10]), .OFM_n_CONV_11(OFM_out[11]),
+        .addr_w_n_state(addr_w_n_state), .OFM_0_n_state(OFM_0_n_state), .OFM_1_n_state(OFM_1_n_state), .OFM_2_n_state(OFM_2_n_state) ,.OFM_3_n_state(OFM_3_n_state),
+       // .OFM_n_CONV_12(OFM_out[12]), .OFM_n_CONV_13(OFM_out[13]), .OFM_n_CONV_14(OFM_out[14]), .OFM_n_CONV_15(OFM_out[15]) ,
+       .PE_reset_n_state(PE_reset_n_state),
+        .data_in_Weight_0_n_state(data_in_Weight_0_n_state),
+        .data_in_Weight_1_n_state(data_in_Weight_1_n_state),
+        .data_in_Weight_2_n_state(data_in_Weight_2_n_state),
+        .data_in_Weight_3_n_state(data_in_Weight_3_n_state)
     );
+
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
     
-    ReLU6 active0(
-        .OFM(OFM_0),
-        .OFM_active(OFM_active_0)
-    );
-    ReLU6 active1(
-        .OFM(OFM_1),
-        .OFM_active(OFM_active_1)
-    );
-    ReLU6 active2(
-        .OFM(OFM_2),
-        .OFM_active(OFM_active_2)
-    );
-    ReLU6 active3(
-        .OFM(OFM_0),
-        .OFM_active(OFM_active_3)
-    );
-    ReLU6 active4(
-        .OFM(OFM_4),
-        .OFM_active(OFM_active_4)
-    );
-    ReLU6 active5(
-        .OFM(OFM_0),
-        .OFM_active(OFM_active_5)
-    );
-    ReLU6 active6(
-        .OFM(OFM_6),
-        .OFM_active(OFM_active_6)
-    );
-    ReLU6 active7(
-        .OFM(OFM_7),
-        .OFM_active(OFM_active_7)
-    );
-    ReLU6 active8(
-        .OFM(OFM_8),
-        .OFM_active(OFM_active_8)
-    );
-    ReLU6 active9(
-        .OFM(OFM_9),
-        .OFM_active(OFM_active_9)
-    );
-    ReLU6 active10(
-        .OFM(OFM_10),
-        .OFM_active(OFM_active_10)
-    );
-    ReLU6 active11(
-        .OFM(OFM_11),
-        .OFM_active(OFM_active_11)
-    );
-    ReLU6 active12(
-        .OFM(OFM_12),
-        .OFM_active(OFM_active_12)
-    );
-    ReLU6 active13(
-        .OFM(OFM_13),
-        .OFM_active(OFM_active_13)
-    );
-    ReLU6 active14(
-        .OFM(OFM_14),
-        .OFM_active(OFM_active_14)
-    );
-    ReLU6 active15(
-        .OFM(OFM_15),
-        .OFM_active(OFM_active_14)
-    );
-    Register_for_pipeline Reg_1(
-        .clk(clk),
-        .reset_n(reset_n),
-        .valid_data(done_window_for_PE_cluster),
-        .data_in_0(OFM_active_0),
-        .data_in_1(OFM_active_1),
-        .data_in_2(OFM_active_2),
-        .data_in_3(OFM_active_3),
-        .data_in_4(OFM_active_4),
-        .data_in_5(OFM_active_5),
-        .data_in_6(OFM_active_6),
-        .data_in_7(OFM_active_7),
-        .data_in_8(OFM_active_8),
-        .data_in_9(OFM_active_9),
-        .data_in_10(OFM_active_10),
-        .data_in_11(OFM_active_11),
-        .data_in_12(OFM_active_12),
-        .data_in_13(OFM_active_13),
-        .data_in_14(OFM_active_14),
-        .data_in_15(OFM_active_15),
-        .data_out_0(OFM_n_CONV_0),
-        .data_out_1(OFM_n_CONV_1),
-        .data_out_2(OFM_n_CONV_2),
-        .data_out_3(OFM_n_CONV_3),
-        .data_out_4(OFM_n_CONV_4),
-        .data_out_5(OFM_n_CONV_5),
-        .data_out_6(OFM_n_CONV_6),
-        .data_out_7(OFM_n_CONV_7),
-        .data_out_8(OFM_n_CONV_8),
-        .data_out_9(OFM_n_CONV_9),
-        .data_out_10(OFM_n_CONV_10),
-        .data_out_11(OFM_n_CONV_11),
-        .data_out_12(OFM_n_CONV_12),
-        .data_out_13(OFM_n_CONV_13),
-        .data_out_14(OFM_n_CONV_14),
-        .data_out_15(OFM_n_CONV_15)
-    );
+    initial begin
+        ////////////////////////////////////LOAD PHASE//////////////////////////////////////////////////
+        // Reset phase
+        reset = 0;
+        PE_reset = 0;
+        #30
+        reset = 1;
+        wr_rd_en_IFM = 0;
+        wr_rd_en_Weight = 0;
+        addr = 0;
+        cal_start = 0;
+        data_in_IFM = 0;
+        data_in_Weight_0 = 0;
+        data_in_Weight_1 = 0;
+        data_in_Weight_2 = 0;
+        data_in_Weight_3 = 0;
+        data_in_Weight_4 = 0;
+        data_in_Weight_5 = 0;
+        data_in_Weight_6 = 0;
+        data_in_Weight_7 = 0;
+        data_in_Weight_8 = 0;
+        data_in_Weight_9 = 0;
+        data_in_Weight_10 = 0;
+        data_in_Weight_11 = 0;
+        data_in_Weight_12 = 0;
+        data_in_Weight_13 = 0;
+        data_in_Weight_14 = 0;
+        data_in_Weight_15 = 0;
+        addr_ram_next_rd = 0;
+        addr_ram_next_wr = -1;
+        wr_en_next = 0;
+        PE_reset_n_state = 0;
+        addr_w_n_state = 0;
+        PE_next_valid = 0;
+        // Load input data from file (example: input_data.hex)
+       //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/../Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/ifm.hex", input_data_mem);
 
-    MUX_pipeline mux(
-        .control(control_mux),
+        //$readmemh("../Fused-Block-CNN/golden_out_fused_block/ifm_padded.hex", input_data_mem);
 
-        .data_in_0(OFM_active_0),
-        .data_in_1(OFM_active_1),
-        .data_in_2(OFM_active_2),
-        .data_in_3(OFM_active_3),
-        .data_in_4(OFM_active_4),
-        .data_in_5(OFM_active_5),
-        .data_in_6(OFM_active_6),
-        .data_in_7(OFM_active_7),
-        .data_in_8(OFM_active_8),
-        .data_in_9(OFM_active_9),
-        .data_in_10(OFM_active_10),
-        .data_in_11(OFM_active_11),
-        .data_in_12(OFM_active_12),
-        .data_in_13(OFM_active_13),
-        .data_in_14(OFM_active_14),
-        .data_in_15(OFM_active_15),
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE0.hex", input_data_mem1);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE1.hex", input_data_mem2);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE2.hex", input_data_mem3);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE3.hex", input_data_mem4);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE4.hex", input_data_mem5);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE5.hex", input_data_mem6);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE6.hex", input_data_mem7);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE7.hex", input_data_mem8);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE8.hex", input_data_mem9);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE9.hex", input_data_mem10);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE10.hex", input_data_mem11);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE11.hex", input_data_mem12);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE12.hex", input_data_mem13);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE13.hex", input_data_mem14);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE14.hex", input_data_mem15);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight1_PE15.hex", input_data_mem16);
 
-        .data_out(out_BRAM_CONV)
-    );
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE0.hex", input_data_mem0_n_state);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE1.hex", input_data_mem1_n_state);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE2.hex", input_data_mem2_n_state);
+        $readmemh("../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2_PE3.hex", input_data_mem3_n_state);
 
-    BRAM_IFM BRAM_pipeline(
-        .clk(clk),
-        .rd_addr(addr_ram_next_wr),
-        .wr_addr(addr_ram_next_rd),
-        .wr_rd_en(wr_en_next),
-        .data_in(data_out_mux),
-        .data_out(out_BRAM_CONV)
-    );
-    address_generator addr_gen(
-        .clk(clk),
-        .rst_n(reset),
-        .KERNEL_W(3),
-        .OFM_W(54),
-        .OFM_C(32),
-        .IFM_C(16),
-        .IFM_W(56),
-        .stride(1),
-        .ready(cal_start),
-        .addr_in(0),
-        .req_addr_out_filter(addr_w),
-        .req_addr_out_ifm(addr_IFM),
-        .done_window(done_window_one_bit)
-    );
-    assign done_window_for_PE_cluster       =   {16{done_window_one_bit}};
-    assign finish_for_PE_cluster            =   (cal_start) && ( addr_IFM != 'b0 )  ? {16{done_window_one_bit}} : 16'b0;
-    assign valid                            =   finish_for_PE_cluster;
+        //@ ( posedge clk );
+        //wait( clk == 1);
+        #5
+        // Write data into BRAM
+        for (i = 0; i < input_size + 1; i = i + 4) begin
+            addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
+            data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
+            wr_rd_en_IFM = 1;
+            #10;
+        end
+
+        wr_rd_en_IFM = 0;
+        for (i = 0; i < 2304; i = i + 4) begin
+
+            addr = i >> 2;  // Chia 4 vì mỗi lần lưu 32-bit
+            //data_in_IFM = {input_data_mem[i], input_data_mem[i+1], input_data_mem[i+2], input_data_mem[i+3]};
+            data_in_Weight_0 = {input_data_mem1[i], input_data_mem1[i+1], input_data_mem1[i+2], input_data_mem1[i+3]};
+            data_in_Weight_1 = {input_data_mem2[i], input_data_mem2[i+1], input_data_mem2[i+2], input_data_mem2[i+3]};
+            data_in_Weight_2 = {input_data_mem3[i], input_data_mem3[i+1], input_data_mem3[i+2], input_data_mem3[i+3]};
+            data_in_Weight_3 = {input_data_mem4[i], input_data_mem4[i+1], input_data_mem4[i+2], input_data_mem4[i+3]};
+            data_in_Weight_4 = {input_data_mem5[i], input_data_mem5[i+1], input_data_mem5[i+2], input_data_mem5[i+3]};
+            data_in_Weight_5 = {input_data_mem6[i], input_data_mem6[i+1], input_data_mem6[i+2], input_data_mem6[i+3]};
+            data_in_Weight_6 = {input_data_mem7[i], input_data_mem7[i+1], input_data_mem7[i+2], input_data_mem7[i+3]};
+            data_in_Weight_7 = {input_data_mem8[i], input_data_mem8[i+1], input_data_mem8[i+2], input_data_mem8[i+3]};
+            data_in_Weight_8 = {input_data_mem9[i], input_data_mem9[i+1], input_data_mem9[i+2], input_data_mem9[i+3]};
+            data_in_Weight_9 = {input_data_mem10[i], input_data_mem10[i+1], input_data_mem10[i+2], input_data_mem10[i+3]};
+            data_in_Weight_10 = {input_data_mem11[i], input_data_mem11[i+1], input_data_mem11[i+2], input_data_mem11[i+3]};
+            data_in_Weight_11 = {input_data_mem12[i], input_data_mem12[i+1], input_data_mem12[i+2], input_data_mem12[i+3]};
+            data_in_Weight_12 = {input_data_mem13[i], input_data_mem13[i+1], input_data_mem13[i+2], input_data_mem13[i+3]};
+            data_in_Weight_13 = {input_data_mem14[i], input_data_mem14[i+1], input_data_mem14[i+2], input_data_mem14[i+3]};
+            data_in_Weight_14 = {input_data_mem15[i], input_data_mem15[i+1], input_data_mem15[i+2], input_data_mem15[i+3]};
+            data_in_Weight_15 = {input_data_mem16[i], input_data_mem16[i+1], input_data_mem16[i+2], input_data_mem16[i+3]};
+
+            data_in_Weight_0_n_state = {input_data_mem0_n_state[i], input_data_mem0_n_state[i+1], input_data_mem0_n_state[i+2], input_data_mem0_n_state[i+3]};
+            data_in_Weight_1_n_state = {input_data_mem1_n_state[i], input_data_mem1_n_state[i+1], input_data_mem1_n_state[i+2], input_data_mem1_n_state[i+3]};
+            data_in_Weight_2_n_state = {input_data_mem2_n_state[i], input_data_mem2_n_state[i+1], input_data_mem2_n_state[i+2], input_data_mem2_n_state[i+3]};
+            data_in_Weight_3_n_state = {input_data_mem3_n_state[i], input_data_mem3_n_state[i+1], input_data_mem3_n_state[i+2], input_data_mem3_n_state[i+3]};
+            wr_rd_en_Weight = 1;
+            #10;
+        end
+        wr_rd_en_Weight = 0;
+    
+        #5000;
+        #5
+        ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
+
+        cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
+        #15 // 3 chu ki
+        repeat (3000) begin
+        //#20
+        PE_reset <= 16'hFFFF;
+        PE_finish <= 0;
+        #10 // one cyvles
+        PE_reset <= 16'b0;
+        #340 // 4 - 2 cyvles for one pixel in OFM = num_of_tiles * kernel_W
+        PE_finish <= 16'hFFFF;
+        #10;
+        end
+        PE_finish = 0;
+        #10000;
+        $finish;
+    end
+    initial begin
+    // Mở các file hex để lưu OFM (sẽ tạo các file nếu chưa tồn tại)
+    for (k = 0; k < 16; k = k + 1) begin
+        // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
+         //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
+        ofm_file[k] = $fopen($sformatf("../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM1_PE%0d_DUT.hex", k), "w");
+        if (ofm_file[k] == 0) begin
+            $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
+            $finish;  // Dừng mô phỏng nếu không mở được file
+        end
+    end
+        for (m = 0; m < 4; m = m + 1) begin
+        // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
+         //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
+        ofm_file_2[m] = $fopen($sformatf("../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM2_PE%0d_DUT.hex", m), "w");
+        if (ofm_file_2[m] == 0) begin
+            $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
+            $finish;  // Dừng mô phỏng nếu không mở được file
+        end
+    end
+end
+    initial begin
+        forever begin
+            @ ( posedge clk ) begin
+            if(valid == 16'hFFFF) begin
+                count_valid = count_valid + 1;
+            end
+            if(count_valid % 8 == 0  && count_valid != 0) begin
+                count_valid = 0;
+                repeat(6) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                PE_next_valid = 0;
+                addr_w_n_state = addr_w_n_state + 4;
+                addr_ram_next_rd = addr_ram_next_rd + 4;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+    
+                addr_w_n_state = addr_w_n_state + 4;
+                addr_ram_next_rd = addr_ram_next_rd + 4;
+                repeat(30)  begin
+                    @(posedge clk)
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                repeat(32)  begin
+                    @(posedge clk)
+                    PE_next_valid = 0;
+                    PE_reset_n_state = 0;
+                    addr_w_n_state = addr_w_n_state + 4;
+                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                end
+                PE_next_valid = 4'b1111;
+                addr_ram_next_rd = addr_ram_next_rd - 128 ;
+                @(posedge clk)
+                PE_reset_n_state = 15;
+                addr_w_n_state = 0;
+                @(posedge clk) 
+                PE_next_valid = 0;
+                PE_reset_n_state = 0;
+                
+                // PE_reset = 1;
+                // @(negedge clk)
+                // PE_reset = 0;                                                       
+            end
+        end 
+        end
+    end
+    initial begin
+        forever begin
+        @ ( posedge clk ) begin
+            if(valid == 16'hFFFF) begin
+            //#10
+            control_mux <= 0;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            wr_en_next <= 1;
+            @ ( posedge clk )
+            control_mux <= 1;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk )
+            control_mux <= 2;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk )
+            control_mux <= 3;
+            addr_ram_next_wr <= addr_ram_next_wr + 1;
+            @ ( posedge clk ) 
+            wr_en_next <= 0;
+            end
+        end
+        end
+    end
+always @(posedge clk) begin
+    if (valid == 16'hFFFF) begin
+        // Lưu giá trị OFM vào các file tương ứng
+        for (k = 0; k < 16; k = k + 1) begin
+            ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
+            // Ghi từng byte của OFM vào các file
+            ofm_data_byte = ofm_data;
+            //$display("%h",ofm_data);
+            //if (ofm_file[1] != 0) begin
+            //$display("check");
+                $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
+           // end
+            ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
+        end
+    end
+    if (PE_next_valid == 4'hF) begin
+        // Lưu giá trị OFM vào các file tương ứng
+            ofm1_data = OFM_1_n_state;  // Lấy giá trị OFM từ output
+            // Ghi từng byte của OFM vào các file
+            ofm_data_byte1 = ofm1_data;
+                $fwrite(ofm_file_2[0], "%h\n", ofm_data_byte1);  // Ghi giá trị từng byte vào file
+           // end
+            ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
+    end
+end
+
 endmodule
