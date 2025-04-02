@@ -32,7 +32,7 @@ def main():
     # Cố định các tham số
     pe = 4  # Số lượng PE
     filter_count = 32  # Số lượng filters
-    weight_height = 3  # Chiều cao của weight
+    weight_height = 1  # Chiều cao của weight
     weight_channel = 128  # Số lượng channel của weight
 
     input_file = "../Fused-Block-CNN/golden_out_fused_block/weight_hex_folder/weight2.hex"
