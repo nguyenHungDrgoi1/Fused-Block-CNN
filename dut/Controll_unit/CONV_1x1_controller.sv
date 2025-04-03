@@ -4,10 +4,11 @@ module CONV_1x1_controller(
     input valid,
     input [7:0] weight_c,
     input [7:0] num_filter,
-    output [31:0] addr_ifm,
-    output [31:0] addr_weight,
-    output [3:0] PE_en,
-    output [3:0] PE_finish
+    input cal_start,
+    output logic [31:0] addr_ifm,
+    output logic [31:0] addr_weight,
+    output logic [3:0] PE_en,
+    output logic [3:0] PE_finish
 );
 reg [2:0] curr_state, next_state;
 parameter IDLE = 3'b000;
@@ -19,7 +20,7 @@ parameter END_PIXEL = 3'b100;
 reg [7:0] valid_count;
 reg [7:0] count_deep_pixel;
 reg [7:0] count_filter;
-
+reg next_filter;
 //value for mode of uart
 // reg [6:0] end_bit;
 // reg [3:0] bit_num;
@@ -60,20 +61,20 @@ always_comb begin
 
         // ST_START_BIT
         START_PIXEL : begin
-            if(valid_count < weight_c) begin
-                next_state = START_PIXEL ;
+            if((valid_count >= weight_c - 8) || (next_filter) ) begin
+                next_state =  DEEP_FETCH;
             end
-            else next_state = DEEP_FETCH ;
+            else next_state =  START_PIXEL;
         end
 
         // ST_DATA_BIT
         DEEP_FETCH : begin
-            if(count_deep_pixel < weight_c) begin
+            if(count_deep_pixel < weight_c - 4) begin
                 next_state = DEEP_FETCH ;
             end
             else begin
-                if(count_filter < num_filter) next_state = END_PIXEL ;
-                else next_state = START_PIXEL ;
+                if(count_filter < num_filter - 4) next_state =  START_PIXEL;
+                else next_state =  END_PIXEL;
             end
         end
 
@@ -90,6 +91,9 @@ end
             valid_count <= 0;
             count_deep_pixel <= 0;
             count_filter <= 0;
+            addr_ifm <= 0;
+            addr_weight <= 0;
+            next_filter <= 0;
         end
         else begin
             unique case(curr_state)
@@ -102,7 +106,7 @@ end
             end
             START_PIXEL:begin
                 if(next_state == START_PIXEL) begin
-                    valid_count <= valid_count + 1;
+                    if(valid == 1) valid_count <= valid_count + 16;
                 end
                 if(next_state == DEEP_FETCH) begin
                     addr_ifm <= addr_ifm + 4 ;
@@ -119,15 +123,16 @@ end
                 end
 
                 if(next_state == START_PIXEL) begin
-                    addr_ifm <= addr_ifm - 128 ;
+                    addr_ifm <= addr_ifm - 124 ;
                     addr_weight <= addr_weight + 4 ;
                     count_deep_pixel <= 0;
-                    count_filter <= count_filter + 1;
+                    count_filter <= count_filter + 4;
+                    next_filter <= 1;
                 end
 
                 if(next_state == END_PIXEL) begin
-                    addr_ifm <= addr_ifm + 4 ;
-                    addr_weight <= addr_weight + 4 ;
+                    // addr_ifm <= addr_ifm + 4 ;
+                    // addr_weight <= addr_weight + 4 ;
                     count_deep_pixel <= 0;
                     count_filter <= 0;
                 end
@@ -136,6 +141,7 @@ end
                 if(next_state == START_PIXEL) begin
                     addr_ifm <= addr_ifm + 4 ;
                     addr_weight <= 0 ;
+                    next_filter <= 0;
                 end
             end
         endcase
