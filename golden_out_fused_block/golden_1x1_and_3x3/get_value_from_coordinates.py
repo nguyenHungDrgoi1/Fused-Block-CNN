@@ -1,21 +1,14 @@
-
 import os
 import numpy as np
 
-def get_line_index_NHWC(b, h, w, c, H, W, C):
-    return b * (H * W * C) + h * (W * C) + w * C + c
-
-def hex_to_signed_int32(hex_str):
-    uval = np.uint32(int(hex_str, 16))  # interpret as unsigned 32-bit
-    sval = uval.view(np.int32)          # view it as signed int32
-    return sval
+def get_line_index_CXYB(b, h, w, c, H, W, C):
+    return c * (W * H * 1) + w * (H * 1) + h * 1 + b
 
 def check_hex_value(filename, b, h, w, c, H, W, C):
-    # Lấy đường dẫn tương đối tới file
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(script_dir, filename)
 
-    line_idx = get_line_index_NHWC(b, h, w, c, H, W, C)
+    line_idx = get_line_index_CXYB(b, h, w, c, H, W, C)
 
     try:
         with open(file_path, "r") as f:
@@ -24,16 +17,17 @@ def check_hex_value(filename, b, h, w, c, H, W, C):
                 print(f"❌ Dòng {line_idx} vượt quá số dòng trong file {filename}")
                 return
             value = lines[line_idx].strip()
-            int_val = hex_to_signed_int32(value)
+            uint_val = np.uint32(int(value, 16))  # ✅ lấy giá trị unsigned
 
             print(f"\n📁 File: {filename}")
             print(f"📍 Tọa độ [b,h,w,c] = [{b},{h},{w},{c}]")
             print(f"➡️  Dòng số: {line_idx} (dòng thứ {line_idx+1} tính từ 1)")
-            print(f"🔢 Giá trị hex: {value}")
-            print(f"🔣 Giá trị int (signed): {int_val}")
+            print(f"🔢 Giá trị hex      : {value}")
+            print(f"🔣 Giá trị unsigned : {uint_val}")
             print(f"💡 Mở file trong VS Code và nhấn Ctrl+G → nhập {line_idx + 1}")
     except FileNotFoundError:
         print(f"❌ Không tìm thấy file: {file_path}")
+
 # KIỂM TRA FILE NÀO THÌ TẮT COMMENT FILE ĐẤY
 # =======================
 # 💡 Ví dụ gọi kiểm tra:
