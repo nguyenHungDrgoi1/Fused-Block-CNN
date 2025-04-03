@@ -13,8 +13,8 @@ def count_lines(filename):
 
 # Hàm xử lý 1 PE
 def process_pe_file(pe_id, OFFSET, tile):
-    input_file = f"../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM1_PE{pe_id}.hex"
-    output_file = f"../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM1_PE{pe_id}_change.hex"
+    input_file = f"../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM2_PE{pe_id}.hex"
+    output_file = f"../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM2_PE{pe_id}_change.hex"
 
     # Đếm số dòng trong file
     total_lines = count_lines(input_file)
@@ -53,11 +53,11 @@ def process_pe_file(pe_id, OFFSET, tile):
 # Hàm chính
 if __name__ == "__main__":
     # Cố định tham số
-    ofm_width = 32
-    max_pe = 16
-    ofm_channel = 16
+    ofm_width = 56
+    max_pe = 4
+    ofm_channel = 32
 
-    tile = 16 // max_pe
+    tile = ofm_channel // max_pe
     OFFSET = ofm_width * ofm_width   # Khoảng cách dòng
     for pe in range(max_pe):
         process_pe_file(pe, OFFSET, tile)

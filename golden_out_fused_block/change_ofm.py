@@ -53,9 +53,9 @@ def process_pe_file(pe_id, OFFSET, tile):
 # Hàm chính
 if __name__ == "__main__":
     # Cố định tham số
-    ofm_width = 32
+    ofm_width = 56
     max_pe = 16
-    ofm_channel = 16
+    ofm_channel = 128
 
     tile = 16 // max_pe
     OFFSET = ofm_width * ofm_width   # Khoảng cách dòng
