@@ -31,11 +31,11 @@ def main():
     input_file = "../Fused-Block-CNN/address/weight.hex"
 
     PE = 16
-    filter_count = 32
+    filter_count = 128
     tile = filter_count // PE
 
     weight_height = 3
-    weight_channel = 16
+    weight_channel = 32
     weight_size = weight_height * weight_height * weight_channel
     offset = weight_size * (PE - 1)
     num_segments = filter_count // PE

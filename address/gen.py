@@ -8,12 +8,12 @@ def save_to_hex_file(data, filename):
 
 # 1. Sinh ngẫu nhiên IFM và Weight (8-bit không dấu)
 np.random.seed(42)
-IFM = np.random.randint(0, 256, size=(56, 56, 16), dtype=np.uint8)
-Weight = np.random.randint(0, 256, size=(32, 3, 3, 16), dtype=np.uint8)
+IFM = np.random.randint(0, 256, size=(58, 58, 32), dtype=np.uint8)
+Weight = np.random.randint(0, 256, size=(128, 3, 3, 32), dtype=np.uint8)
 
 # 2. Thêm padding (padding = 1) -> IFM mới có kích thước (58, 58, 16)
 pad_size = 1
-IFM_padded = np.zeros((56 + 2 * pad_size, 56 + 2 * pad_size, 16), dtype=np.uint8)
+IFM_padded = np.zeros((58 + 2 * pad_size, 58 + 2 * pad_size, 32), dtype=np.uint8)
 IFM_padded[pad_size:-pad_size, pad_size:-pad_size, :] = IFM
 
 # 3. Lưu IFM và Weight vào file
@@ -23,14 +23,14 @@ print("✅ Đã lưu IFM (có padding) và Weight vào ifm_padded.hex, weight.he
 
 # 4. Tính toàn bộ OFM (stride=1, có padding)
 OH, OW = 54, 54  # Kích thước đầu ra giữ nguyên do padding
-OFM = np.zeros((32, OH, OW), dtype=int)  # 32 filters
+OFM = np.zeros((128, OH, OW), dtype=int)  # 32 filters
 
 print("\n🎯 BẮT ĐẦU TÍNH TOÁN TOÀN BỘ OFM (32 FILTERS)\n")
 
 for j in range(OW):
     print("🔹 Filter :")
     for i in range(OH):       # output height
-        for f in range(32):   # output width
+        for f in range(128):   # output width
             acc = 0
             is_print = (f == 16 and i == 0 and j == 0)
             if is_print:
