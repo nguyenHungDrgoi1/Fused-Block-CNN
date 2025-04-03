@@ -47,3 +47,4 @@ def check_hex_value(filename, b, h, w, c, H, W, C):
 
 # --- (5) Golden output của project ---
 check_hex_value("Golden_OFM_project.hex", b=0, h=10, w=10, c=3, H=56, W=56, C=32)
+

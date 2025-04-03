@@ -1,15 +1,4 @@
-######################################################################################
-# Cách kiểm tra giá trị được lấy ra từ tọa độ:                                       #
-#line = b * (H * W * C) + y * (W * C) + x * C + c                                    #
-#  Ví dụ:                                                                            #
-# IFM shape: [1, 56, 56, 32]                                                         #
-# Tọa độ: IFM[0, 2, 14, 0]                                                           #                      
-# line = 0 * (56*56*32) + 2 * (56*32) + 14*32 + 0                                    #
-#      = 2 * 1792 + 448                                                              #
-#      = 3584 + 448                                                                  #
-#      = 4032                                                                        #
-# → Giá trị tại dòng 4033 trong file (do file đánh số từ 1)                          #
-######################################################################################
+
 import numpy as np
 import random
 
@@ -27,11 +16,17 @@ def write_uint_array_to_hex_file_depth_width_height_batch(arr, filename):
 
 def write_uint_array_to_hex_file(arr, filename):
     arr = np.ascontiguousarray(arr.astype(np.uint32))
-    flat = arr.flatten()
+    B, H, W, C = arr.shape
     with open(filename, "w") as f:
+
         for val in flat:
             f.write("{:08X}\n".format(val))
->>>>>>> c02b293 (Update Golden Output)
+        for c in range(C):
+            for w in range(W):
+                for h in range(H):
+                    for b in range(B):
+                        val = arr[b, h, w, c]
+                        f.write("{:08X}\n".format(val))
 
 def conv2d_debug(IFM, Weight, kernel_size, stride=1, padding='same', layer_name='', sample_coords=None):
     B, H, W, C_in = IFM.shape
@@ -96,25 +91,28 @@ def main():
     # Layer project
     OFM_project, _ = conv2d_debug(OFM_expand, Weight_project, (1, 1), layer_name='block2b_project_conv')
 
-    # Ghi file hex
-    write_uint_array_to_hex_file(IFM, "IFM.hex")
-    write_uint_array_to_hex_file(Weight_expand, "Weight_expand.hex")
-    write_uint_array_to_hex_file(Weight_project, "Weight_project.hex")
-    write_uint_array_to_hex_file(OFM_expand, "Golden_OFM_expand.hex")
-    write_uint_array_to_hex_file(OFM_project, "Golden_OFM_project.hex")
+    # Ghi file hex theo thứ tự C → W → H → B
+    write_uint_array_to_hex_file_depth_width_height_batch(IFM, "IFM.hex")
+    write_uint_array_to_hex_file_depth_width_height_batch(Weight_expand, "Weight_expand.hex")
+    write_uint_array_to_hex_file_depth_width_height_batch(Weight_project, "Weight_project.hex")
+    write_uint_array_to_hex_file_depth_width_height_batch(OFM_expand, "Golden_OFM_expand.hex")
+    write_uint_array_to_hex_file_depth_width_height_batch(OFM_project, "Golden_OFM_project.hex")
 
-    print("\n✅ Đã ghi xong tất cả file .hex (kiểu unsigned int, giá trị < 0xFF)")
+    print("\n✅ Đã ghi xong tất cả file .hex (theo thứ tự C → X → Y → B)")
     return OFM_expand, OFM_project
 
-# Gọi hàm chính
+# Chạy chương trình
 OFM_expand_result, OFM_project_result = main()
+
+
 
 # Gọi ví dụ:
 # inspect_ofm_value(OFM_expand_result, 0, 0, 0, 0)
 # inspect_ofm_value(OFM_project_result, 0, 10, 10, 5)
 
 ######################################################################################
-# Gọi ví dụ:  CÁI NÀY ĐỂ CHỈ ĐỊNH TỌA ĐỘ MÀ MÌNH MUỐN XEM                            #                                 
+# Gọi ví dụ:  CÁI NÀY ĐỂ CHỈ ĐỊNH TỌA ĐỘ MÀ MÌNH MUỐN XEM                            #
+# (Tọa độ theo các chiều mặc định của Python: b,x,y,c)                               #                                 
 # inspect_ofm_value(OFM_expand_result, 0, 2, 14, 0)                                  #
 # inspect_ofm_value(OFM_expand_result, 0, 0, 0, 0)                                   #
 # inspect_ofm_value(OFM_project_result, 0, 10, 10, 5)                                #
