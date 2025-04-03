@@ -13,6 +13,7 @@
 import numpy as np
 import random
 
+
 def write_uint_array_to_hex_file_depth_width_height_batch(arr, filename):
     arr = np.ascontiguousarray(arr.astype(np.uint32))
     B, H, W, C = arr.shape
@@ -23,6 +24,14 @@ def write_uint_array_to_hex_file_depth_width_height_batch(arr, filename):
                     for b in range(B):
                         val = arr[b, h, w, c]
                         f.write("{:08X}\n".format(val))
+
+def write_uint_array_to_hex_file(arr, filename):
+    arr = np.ascontiguousarray(arr.astype(np.uint32))
+    flat = arr.flatten()
+    with open(filename, "w") as f:
+        for val in flat:
+            f.write("{:08X}\n".format(val))
+>>>>>>> c02b293 (Update Golden Output)
 
 def conv2d_debug(IFM, Weight, kernel_size, stride=1, padding='same', layer_name='', sample_coords=None):
     B, H, W, C_in = IFM.shape
@@ -72,7 +81,11 @@ def main():
     in_ch_expand, out_ch_expand = 32, 128
     in_ch_project, out_ch_project = 128, 32
 
+
     # Sinh dữ liệu ngẫu nhiên nhỏ hơn 0xFF (unsigned)
+
+    # Sinh ngẫu nhiên số nhỏ < 0xFF, kiểu uint32
+
     IFM = np.random.randint(0, 0xFF, size=(B, H, W, in_ch_expand), dtype=np.uint32)
     Weight_expand = np.random.randint(0, 0xFF, size=(3, 3, in_ch_expand, out_ch_expand), dtype=np.uint32)
     Weight_project = np.random.randint(0, 0xFF, size=(1, 1, in_ch_project, out_ch_project), dtype=np.uint32)
@@ -83,22 +96,22 @@ def main():
     # Layer project
     OFM_project, _ = conv2d_debug(OFM_expand, Weight_project, (1, 1), layer_name='block2b_project_conv')
 
-    # Ghi file hex theo thứ tự C → W → H → B
-    write_uint_array_to_hex_file_depth_width_height_batch(IFM, "IFM.hex")
-    write_uint_array_to_hex_file_depth_width_height_batch(Weight_expand, "Weight_expand.hex")
-    write_uint_array_to_hex_file_depth_width_height_batch(Weight_project, "Weight_project.hex")
-    write_uint_array_to_hex_file_depth_width_height_batch(OFM_expand, "Golden_OFM_expand.hex")
-    write_uint_array_to_hex_file_depth_width_height_batch(OFM_project, "Golden_OFM_project.hex")
+    # Ghi file hex
+    write_uint_array_to_hex_file(IFM, "IFM.hex")
+    write_uint_array_to_hex_file(Weight_expand, "Weight_expand.hex")
+    write_uint_array_to_hex_file(Weight_project, "Weight_project.hex")
+    write_uint_array_to_hex_file(OFM_expand, "Golden_OFM_expand.hex")
+    write_uint_array_to_hex_file(OFM_project, "Golden_OFM_project.hex")
 
-    print("\n✅ Đã ghi xong tất cả file .hex (theo thứ tự C → X → Y → B)")
+    print("\n✅ Đã ghi xong tất cả file .hex (kiểu unsigned int, giá trị < 0xFF)")
     return OFM_expand, OFM_project
 
-# Chạy chương trình
+# Gọi hàm chính
 OFM_expand_result, OFM_project_result = main()
 
-# Ví dụ kiểm tra giá trị tại 1 tọa độ
+# Gọi ví dụ:
+# inspect_ofm_value(OFM_expand_result, 0, 0, 0, 0)
 # inspect_ofm_value(OFM_project_result, 0, 10, 10, 5)
-
 
 ######################################################################################
 # Gọi ví dụ:  CÁI NÀY ĐỂ CHỈ ĐỊNH TỌA ĐỘ MÀ MÌNH MUỐN XEM                            #                                 
