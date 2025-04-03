@@ -11,7 +11,6 @@ def hex_to_signed_int32(hex_str):
     return sval
 
 def check_hex_value(filename, b, h, w, c, H, W, C):
-    # Lấy đường dẫn tương đối tới file
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(script_dir, filename)
 

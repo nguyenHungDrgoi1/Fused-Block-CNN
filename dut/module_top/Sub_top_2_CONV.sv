@@ -22,10 +22,10 @@ module Sub_top_2_CONV(
     input [31:0] data_in_Weight_13,
     input [31:0] data_in_Weight_14,
     input [31:0] data_in_Weight_15,
-    input [31:0] data_in_Weight_0_n_state;
-    input [31:0] data_in_Weight_1_n_state;
-    input [31:0] data_in_Weight_2_n_state;
-    input [31:0] data_in_Weight_3_n_state;
+    input [31:0] data_in_Weight_0_n_state,
+    input [31:0] data_in_Weight_1_n_state,
+    input [31:0] data_in_Weight_2_n_state,
+    input [31:0] data_in_Weight_3_n_state,
     input [1:0] control_mux,
     //control signal 
     input wire [15:0] PE_reset,
@@ -495,10 +495,10 @@ module Sub_top_2_CONV(
         .clk(clk),
         .rst_n(reset),
         .KERNEL_W(3),
-        .OFM_W(54),
-        .OFM_C(32),
+        .OFM_W(56),
+        .OFM_C(128),
         .IFM_C(16),
-        .IFM_W(56),
+        .IFM_W(58),
         .stride(1),
         .ready(cal_start),
         .addr_in(0),

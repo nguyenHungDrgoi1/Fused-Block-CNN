@@ -48,7 +48,7 @@ if __name__ == "__main__":
     # Cố định tham số cho Conv1
     ifm_height = 58
     ifm_width = 58
-    ifm_channel = 32
+    ifm_channel = 16
     weight_height = 3
     weight_width = 3
     weight_filter = 128
