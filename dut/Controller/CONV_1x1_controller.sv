@@ -7,7 +7,7 @@ module CONV_1x1_controller(
     input cal_start,
     output logic [31:0] addr_ifm,
     output logic [31:0] addr_weight,
-    output logic [3:0] PE_en,
+    output logic [3:0] PE_reset,
     output logic [3:0] PE_finish
 );
 reg [2:0] curr_state, next_state;
@@ -88,12 +88,14 @@ end
 //always_ff for output
     always_ff@(posedge clk or negedge reset_n) begin
         if(~reset_n) begin
-            valid_count <= 0;
-            count_deep_pixel <= 0;
-            count_filter <= 0;
-            addr_ifm <= 0;
-            addr_weight <= 0;
-            next_filter <= 0;
+            valid_count         <= 0;
+            count_deep_pixel    <= 0;
+            count_filter        <= 0;
+            addr_ifm            <= 0;
+            addr_weight         <= 0;
+            next_filter         <= 0;
+            PE_reset            <= 0;
+            PE_finish           <= 0;
         end
         else begin
             unique case(curr_state)
@@ -105,6 +107,9 @@ end
                 end
             end
             START_PIXEL:begin
+                PE_reset <=4'b1111;
+                if (count_filter!=0) PE_finish <=4'b1111;
+                else                 PE_finish <=4'b0;
                 if(valid == 1) valid_count <= valid_count + 16;
                 if(next_state == START_PIXEL) begin
                 end
@@ -117,6 +122,8 @@ end
                 end
             end
             DEEP_FETCH: begin
+                PE_reset <=0;
+                PE_finish <=0;
                 if(valid == 1) valid_count <= valid_count + 16;
                 if(next_state == DEEP_FETCH) begin
                     addr_ifm <= addr_ifm + 4 ;
@@ -140,6 +147,8 @@ end
                 end
             end
             END_PIXEL: begin
+                PE_reset <=4'b1111;
+                PE_finish <=4'b1111;
                 if(valid == 1) valid_count <= valid_count + 16;
                 if(next_state == START_PIXEL) begin
                     addr_ifm <= addr_ifm + 4 ;

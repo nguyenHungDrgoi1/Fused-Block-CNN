@@ -44,6 +44,8 @@ module Sub_top_CONV(
     //control signal layer 1
     input wire [15:0] PE_reset,
     input wire [15:0] PE_finish,
+    //control singal layer 2
+    output wire [3:0] PE_finish_PE_cluster1x1,
 
     input  wire [3:0] KERNEL_W,
     input  wire [7:0] OFM_W,
@@ -51,6 +53,8 @@ module Sub_top_CONV(
     input  wire [7:0] IFM_C,
     input  wire [7:0] IFM_W,
     input  wire [1:0] stride,
+
+    input  wire [7:0] OFM_C_layer2,
     output wire [15:0] valid,
     //output wire [15:0] done_window,
     output wire        done_compute,
@@ -616,11 +620,11 @@ module Sub_top_CONV(
         .data_in(data_in_Weight_3_n_state),
         .data_out(Weight_3_n_state)
     );
-
+    wire [3:0] PE_reset_n_state_wire;
     PE_cluster_1x1 PE_cluster_1x1(
         .clk(clk),
         .reset_n(reset),
-        .PE_reset(PE_reset_n_state),
+        .PE_reset(PE_reset_n_state_wire),
         .Weight_0(Weight_0_n_state),
         .Weight_1(Weight_1_n_state),
         .Weight_2(Weight_2_n_state),
@@ -636,10 +640,12 @@ module Sub_top_CONV(
         .clk(clk),
         .reset_n(reset),
         .valid(wr_data_valid),
-        .weight_c(128),
+        .weight_c(OFM_C_layer2),
         .num_filter(32),
         .cal_start(cal_start_ctl),
         .addr_ifm(addr_ram_next_rd),
-        .addr_weight(addr_w_n_state)
+        .addr_weight(addr_w_n_state),
+        .PE_reset(PE_reset_n_state_wire),
+        .PE_finish(PE_finish_PE_cluster1x1)
     );
 endmodule
