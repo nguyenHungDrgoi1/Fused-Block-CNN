@@ -377,7 +377,7 @@ module Sub_top_CONV_tb;
             // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
             //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
             if (`GOL1) ofm_file[k] = $fopen($sformatf("../Fused-Block-CNN/address/OFM_PE%0d_DUT.hex", k), "w");
-            else    ofm_file[k] = $fopen($sformatf("../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM_PE1%0d_DUT.hex", k), "w");
+            else    ofm_file[k] = $fopen($sformatf("../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM1_PE%0d_DUT.hex", k), "w");
             if (ofm_file[k] == 0) begin
                 $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
                 $finish;  // Dừng mô phỏng nếu không mở được file
