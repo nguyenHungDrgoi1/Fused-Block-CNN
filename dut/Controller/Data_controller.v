@@ -25,7 +25,7 @@ always@(*) begin
     case ( current_state )
     START : begin
         if (OFM_data_out_valid == 16'hFFFF)  next_state = DATA_FETCH;
-        else                            next_state = START;
+        else                                 next_state = START;
     end
     DATA_FETCH : begin
         if (control_mux=='h3)           next_state = START;

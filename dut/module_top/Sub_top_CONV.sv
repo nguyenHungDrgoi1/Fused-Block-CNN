@@ -553,7 +553,7 @@ module Sub_top_CONV(
     );
 
     MUX_pipeline mux(
-        .control(control_mux),
+        .control(control_mux_wire),
 
         .data_in_0(OFM_n_CONV_0),
         .data_in_1(OFM_n_CONV_1),

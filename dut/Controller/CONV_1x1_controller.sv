@@ -11,10 +11,10 @@ module CONV_1x1_controller(
     output logic [3:0] PE_finish
 );
 reg [2:0] curr_state, next_state;
-parameter IDLE = 3'b000;
-parameter START_PIXEL = 3'b001;
-parameter DEEP_FETCH = 3'b010;
-parameter END_PIXEL = 3'b100;
+parameter IDLE          = 3'b000;
+parameter START_PIXEL   = 3'b001;
+parameter DEEP_FETCH    = 3'b010;
+parameter END_PIXEL     = 3'b100;
 
 // value for count
 reg [7:0] valid_count;
