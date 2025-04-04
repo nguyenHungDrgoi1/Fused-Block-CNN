@@ -105,17 +105,19 @@ end
                 end
             end
             START_PIXEL:begin
+                if(valid == 1) valid_count <= valid_count + 16;
                 if(next_state == START_PIXEL) begin
-                    if(valid == 1) valid_count <= valid_count + 16;
                 end
                 if(next_state == DEEP_FETCH) begin
                     addr_ifm <= addr_ifm + 4 ;
                     addr_weight <= addr_weight + 4 ;
+                    if(~next_filter)
                     valid_count <= 0;
                     count_deep_pixel <= count_deep_pixel + 4;
                 end
             end
             DEEP_FETCH: begin
+                if(valid == 1) valid_count <= valid_count + 16;
                 if(next_state == DEEP_FETCH) begin
                     addr_ifm <= addr_ifm + 4 ;
                     addr_weight <= addr_weight + 4 ;
@@ -138,6 +140,7 @@ end
                 end
             end
             END_PIXEL: begin
+                if(valid == 1) valid_count <= valid_count + 16;
                 if(next_state == START_PIXEL) begin
                     addr_ifm <= addr_ifm + 4 ;
                     addr_weight <= 0 ;

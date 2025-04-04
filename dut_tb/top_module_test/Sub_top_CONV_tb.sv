@@ -61,7 +61,8 @@ module Sub_top_CONV_tb;
     //reg [31:0] addr_ram_next_wr;
 
     //reg [3:0] PE_next_valid;
-
+    int count_for_layer_1 =0 ;
+    int count_for_layer_2 =0;
     
     reg [19:0] addr_w[15:0];
     reg [19:0] addr_IFM;
@@ -78,6 +79,7 @@ module Sub_top_CONV_tb;
     reg [31:0] addr_w_n_state;
     wire [7:0] OFM_n_state [3:0];
     reg [3:0] PE_reset_n_state;
+    reg [3:0] PE_reset_n_state_1;
 
     
     wire [31:0] OFM;
@@ -399,7 +401,13 @@ module Sub_top_CONV_tb;
             @ ( posedge clk ) begin
             if(valid == 16'hFFFF) begin
                 count_valid = count_valid + 1;
+                end
             end
+        end
+    end
+    initial begin
+        forever begin
+            @ ( posedge clk ) begin
             if(count_valid % 8 == 0  && count_valid != 0) begin
                 count_valid = 0;
                 link_inital =  1;
@@ -452,7 +460,8 @@ module Sub_top_CONV_tb;
         forever begin
             @ ( posedge clk ) begin
         if(link_inital) begin
-                count_valid = 0;
+                //count_valid = 0;
+                link_inital = 0;
                 repeat(5) begin
                 @(posedge clk);
                 end
@@ -464,51 +473,66 @@ module Sub_top_CONV_tb;
                 @(posedge clk);
                 end
                 PE_reset_n_state =15;
+                PE_reset_n_state_1 =15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
+                PE_reset_n_state_1 =0;
                 repeat(31) begin
                 @(posedge clk);
                 end
                 PE_reset_n_state = 15;
+                PE_reset_n_state_1 = 15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
+                PE_reset_n_state_1 = 0;
                 repeat(31) begin
                 @(posedge clk);
                 end
                 PE_reset_n_state = 15;
+                PE_reset_n_state_1 = 15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
+                PE_reset_n_state_1 = 0;
                 repeat(31) begin
                 @(posedge clk);
                 end
                 PE_reset_n_state = 15;
+                PE_reset_n_state_1 = 15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
+                PE_reset_n_state_1 = 0;
                 repeat(31) begin
                 @(posedge clk);
                 end
                 PE_reset_n_state = 15;
+                PE_reset_n_state_1 = 15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
+                PE_reset_n_state_1 = 0;
                 repeat(31) begin
                 @(posedge clk);
                 end
                 PE_reset_n_state = 15;
+                PE_reset_n_state_1 = 15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
+                PE_reset_n_state_1 = 0;
                 repeat(31) begin
                 @(posedge clk);
                 end
                 PE_reset_n_state = 15;
+                PE_reset_n_state_1 = 15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
+                PE_reset_n_state_1 = 0;
                 repeat(31) begin
                 @(posedge clk);
                 end
                 PE_reset_n_state = 15;
+                PE_reset_n_state_1 = 15;
                 @(posedge clk);
                 PE_reset_n_state = 0;
-                link_inital = 0;
+                PE_reset_n_state_1 = 0;
         end                                            
             end
         end
@@ -542,6 +566,7 @@ module Sub_top_CONV_tb;
 always @(posedge clk) begin
     if (valid == 16'hFFFF) begin
         // Lưu giá trị OFM vào các file tương ứng
+        count_for_layer_1 = count_for_layer_1 + 1;
         for (k = 0; k < 16; k = k + 1) begin
             ofm_data = OFM_out[k];  // Lấy giá trị OFM từ output
             // Ghi từng byte của OFM vào các file
@@ -549,22 +574,25 @@ always @(posedge clk) begin
             //if (ofm_file[1] != 0) begin
             //$display("check");
                 $fwrite(ofm_file[k], "%h\n", ofm_data_byte);  // Ghi giá trị từng byte vào file
+                
            // end
             ofm_data = ofm_data >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
         end
     end
 end
 always @(posedge clk) begin
-    if (PE_reset_n_state == 15) begin
+    if (PE_reset_n_state_1 == 15) begin
         // Lưu giá trị OFM vào các file tương ứng
+        count_for_layer_2 = count_for_layer_2 + 1;
         for (k1 = 0; k1 < 4; k1 = k1 + 1) begin
             ofm_data_2 = OFM_n_state[k1];  // Lấy giá trị OFM từ output
             // Ghi từng byte của OFM vào các file
             ofm_data_byte_2 = ofm_data_2;
             //if (ofm_file[1] != 0) begin
             //$display("check");
-                $fwrite(ofm_file_2[k], "%h\n", ofm_data_byte_2);  // Ghi giá trị từng byte vào file
+                $fwrite(ofm_file_2[k1], "%h\n", ofm_data_byte_2);  // Ghi giá trị từng byte vào file
                 //$display("check");
+                
            // end
             ofm_data_2 = ofm_data_2 >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
         end
