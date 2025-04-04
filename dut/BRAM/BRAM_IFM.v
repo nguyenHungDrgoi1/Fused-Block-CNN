@@ -9,18 +9,15 @@ module BRAM_IFM(
 );
 
     // Dùng 32 khối BRAM chạy song song, mỗi khối lưu 64-bit
-    (* ram_style = "block" *) reg [31:0] bram [0:26911];  // Dùng 1 mảng một chiều
+    (* ram_style = "block" *) reg [31:0] bram [0:100352];  // Dùng 1 mảng một chiều
     
     //integer i;
     always @(posedge clk) begin
         if (wr_rd_en) begin
             bram[wr_addr] <= data_in;  // Ghi dữ liệu vào BRAM
-            data_out <= 0;
         end
-        else begin
         data_out <= bram[ rd_addr >> 2 ];
         // addr <= rd_addr; 
-        end
     end
 
 endmodule
