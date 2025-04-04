@@ -57,7 +57,7 @@ if __name__ == "__main__":
     max_pe = 16
     ofm_channel = 128
 
-    tile = 16 // max_pe
+    tile = ofm_channel // max_pe
     OFFSET = ofm_width * ofm_width   # Khoảng cách dòng
     for pe in range(max_pe):
         process_pe_file(pe, OFFSET, tile)

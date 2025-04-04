@@ -76,10 +76,7 @@ module Sub_top_CONV_tb;
     wire        wr_rd_req_Weight_for_tb;
     wire [31:0] wr_addr_Weight_for_tb;
     reg [31:0] addr_w_n_state;
-    wire [7:0] OFM_0_n_state;
-    wire [7:0] OFM_1_n_state;
-    wire [7:0] OFM_2_n_state;
-    wire [7:0] OFM_3_n_state;
+    wire [7:0] OFM_n_state [3:0];
     reg [3:0] PE_reset_n_state;
 
     
@@ -87,7 +84,7 @@ module Sub_top_CONV_tb;
    
     wire [7:0] OFM_out[15:0];
     
-    integer i,j,k,m=0;
+    integer i,j,k,m,k1=0;
     integer ofm_file[15:0];  // Mảng để lưu các file handle
     integer ofm_file_2[3:0];
     int link_inital;
@@ -117,12 +114,12 @@ module Sub_top_CONV_tb;
 
 
     reg [31:0] ofm_data;
+    reg [31:0] ofm_data_2;
     //CAL START
     reg cal_start;
     wire [15:0] valid ;
     reg [7:0] ofm_data_byte;
-    reg [7:0] ofm_data_byte1;
-
+    reg [7:0] ofm_data_byte_2;
     int count_valid;
     Sub_top_CONV uut (
         .clk(clk),
@@ -192,7 +189,7 @@ module Sub_top_CONV_tb;
         //.addr_ram_next_wr(addr_ram_next_wr),
         .PE_reset_n_state(PE_reset_n_state),
        //.addr_w_n_state(addr_w_n_state),
-        .OFM_0_n_state(OFM_0_n_state), .OFM_1_n_state(OFM_1_n_state), .OFM_2_n_state(OFM_2_n_state) ,.OFM_3_n_state(OFM_3_n_state)
+        .OFM_0_n_state(OFM_n_state[0]), .OFM_1_n_state(OFM_n_state[1]), .OFM_2_n_state(OFM_n_state[2]) ,.OFM_3_n_state(OFM_n_state[3])
 
     );
 
@@ -296,7 +293,6 @@ module Sub_top_CONV_tb;
 
         run         =   1;
         instrution  =   1;
-        #5;
         fork
             begin
                 // Write data into BRAM
@@ -351,7 +347,7 @@ module Sub_top_CONV_tb;
         //wr_rd_en_Weight = 0;
     
         #5000;
-        #5
+        #10
         ////////////////////////////////////CAL PHASE//////////////////////////////////////////////////
 
         cal_start = 1; // ready phari leen o canh duong va sau do it nhat 3 chu ki thi PE_reset ( PE_reset ) phai kich hoat
@@ -383,15 +379,15 @@ module Sub_top_CONV_tb;
                 $finish;  // Dừng mô phỏng nếu không mở được file
             end
         end
-        // for (m = 0; m < 4; m = m + 1) begin
+         for (m = 0; m < 4; m = m + 1) begin
         //     // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
         //     //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
-        //     ofm_file_2[m] = $fopen($sformatf("../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM2_PE%0d_DUT.hex", m), "w");
-        //     if (ofm_file_2[m] == 0) begin
-        //         $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
-        //         $finish;  // Dừng mô phỏng nếu không mở được file
-        //     end
-        // end
+             ofm_file_2[m] = $fopen($sformatf("../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM2_PE%0d_DUT.hex", m), "w");
+             if (ofm_file_2[m] == 0) begin
+                 $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
+                 $finish;  // Dừng mô phỏng nếu không mở được file
+             end
+         end
     end
    
     
@@ -558,5 +554,20 @@ always @(posedge clk) begin
         end
     end
 end
-
+always @(posedge clk) begin
+    if (PE_reset_n_state == 15) begin
+        // Lưu giá trị OFM vào các file tương ứng
+        for (k1 = 0; k1 < 4; k1 = k1 + 1) begin
+            ofm_data_2 = OFM_n_state[k1];  // Lấy giá trị OFM từ output
+            // Ghi từng byte của OFM vào các file
+            ofm_data_byte_2 = ofm_data_2;
+            //if (ofm_file[1] != 0) begin
+            //$display("check");
+                $fwrite(ofm_file_2[k], "%h\n", ofm_data_byte_2);  // Ghi giá trị từng byte vào file
+                //$display("check");
+           // end
+            ofm_data_2 = ofm_data_2 >> 8;  // Dịch 8 bit cho đến khi hết 32-bit
+        end
+    end
+end
 endmodule
