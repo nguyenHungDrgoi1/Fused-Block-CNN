@@ -53,12 +53,12 @@ module Sub_top_CONV_tb;
     reg [31:0] data_in_Weight_2_n_state;
     reg [31:0] data_in_Weight_3_n_state;
 
-    reg [1:0] control_mux;
-    reg       wr_en_next;
+    //reg [1:0] control_mux;
+    //reg       wr_en_next;
     reg [31:0] addr_ram_next_rd;
-    reg [31:0] addr_ram_next_wr;
+    //reg [31:0] addr_ram_next_wr;
 
-    reg [3:0] PE_next_valid;
+    //reg [3:0] PE_next_valid;
 
     
     reg [19:0] addr_w[15:0];
@@ -85,7 +85,11 @@ module Sub_top_CONV_tb;
    
     wire [7:0] OFM_out[15:0];
     
-    integer i,j,k=0;
+    integer i,j,k,m=0;
+    integer ofm_file[15:0];  // Mảng để lưu các file handle
+    integer ofm_file_2[3:0];
+    int link_inital;
+
     reg [7:0] input_data_mem [0:107648]; // BRAM input data
     reg [7:0] input_data_mem0 [0:2303];
     reg [7:0] input_data_mem1 [0:2303];
@@ -109,8 +113,6 @@ module Sub_top_CONV_tb;
     reg [7:0] input_data_mem2_n_state [0:2303];
     reg [7:0] input_data_mem3_n_state [0:2303];
 
-
-    integer ofm_file[15:0];  // Mảng để lưu các file handle
 
     reg [31:0] ofm_data;
     //CAL START
@@ -183,11 +185,11 @@ module Sub_top_CONV_tb;
         .data_in_Weight_2_n_state(data_in_Weight_2_n_state),    // layer 2
         .data_in_Weight_3_n_state(data_in_Weight_3_n_state),    // layer 2
         .control_mux(control_mux),                              // controll  layer1_2
-        .wr_en_next (wr_en_next),                               // controll  layer1_2
-        .addr_ram_next_rd(addr_ram_next_rd),                
-        .addr_ram_next_wr(addr_ram_next_wr),
+        //.wr_en_next (wr_en_next),                               // controll  layer1_2
+        //.addr_ram_next_rd(addr_ram_next_rd),                
+        //.addr_ram_next_wr(addr_ram_next_wr),
         .PE_reset_n_state(PE_reset_n_state),
-        .addr_w_n_state(addr_w_n_state),
+       //.addr_w_n_state(addr_w_n_state),
         .OFM_0_n_state(OFM_0_n_state), .OFM_1_n_state(OFM_1_n_state), .OFM_2_n_state(OFM_2_n_state) ,.OFM_3_n_state(OFM_3_n_state)
 
     );
@@ -238,8 +240,8 @@ module Sub_top_CONV_tb;
         data_in_Weight_14 = 0;
         data_in_Weight_15 = 0;
         
-        addr_ram_next_wr = -1;
-        wr_en_next = 0;
+        //addr_ram_next_wr = -1;
+        //wr_en_next = 0;
 
         // Load input data from file (example: input_data.hex)
        //$readmemh("C:/Users/Admin/OneDrive - Hanoi University of Science and Technology/Desktop/CNN/Fused-Block-CNN/../Fused-Block-CNN/address/input_56x56x16_pad.hex", input_data_mem);
@@ -347,19 +349,32 @@ module Sub_top_CONV_tb;
         $finish;
     end
     initial begin
-    // Mở các file hex để lưu OFM (sẽ tạo các file nếu chưa tồn tại)
-    for (k = 0; k < 16; k = k + 1) begin
-        // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
-         //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
-        ofm_file[k] = $fopen($sformatf("../Fused-Block-CNN/address/OFM_PE%0d_DUT.hex", k), "w");
-        if (ofm_file[k] == 0) begin
-            $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
-            $finish;  // Dừng mô phỏng nếu không mở được file
+        // Mở các file hex để lưu OFM (sẽ tạo các file nếu chưa tồn tại)
+        for (k = 0; k < 16; k = k + 1) begin
+            // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
+            //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
+            ofm_file[k] = $fopen($sformatf("../Fused-Block-CNN/address/OFM_PE%0d_DUT.hex", k), "w");
+            if (ofm_file[k] == 0) begin
+                $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
+                $finish;  // Dừng mô phỏng nếu không mở được file
+            end
         end
+        // for (m = 0; m < 4; m = m + 1) begin
+        //     // Mở file để ghi (nếu file chưa có, sẽ được tạo ra)
+        //     //ofm_file[k]  = $fopen("/home/manhung/Hung/CNN/Fused-Block-CNN/dut/OFM_PE_check.hex", "w");
+        //     ofm_file_2[m] = $fopen($sformatf("../Fused-Block-CNN/golden_out_fused_block/output_hex_folder/OFM2_PE%0d_DUT.hex", m), "w");
+        //     if (ofm_file_2[m] == 0) begin
+        //         $display("Error opening file OFM_PE%d.hex", k); // Nếu không mở được file, in thông báo lỗi
+        //         $finish;  // Dừng mô phỏng nếu không mở được file
+        //     end
+        // end
     end
-end
+   
+    
 
-initial begin
+
+    //--------------------------------Data_controller--------------------------------------------//
+    initial begin
         forever begin
             @ ( posedge clk ) begin
             if(valid == 16'hFFFF) begin
@@ -367,142 +382,140 @@ initial begin
             end
             if(count_valid % 8 == 0  && count_valid != 0) begin
                 count_valid = 0;
+                link_inital =  1;
                 repeat(6) begin
                 @(posedge clk);
                 end
-                PE_reset_n_state = 15;
-                PE_next_valid = 0;
-                addr_w_n_state = addr_w_n_state + 4;
-                addr_ram_next_rd = addr_ram_next_rd + 4;
                 @(posedge clk);
-                PE_reset_n_state = 0;
-    
-                addr_w_n_state = addr_w_n_state + 4;
-                addr_ram_next_rd = addr_ram_next_rd + 4;
-                repeat(30)  begin
-                    @(posedge clk)
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                repeat(29)  begin
+                    @(posedge clk);
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
                 @(posedge clk)
-                PE_reset_n_state = 15;
+                @(posedge clk)
                 
                 repeat(32)  begin
-                    @(posedge clk)
-                    PE_next_valid = 0;
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                    @(posedge clk);
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
-                @(posedge clk)
-                PE_reset_n_state = 15;
+
                 repeat(32)  begin
-                    @(posedge clk)
-                    PE_next_valid = 0;
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                    @(posedge clk);
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
-                @(posedge clk)
-                PE_reset_n_state = 15;
+
                 repeat(32)  begin
-                    @(posedge clk)
-                    PE_next_valid = 0;
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                    @(posedge clk);
+
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
-                @(posedge clk)
-                PE_reset_n_state = 15;
+
                 repeat(32)  begin
-                    @(posedge clk)
-                    PE_next_valid = 0;
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                    @(posedge clk);
+
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
-                @(posedge clk)
-                PE_reset_n_state = 15;
                 repeat(32)  begin
-                    @(posedge clk)
-                    PE_next_valid = 0;
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                    @(posedge clk);
+
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
-                @(posedge clk)
-                PE_reset_n_state = 15;
                 repeat(32)  begin
-                    @(posedge clk)
-                    PE_next_valid = 0;
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                    @(posedge clk);
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
-                @(posedge clk)
-                PE_reset_n_state = 15;
                 repeat(32)  begin
-                    @(posedge clk)
-                    PE_next_valid = 0;
-                    PE_reset_n_state = 0;
-                    addr_w_n_state = addr_w_n_state + 4;
-                    addr_ram_next_rd = addr_ram_next_rd + 4;
+                    @(posedge clk);
                 end
-                PE_next_valid = 4'b1111;
-                addr_ram_next_rd = addr_ram_next_rd - 128 ;
-                @(posedge clk)
-                PE_reset_n_state = 15;
-                addr_w_n_state = 0;
-                @(posedge clk) 
-                PE_next_valid = 0;
-                PE_reset_n_state = 0;
-                
-                // PE_reset = 1;
-                // @(negedge clk)
-                // PE_reset = 0;                                                       
+                @(posedge clk);
+
+                                             
             end
         end 
         end
     end
-    //--------------------------------Data_controller--------------------------------------------//
+
     initial begin
         forever begin
-        @ ( posedge clk ) begin
-            if(valid == 16'hFFFF) begin
-            //#10
-            control_mux <= 0;
-            addr_ram_next_wr <= addr_ram_next_wr + 1;
-            wr_en_next <= 1;
-            @ ( posedge clk )
-            control_mux <= 1;
-            addr_ram_next_wr <= addr_ram_next_wr + 1;
-            @ ( posedge clk )
-            control_mux <= 2;
-            addr_ram_next_wr <= addr_ram_next_wr + 1;
-            @ ( posedge clk )
-            control_mux <= 3;
-            addr_ram_next_wr <= addr_ram_next_wr + 1;
-            @ ( posedge clk ) 
-            wr_en_next <= 0;
+            @ ( posedge clk ) begin
+        if(link_inital) begin
+                count_valid = 0;
+                repeat(6) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                //$display("dasdas");
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state =15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                repeat(31) begin
+                @(posedge clk);
+                end
+                PE_reset_n_state = 15;
+                @(posedge clk);
+                PE_reset_n_state = 0;
+                link_inital = 0;
+        end                                            
             end
         end
-        end
     end
+    // initial begin
+    //     forever begin
+    //     @ ( posedge clk ) begin
+    //         if(valid == 16'hFFFF) begin
+    //         //#10
+    //         control_mux <= 0;
+    //         addr_ram_next_wr <= addr_ram_next_wr + 1;
+    //         wr_en_next <= 1;
+    //         @ ( posedge clk )
+    //         control_mux <= 1;
+    //         addr_ram_next_wr <= addr_ram_next_wr + 1;
+    //         @ ( posedge clk )
+    //         control_mux <= 2;
+    //         addr_ram_next_wr <= addr_ram_next_wr + 1;
+    //         @ ( posedge clk )
+    //         control_mux <= 3;
+    //         addr_ram_next_wr <= addr_ram_next_wr + 1;
+    //         @ ( posedge clk ) 
+    //         wr_en_next <= 0;
+    //         end
+    //     end
+    //     end
+    // end
 
 
 

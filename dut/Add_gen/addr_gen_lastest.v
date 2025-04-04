@@ -280,10 +280,10 @@ always @(*) begin
     
     'b0: begin 
         if (stride ==2) skip_a_pixel    =   IFM_C;
-        else            skip_a_pixel    =   0;
+        else            skip_a_pixel    =   'h0;
     end
     'b1: begin 
-                        skip_a_pixel    =   0;
+                        skip_a_pixel    =   'h0;
     end
     endcase
 end
@@ -291,9 +291,9 @@ end
 /////////////////////// FSM Output Logic ///////////////////////
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-        predict_line_addr_fetch_ifm         <= 0;
-        predict_window_addr_fetch_ifm       <= 0;
-        predict_window_OFM_addr_fetch_ifm   <= 0;
+        predict_line_addr_fetch_ifm         <= 'h0;
+        predict_window_addr_fetch_ifm       <= 'h0;
+        predict_window_OFM_addr_fetch_ifm   <= 'h0;
 
     end
     else begin
