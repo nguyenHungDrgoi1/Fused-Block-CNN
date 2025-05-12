@@ -142,6 +142,7 @@ module New_Top_Global_Fused(
     logic [7:0]  OFM_active_16;
     logic [31:0] base_addr =0;
     logic  [127:0] data_out_global_BRAM;
+    logic [127:0] data_write_pipeline_bram;
 
     //output fused signal
     logic [7:0] OFM_0_n_state;
@@ -515,7 +516,7 @@ module New_Top_Global_Fused(
     CONV_1x1_controller CONV_1x1_controller_inst(
         .clk(clk),
         .reset_n(reset_n),
-        .valid(wr_data_valid),
+        .valid(finish_for_PE),
         .weight_c(IFM_C_layer2),
         .num_filter(OFM_C_layer2),
         .cal_start(ready),
@@ -650,87 +651,30 @@ module New_Top_Global_Fused(
     assign finish_for_PE_cluster            =   1 && ( addr_IFM != 'b0 )   ? {16{finish_for_PE}} : 16'b0;
     assign valid                            =   finish_for_PE_cluster;
 
+    assign data_write_pipeline_bram = {OFM_active_15,OFM_active_14,OFM_active_13,OFM_active_12,OFM_active_11,OFM_active_10,OFM_active_9,OFM_active_8,OFM_active_7,OFM_active_6,OFM_active_5,OFM_active_4,OFM_active_3,OFM_active_2,OFM_active_1,OFM_active_0};
 
 
-    Register_for_pipeline Reg_1(
-        .clk(clk),
-        .reset_n(reset_n),
-        .valid_data(done_window_for_PE_cluster),
-        .data_in_0(OFM_active_0),
-        .data_in_1(OFM_active_1),
-        .data_in_2(OFM_active_2),
-        .data_in_3(OFM_active_3),
-        .data_in_4(OFM_active_4),
-        .data_in_5(OFM_active_5),
-        .data_in_6(OFM_active_6),
-        .data_in_7(OFM_active_7),
-        .data_in_8(OFM_active_8),
-        .data_in_9(OFM_active_9),
-        .data_in_10(OFM_active_10),
-        .data_in_11(OFM_active_11),
-        .data_in_12(OFM_active_12),
-        .data_in_13(OFM_active_13),
-        .data_in_14(OFM_active_14),
-        .data_in_15(OFM_active_15),
-        .data_out_0(OFM_n_CONV_0),
-        .data_out_1(OFM_n_CONV_1),
-        .data_out_2(OFM_n_CONV_2),
-        .data_out_3(OFM_n_CONV_3),
-        .data_out_4(OFM_n_CONV_4),
-        .data_out_5(OFM_n_CONV_5),
-        .data_out_6(OFM_n_CONV_6),
-        .data_out_7(OFM_n_CONV_7),
-        .data_out_8(OFM_n_CONV_8),
-        .data_out_9(OFM_n_CONV_9),
-        .data_out_10(OFM_n_CONV_10),
-        .data_out_11(OFM_n_CONV_11),
-        .data_out_12(OFM_n_CONV_12),
-        .data_out_13(OFM_n_CONV_13),
-        .data_out_14(OFM_n_CONV_14),
-        .data_out_15(OFM_n_CONV_15)
-    );
     wire [1:0]  control_mux_wire;
     wire [31:0] addr_ram_next_wr_wire;
     wire        wr_en_next_write;
-    Data_controller Data_controller_inst(
+    Write_for_Bram_controller data_write_controller(
         .clk(clk),
-        .rst_n(reset_n),
-        .OFM_data_out_valid(valid),
-        .control_mux(control_mux_wire),
-        .addr_ram_next_wr(addr_ram_next_wr_wire),
-        .wr_en_next(wr_en_next_write),
-        .wr_data_valid(wr_data_valid),
-        .done_compute(done_compute)
+        .reset_n(reset_n),
+        .OFM_C(IFM_C_layer2),
+        .valid(finish_for_PE),
+        .write_addr(addr_ram_next_wr_wire)
     );
-
-    MUX_pipeline mux(
-        .control(control_mux_wire),
-
-        .data_in_0(OFM_n_CONV_0),
-        .data_in_1(OFM_n_CONV_1),
-        .data_in_2(OFM_n_CONV_2),
-        .data_in_3(OFM_n_CONV_3),
-        .data_in_4(OFM_n_CONV_4),
-        .data_in_5(OFM_n_CONV_5),
-        .data_in_6(OFM_n_CONV_6),
-        .data_in_7(OFM_n_CONV_7),
-        .data_in_8(OFM_n_CONV_8),
-        .data_in_9(OFM_n_CONV_9),
-        .data_in_10(OFM_n_CONV_10),
-        .data_in_11(OFM_n_CONV_11),
-        .data_in_12(OFM_n_CONV_12),
-        .data_in_13(OFM_n_CONV_13),
-        .data_in_14(OFM_n_CONV_14),
-        .data_in_15(OFM_n_CONV_15),
-
-        .data_out(data_out_mux)
-    );
-    BRAM_IFM BRAM_IFM_layer2(
+    BRAM_General_weight #(
+        .DATA_WIDTH_IN(128),
+        .DATA_WIDTH_OUT(32),
+        .DEPTH(360),
+        .off_set_shift(4) 
+        )BRAM_IFM_layer2(
         .clk(clk),
         .rd_addr(addr_ram_next_rd),
         .wr_addr(addr_ram_next_wr_wire),
-        .wr_rd_en(wr_en_next_write),
-        .data_in(data_out_mux),
+        .wr_rd_en(done_window_one_bit),
+        .data_in(data_write_pipeline_bram),
         .data_out(out_BRAM_CONV)
     );
     Register_for_fused reg_for_write_in_global(

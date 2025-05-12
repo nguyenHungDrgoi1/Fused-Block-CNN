@@ -21,6 +21,7 @@ reg [7:0] valid_count;
 reg [7:0] count_deep_pixel;
 reg [7:0] count_filter;
 reg next_filter;
+reg revert;
 
 parameter Num_of_PE_x4     = 16;
 
@@ -102,6 +103,7 @@ end
             next_filter         <= 0;
             PE_reset            <= 0;
             PE_finish           <= 0;
+            revert              <= 0;
         end
         else begin
             unique case(curr_state)
@@ -156,7 +158,14 @@ end
                 PE_finish <=4'b1111;
                 if(valid == 1) valid_count <= valid_count + 16;
                 if(next_state == START_PIXEL) begin
-                    addr_ifm <= addr_ifm + 4 ;
+                    if(~revert) begin 
+                        addr_ifm <= addr_ifm + 4 ;
+                        revert <= 1;
+                    end
+                    else begin
+                        revert <= 0;
+                        addr_ifm <= addr_ifm - (weight_c-'h4) -  (weight_c-'h4) - 'h4 ;
+                    end
                     addr_weight <= 0 ;
                     next_filter <= 0;
                 end

@@ -140,6 +140,7 @@ module Top_Global_Fused_tb;
         @(posedge clk)
         begin
         $display("DONE FUSED BLOCK 1");
+        $finish;
         $display("START FUSED BLOCK 2");
             base_addr_IFM = 32'h0000_0000;
             size_IFM = 32'h1A480;
