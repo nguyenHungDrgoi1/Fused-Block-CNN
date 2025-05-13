@@ -69,7 +69,7 @@ module New_Top_Global_Fused(
     logic [31:0] addr_IFM;
     logic [19:0] addr_w;
     logic [31:0] IFM_data;
-    logic [31:0] IFM_data_q;
+    //logic [31:0] IFM_data_q;
     logic [31:0] Weight_0;
     logic [31:0] Weight_1;
     logic [31:0] Weight_2;
@@ -199,15 +199,6 @@ module New_Top_Global_Fused(
         .done_compute(done_compute)
     );
 
-    always@(posedge clk or negedge m00_axi_aresetn) begin
-        if(~m00_axi_aresetn) begin
-            IFM_data_q <= 0;
-        end
-        else begin
-            IFM_data_q <= IFM_data;
-        end
-    end
-
     BRAM_General #(
         .DATA_WIDTH_IN(128),
         .DATA_WIDTH_OUT(128),
@@ -233,7 +224,7 @@ module New_Top_Global_Fused(
     .wr_addr(wr_addr_fused),            // Địa chỉ ghi
     .rd_addr(addr_IFM),  // Địa chỉ đọc (địa chỉ byte → cần dịch)
     .data_in(data_out_global_BRAM),               // Dữ liệu vào
-    .data_out(IFM_data_q)               // Dữ liệu ra
+    .data_out(IFM_data)               // Dữ liệu ra
     );
 
     BRAM_General_weight #(
